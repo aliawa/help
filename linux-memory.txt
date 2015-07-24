@@ -1,0 +1,206 @@
+
+--------------------------------------------------------------------------
+/proc/meminfo 
+
+MemTotal     – physical RAM,  total
+MemFree      – physical RAM,  left unused by the system.
+Buffers      – physical RAM,  used for file buffers.
+Cached       – physical RAM,  used as cache memory.
+Active       – buffer or page cache memory,  that is in active use. 
+               This is memory that has been recently used and is usually not reclaimed for other purposes.
+Inactive     – buffer or page cache memory,  that are free and available.
+               This is memory that has not been recently used and can be reclaimed for other purposes.
+LowTotal and LowFree 
+             – memory, that is directly mapped into kernel space. 
+               The LowTotal value can vary based on the type of kernel used.
+Mapped       – memory, which have been used to map devices, files, or libraries using the mmap command.
+Slab         – memory, used by the kernel to cache data structures for its own use.
+Committed_AS – memory, estimated to complete the workload. 
+               This value represents the worst case scenario value, and also includes swap memory.
+PageTables   – memory, dedicated to the lowest page table level.
+VMallocTotal – total allocated virtual address space. ??
+VMallocUsed  – used virtual address space.??
+VMallocChunk – The largest contiguous block of memory,  of available virtual address space. ??
+
+--------------------------------------------------------------------------
+Actual free memory
+    MemFree + Buffers + Cached
+
+Flush and invalidate system caches
+    echo 3 > /proc/sys/vm/drop_caches
+
+--------------------------------------------------------------------------
+
+page size (PS) 
+    4096/1024 = 4 kB
+    smallest contiguous block of physical memory that can be allocated
+
+ps output:
+    shows vmsize which is the same as RSS in top output
+
+other tools
+    free
+    vmstat
+
+--------------------
+cat /proc/<pid>/mem
+
+size 
+resident set size 
+shared pages
+code
+stack
+lrs library
+dirty pages
+
+
+
+----------------------
+/proc/25914/status
+
+VmSize:	   51512 kB (stat.vsize / 1024) (in 2.6 kernel statm.size * PS)
+VmLck:	       0 kB
+VmRSS:	    6916 kB (statm.rss * PS)
+VmData:	   45664 kB
+VmStk:	      20 kB
+VmExe:	    2888 kB
+VmLib:	    2488 kB
+
+
+---------------------
+/proc/25194/statm:
+
+size: 1730
+rss:1729 (stat.rss)
+shared:518 
+text:262
+lib:28
+data:1439
+dirty:1211
+
+
+------------------
+/proc/25914/stat
+
+vsize: 52748288 (0x324e000) (status.VmSize * 1024)
+rss: 1729                   (statm.rss)
+startcode:32768 (0x8000)    (see maps)
+endcode: 2987740(0X2d96dc)
+
+
+--------------------
+top
+
+tsize:2885  (stat.endcode -stat.startcode)/1024
+dsize:48594 (stat.vsize - stat.endcode)/1024
+size:6920   (statm.size * PS)
+rss:6916    (status.VmRSS)
+share:2072  (statm.shared * PS)
+%mem:11.0
+
+press f to toggle fields on and off
+
+RSS:
+    Resident Set Size is the portion of a process memory that is held in RAM. 
+    The rest of the memory exists in swap or the filesystem 
+    This is also the ps vmsize column.
+
+--------------------
+/proc/25914/maps
+
+Each row describes a region of contiguous virtual memory in a process or thread. 
+
+address
+   Starting and ending address of region
+
+permissions
+    r: read, w: write, x: execute, -:read,write,execute disabled
+    p: private i.e., not shared.
+    
+    * If the process attempts to access memory in a way that is not permitted, 
+      a segmentation fault is generated. 
+    * Permissions can be changed using the mprotect system call.
+   
+offset
+   If the region was mapped from a file (using mmap), this is the offset in the file
+   where the mapping begins. If the memory was not mapped from a file, it's just 0.
+
+device
+   If the region was mapped from a file, this is the major and minor device number
+   (in hex) where the file lives.
+   Obtained by: ls -l <device>
+   For exmaple for "/dev/mtdblock3" Major=31 and Minor=03
+       ls -l /dev/mtdblock3
+       brw-rw-r--    1 root     root      31,   3 Jan  1  1970 /dev/mtdblock3
+
+inode
+   If the region was mapped from a file, this is the file number.
+   Obtained by: ls -i <filename>
+
+
+pathname
+    If the region was mapped from a file, this is the name of the file. This field is 
+    blank for anonymous mapped regions. There are also special regions with names
+    like [heap], [stack], or [vdso]. [vdso] stands for virtual dynamic shared object.
+    It's used by system calls to switch to kernel mode. Here's a good article about it.
+
+
+
+00008000-002da000 r-xp 00000000 1f:03 11533984   /usr/local/bin/mand
+002e1000-002e6000 rw-p 002d1000 1f:03 11533984   /usr/local/bin/mand
+002e6000-0035f000 rwxp 00000000 00:00 0 
+40000000-40014000 r-xp 00000000 1f:03 4459696    /lib/ld-linux.so.2
+40014000-40016000 rw-p 00000000 00:00 0 
+40016000-40017000 rwxp 00000000 00:00 0 
+4001b000-4001d000 rw-p 00013000 1f:03 4459696    /lib/ld-linux.so.2
+4001d000-40021000 r-xp 00000000 1f:03 5995564    /lib/libewnresolv.so
+40021000-40025000 ---p 00004000 1f:03 5995564    /lib/libewnresolv.so
+40025000-40029000 rw-p 00000000 1f:03 5995564    /lib/libewnresolv.so
+40029000-40037000 r-xp 00000000 1f:03 7201884    /lib/libpthread.so.0
+40037000-40039000 ---p 0000e000 1f:03 7201884    /lib/libpthread.so.0
+40039000-40044000 rw-p 00008000 1f:03 7201884    /lib/libpthread.so.0
+40044000-40046000 rw-p 00000000 00:00 0 
+40046000-40048000 r-xp 00000000 1f:03 6052908    /lib/libghthash.so.2.0.1
+40048000-4004e000 ---p 00002000 1f:03 6052908    /lib/libghthash.so.2.0.1
+4004e000-40050000 rw-p 00000000 1f:03 6052908    /lib/libghthash.so.2.0.1
+40050000-40158000 r-xp 00000000 1f:03 5084876    /lib/libcrypto.so
+40158000-40175000 rw-p 00100000 1f:03 5084876    /lib/libcrypto.so
+40175000-40178000 rw-p 00000000 00:00 0 
+40178000-40187000 r-xp 00000000 1f:03 7228828    /lib/libqDecoder.so.2
+40187000-40188000 ---p 0000f000 1f:03 7228828    /lib/libqDecoder.so.2
+40188000-40190000 rw-p 00008000 1f:03 7228828    /lib/libqDecoder.so.2
+40190000-40191000 rw-p 00000000 00:00 0 
+40191000-40195000 r-xp 00000000 1f:03 5634636    /lib/libdnscache.so
+40195000-40199000 ---p 00004000 1f:03 5634636    /lib/libdnscache.so
+40199000-4019d000 rw-p 00000000 1f:03 5634636    /lib/libdnscache.so
+4019d000-4019e000 rw-p 00000000 00:00 0 
+4019e000-401b8000 r-xp 00000000 1f:03 6002944    /lib/libexpat.so.0.5.0
+401b8000-401be000 ---p 0001a000 1f:03 6002944    /lib/libexpat.so.0.5.0
+401be000-401c2000 rw-p 00018000 1f:03 6002944    /lib/libexpat.so.0.5.0
+401c2000-401d2000 r-xp 00000000 1f:03 8146088    /lib/libtinyxml.so
+401d2000-401da000 rw-p 00008000 1f:03 8146088    /lib/libtinyxml.so
+401da000-402db000 r-xp 00000000 1f:03 4508344    /lib/libc.so.6
+402db000-402e2000 ---p 00101000 1f:03 4508344    /lib/libc.so.6
+402e2000-402e8000 rw-p 00100000 1f:03 4508344    /lib/libc.so.6
+402e8000-40dfd000 rw-p 00000000 00:00 0 
+40e00000-40e08000 rw-p 00000000 00:00 0 
+bf000000-bf001000 ---p 00000000 00:00 0 
+bf001000-bf200000 rwxp 00001000 00:00 0 
+bf200000-bf201000 ---p 00000000 00:00 0 
+bf201000-bf400000 rwxp 00001000 00:00 0 
+bf400000-bf401000 ---p 00000000 00:00 0 
+bf401000-bf600000 rwxp 00001000 00:00 0 
+bf600000-bf601000 ---p 00000000 00:00 0 
+bf601000-bf800000 rwxp 00001000 00:00 0 
+bfffb000-c0000000 rwxp ffffc000 00:00 0
+
+
+
+# Memory Allocation
+http://www.cs.utah.edu/dept/old/texinfo/glibc-manual-0.02/library_3.html
+
+# Heap Consistency Checking
+http://www.gnu.org/software/libc/manual/html_node/Heap-Consistency-Checking.html#Heap-Consistency-Checking
+
+
+

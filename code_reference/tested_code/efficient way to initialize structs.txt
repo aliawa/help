@@ -1,0 +1,19 @@
+Simple, easy, and efficient way to initialize structs 
+------------------------------------------------------
+
+Struct instances created on the stack are uninitialized (i.e., contain garbage values). The easiest, most efficient, and future-proof way to initialize them is: 
+struct  PlainData {
+char [20] name;
+long ID;
+char [15] phone;
+//... other fields as many as you like 
+};
+
+int main()
+{
+	PlainData data = {0};  //automatic initialization of the rest 					//of data to binary zeroes is 						//guaranteed both for C and C++
+}
+
+This is a much better way than manually assigning values to all the fields of the struct (which may also turn into a maintenance nightmare when new struct members are added or deleted) and it is at least as efficient as a 
+ memset()
+call—usually much more efficient.  

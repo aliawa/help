@@ -1,0 +1,56 @@
+fedup --network 20
+
+problem 1:
+Downloading failed: GPG key retrieval failed: [Errno 14] Could not open/read
+file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-i386
+
+Solution: manually install keys
+sudo rpmkeys --import /etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-nonfree-fedora-20
+sudo rpmkeys --import /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-20-primary
+  VirtualBox-4.2-4.2.26_95022_fedora18-1.i686 
+  automake14-1.4p6-23.fc18.noarch
+  automake17-1.7.9-17.fc18.noarch
+  btparser-0.25-1.fc18.i686
+  firstboot-18.7-1.fc18.i686
+  kernel-3.11.10-100.fc18.i686
+  kernel-3.11.9-100.fc18.i686
+  kernel-PAE-3.11.10-100.fc18.i686
+  kernel-PAE-3.11.9-100.fc18.i686
+  kernel-PAE-devel-3.11.10-100.fc18.i686
+  kernel-PAE-devel-3.11.9-100.fc18.i686
+  kernel-devel-3.11.10-100.fc18.i686
+  kernel-devel-3.11.9-100.fc18.i686
+  kernel-modules-extra-3.11.10-100.fc18.i686
+  kernel-modules-extra-3.11.9-100.fc18.i686
+  libgssglue-0.4-1.fc18.i686
+  nvidia-settings-319.32-1.fc18.i686
+  nvidia-xconfig-319.32-1.fc18.i686
+  1:kmod-nvidia-3.11.10-100.fc18.i686-319.60-3.fc18.3.i686
+  1:kmod-nvidia-3.11.10-100.fc18.i686.PAE-319.60-3.fc18.3.i686
+  1:kmod-nvidia-3.11.9-100.fc18.i686-319.60-3.fc18.2.i686
+  1:kmod-nvidia-3.11.9-100.fc18.i686.PAE-319.60-3.fc18.2.i686
+  2000:jdk-1.8.0-fcs.i586
+  2:opera-12.16-1860.i386
+
+
+package-cleanup --oldkernel
+
+Removing:
+ kernel                                                i686                  3.11.7-100.fc18                   @updates                    96 M
+ kernel-PAE                                            i686                  3.11.7-100.fc18                   @updates                    97 M
+ kernel-PAE-devel                                      i686                  3.11.7-100.fc18                   @updates                    31 M
+ kernel-devel                                          i686                  3.11.7-100.fc18                   @updates                    31 M
+Removing for dependencies:
+ kernel-modules-extra                                  i686                  3.11.7-100.fc18                   @updates                   5.7 M
+ kmod-nvidia-3.11.7-100.fc18.i686                      i686                  1:319.60-3.fc18                   installed                  9.3 M
+ kmod-nvidia-3.11.7-100.fc18.i686.PAE                  i686                  1:319.60-3.fc18                   installed                  9.3 M
+
+
+rpm -qa kernel* 
+
+one old kernel 3.11.9 is still left
+
+
+http://davejingtian.org/2014/02/06/fedora-20-some-post-installation-issues-may-bother/
+http://docs.fedoraproject.org/en-US/Fedora/14/html/Software_Management_Guide/ch07s03.html
+

@@ -1,0 +1,161 @@
+# intro
+# ------------------------------------------------
+Commands have two parts:
+Part 1: the table, a command, a chain (iptables <table> <command> <chain>)
+Part 2: match and target
+
+Note the table in part 1 can be omitted, it is then understood to be 
+-t filter
+
+http://wiki.openwrt.org/doc/howto/netfilter#dokuwiki__top
+
+
+# List
+# -------------------------------------------------
+ip6tables -nvL --line-numbers
+ip6tables -nvL INETIN --line-numbers
+
+iptables -t nat -nvL --line-numbers
+iptables -nvxL --line-numbers  # exact number (no rounding)
+
+
+# Insert
+# -------------------------------------------------
+iptables -I INPUT {LINE_NUMBER} -i eth1 -p tcp --dport 21 -s 123.123.123.123
+-j ACCEPT -m comment --comment "This rule is here for this reason"
+
+
+# Delete
+# -------------------------------------------------
+iptables -D OUTPUT 1
+iptables -t nat -D PREROUTING 3
+
+iptables -t nat -X # delete all rules in nat table
+
+
+
+# Zero counters
+# -------------------------------------------------
+iptables -nvZ -L FORWARD
+
+
+
+# Minimal working firewall
+# -------------------------------------------------
+*filter
+:INPUT ACCEPT [368:102354]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [92952:20764374]
+-A INPUT -i lo -j ACCEPT
+-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -i eth0 -p tcp -m tcp --dport 22 -j ACCEPT
+-A INPUT -i eth0 -p tcp -m tcp --dport 80 -j ACCEPT
+-A INPUT -m limit --limit 5/min -j LOG --log-prefix "iptables denied: "
+--log-level 7
+-A INPUT -j DROP
+COMMIT
+
+
+
+# How Packets Traverse The Filters
+# -------------------------------------------------
+
+# MANGLE:
+          _________                     _____             __________        
+Incoming /         \                   /     \           /          \   Outgoing
+     -->|PRE-ROUTING|-->[Routing ]--->|FORWARD|-------->|POST-ROUTING|--->
+         \_________/    [Decision]     \_____/       ^   \__________/   
+                            |                        |     
+                            v                       ____
+                           ___                     /    \
+                          /   \                   |OUTPUT|
+                         |INPUT|                   \____/
+                          \___/                      ^ 
+                            |                        |
+                             ----> Local Process ----
+
+
+# NAT:
+          _________                                       __________        
+Incoming /         \                                     /          \   Outgoing
+     -->|PRE-ROUTING|-->[Routing ]--------------------->|POST-ROUTING|--->
+         \_________/    [Decision]                   ^   \__________/   
+                            |                        |     
+                            |                       ____
+                            |                      /    \
+                            |                     |OUTPUT|
+                            |                      \____/
+                            |                        ^ 
+                            |                        |
+                             ----> Local Process ----
+
+
+# FILTER :
+                                        _____
+Incoming                               /     \                          Outgoing
+     ------------------>[Routing ]--->|FORWARD|-------------------------->
+                        [Decision]     \_____/       ^
+                            |                        |
+                            v                       ____
+                           ___                     /    \
+                          /   \                   |OUTPUT|
+                         |INPUT|                   \____/
+                          \___/                      ^
+                            |                        |
+                             ----> Local Process ----
+
+# NOTE:
+The order of chains processed is: Mangle chains --> NAT chains --> Filter chains                
+
+
+
+# Basic options
+# -------------------------------------------------
+
+protocol:
+-p tcp, -p ! tcp              
+
+source / destination
+-s 127.0.0.1 
+-s ! localhost
+-d 1.1.1.0/24
+
+interface
+-i ! eth0 : inptut interface is not eth0
+-o ppp+   : output interface is any ppp interface
+
+
+
+
+conntrack state
+------------------------------
+cat /proc/net/ip_conntrack
+
+
+# Short disable firewall
+# -------------------------------------------------
+iptables -F
+
+
+# Complete disable firewall script
+# -------------------------------------------------
+echo "Stopping firewall and allowing everyone..."
+iptables -F
+iptables -X
+iptables -t nat -F
+iptables -t nat -X
+iptables -t mangle -F
+iptables -t mangle -X
+iptables -P INPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT ACCEPT
+
+
+# Modules
+# -------------------------------------------------
+# show loaded modules
+lsmod|grep -E "nf_|xt_|ip"
+cat /proc/net/ip_tables_name
+cat /proc/net/ip_tables_matches
+
+

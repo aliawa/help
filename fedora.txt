@@ -1,0 +1,219 @@
+#!/bin/bash
+
+#-------------
+# Fedora 18
+#-------------
+
+# --- three button emulation for copy paste. ---
+gsettings set org.gnome.settings-daemon.peripherals.mouse middle-button-enabled true
+
+# --- current release ---
+cat /etc/fedora-release 
+
+# --- Installing virtualbox ---
+yum install kernel-PAE-devel dkms VirtualBox
+su -c '/etc/init.d/vboxdrv setup'
+
+
+
+# --- sevices ---
+
+# List all active
+systemctl list-units --type=service
+
+# status
+systemctl status proftpd.service
+
+# Is running
+systemctl is-active proftpd.service
+
+# start service
+systemctl start firewalld.service
+
+# stop service
+systemctl stop firewalld.service
+
+
+
+# ----- custom launcher ----------
+
+
+create a file mylauncher.desktop in ${HOME}/.local/share/applications
+or /usr/share/applications 
+
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Exec='<path to program to be launched' %f
+Name=<name of launcher>
+Comment=custom launcher for <myprogram>
+Icon=application.png
+NoDisplay=false
+
+copy the icons to
+/usr/share/icons/hicolor/48x48/apps
+/usr/share/icons/hicolor/32x32/apps
+/usr/share/icons/hicolor/16x16/apps
+
+# ------- installing Nvidia driver ------------
+
+yum localinstall --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+yum localinstall --nogpgcheck http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+
+yum install akmod-nvidia xorg-x11-drv-nvidia-libs
+yum install akmod-nvidia-304xx xorg-x11-drv-nvidia-304xx-libs
+
+# Uninstall nVidia driver
+yum remove xorg-x11-drv-nvidia\* nvidia-settings nvidia-xconfig
+
+# ---------- nvidia tools ------------------------
+sudo yum install nvidia-xconfig
+sudo yum install nvidia-settings
+
+
+# ------------- services and startup programs ---------
+# systemctl (Manage systemd: the new linux init daemon)
+systemctl status telnet.service
+
+systemctl start proftpd.service  # ftp
+systemctl start xinetd.service   # tftp
+systemctl start boa.service      # Boa
+
+systemctl stop telnet.service
+
+# All active services
+systemctl list-units --type=service
+
+# GUI
+system-config-services
+
+# Gnome startup programs
+gnome-session-properties
+
+
+### chkconfig  ###
+### chkconfig is obsolete, Don't use ###
+chkconfig --list 
+
+# make service manageable by chkconfig
+# 1. create scritp in /etc/init.d/asterisk
+# 2. create config in /etc/sysconfig/asterisk
+# 3. chkconfig --add asterisk
+# 4. chkconfig --level 5 asterisk on
+
+
+
+
+# ------------ systemd config file ----------
+
+# Location is: /etc/systemd/system/boa.service
+# reload file: sudo systemctl daemon-reload
+
+# see: http://0pointer.de/blog/projects/systemd-for-admins-3.html
+
+[Unit]
+Description=BOA web server
+After=syslog.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/boa -c /home/httpd/
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+# ------------ Install and run tftp server -------------------
+
+sudo yum install tftp-server
+# - In the tftp-server config file at /etc/xinet.d/tftp, 
+#   change the disable parameter from yes to no. 
+#   Set directory in server_args.
+# - start xinetd
+  systemctl start xinetd
+  systemctl enable xinetd
+  systemctl status xinetd
+
+# ----------- Show date at the top --------------------------
+gsettings set org.gnome.desktop.interface clock-show-date true
+
+
+# ----------- Remap CAPSLOCK to CTRL -----------------------
+gsettings set org.gnome.desktop.input-sources xkb-options "['ctrl:nocaps']"
+
+
+# ----------- remap ESC in bash ----------------------------
+put the following in $HOME/.inputrc
+
+$if mode=vi
+    set keymap vi-command
+    "jk": vi-insertion-mode
+
+    set keymap vi-insert
+    "jk": vi-movement-mode
+$endif 
+
+# ------------- files --------------------------
+Address bar: type /
+
+connect to SNAP86: smb:///10.10.22.235
+
+
+# ------------- rsyslogd --------------------------
+
+# 1. install syslog viewer
+sudo yum install gnome-system-log
+
+# 2. open port 514 in firewall for UDP syslog
+#    messages
+
+# 3. uncomment in /etc/rsyslog.conf
+$ModLoad imudp
+$UDPServerRun 514
+
+# 4. make rsyslogd re-read conf file
+sudo killall -HUP rsyslogd
+
+# 5. check if rsyslogd is listning on port 514
+sudo netstat -apnu
+
+# 6. If 5 does not show rsyslogd listning on 514
+#    reboot the system.
+
+
+
+# ------------- interface names --------------------------
+create a file /etc/udev/rules.d/75-persistent-net.rules
+SUBSYSTEM=="net", ACTION=="add", DRIVERS=="?*", ATTR{address}=="00:50:43:01:0c:e9", NAME="eth0"
+SUBSYSTEM=="net", ACTION=="add", DRIVERS=="?*", ATTR{address}=="18:03:73:b3:c9:26", NAME="eth1"
+SUBSYSTEM=="net", ACTION=="add", DRIVERS=="?*", ATTR{address}=="00:50:da:33:4b:9a", NAME="eth2"
+
+
+# -------------------------------------------------------
+# Trash scripts
+gvfs-trash
+trash-cli
+
+
+
+# ------------- mdns (avahi-daemon) --------------------------
+
+# when avahi is enabled ewn.local does not work
+sudo systemctl disable avahi-daemon.socket
+sudo systemctl stop avahi-daemon.socket
+
+sudo systemctl disable avahi-daemon.service
+sudo systemctl stop avahi-daemon.service
+
+
+# Arabic support
+yum install fribidi-devel.i686 fribidi.i686
+sudo -e /usr/share/applications/gnome-terminal.desktop 
+# Add this code to the document:
+Terminal=true
+Exec=/usr/bin/bicon.bin
+
+
+

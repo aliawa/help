@@ -1,0 +1,28 @@
+Setup
+-----
+[66.52.177.235]----[66.52.177.231 ... 66.52.177.230]------[66.52.177.1]
+
+On 66.52.177.235:
+-----------------
+all trafic for 66.52.177 network goes to gw 66.52.177.231
+sudo ifconfig eth1 66.52.177.232/24
+sudo route del -net 66.52.177.0/24
+sudo route add -host 66.52.177.231 dev eth1
+sudo route add -net 66.52.177.0/24 gw 66.52.177.231
+
+On knoppix:
+-----------
+1. configure interfaces
+sudo ifconfig eth0 66.52.177.230 netmask 255.255.255.0 up
+sudo ifconfig eth1 66.52.177.231 netmask 255.255.255.0 up
+
+2. delete routes for 66.52.177.0 on eth1 (internal interface)
+sudo route del -net 66.52.177.0/24 dev eth1
+
+3. add routes for 66.52.177.232
+sudo route add -host 66.52.177.232 dev eth1
+
+4. start firewall with forwarding enabled
+
+5. add default route to enable web browsing
+sudo route add default gw 66.52.177.1

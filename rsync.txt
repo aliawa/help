@@ -1,0 +1,25 @@
+- rsync SRC [SRC]... DST
+  many sources one destination.
+
+- rsync -avz foo:src/bar/ /data/tmp
+  copy contents of 'src/bar' to '/data/tmp'
+
+- rsync -avz foo:src/bar /data/tmp
+  copy contents of 'src/bar' to '/data/tmp/bar'
+
+
+- Synchronize the directory sipp on 192.168.1.190 with the sipp directory on this
+  computer
+  rsync -a aawais@192.168.1.190:/home/aawais/workspace/sipp/ /home/aawais/workspace/sipp/
+
+
+- Sync and also delete files in local sipp directory that are not present in the 
+  remote sipp directory
+  rsync -av --delete aawais@192.168.1.190:/home/aawais/workspace/sipp/ /home/aawais/workspace/sipp/
+
+
+- List files in remote direcory:
+  rsync -va devtest@10.10.10.60:/usr/local/BatchReplay/BatchReplay_883x/AstExt/ast6
+
+
+

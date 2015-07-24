@@ -1,0 +1,24 @@
+
+- Sections of man pages manual:
+  1 Executable programs or shell commands
+  2 System calls
+  3 Library calls
+  4 Special files (usually found in /dev)
+  5 File formats and conventions
+  6 Games
+  7 Miscellaneous
+  8 System administration commands
+  9 Nonstandard kernel routines
+  n New documentation, which may be moved later
+  l Local documentation, specific to your system
+
+
+man 1 grep         : man grep in section 1
+man -f grep        : List all man pages for grep
+man -k count words : key word search in Description section of man pages
+whereis cat        : locate binary source and man page
+manpath            : show current man path
+
+
+trying to install c++ man pages
+sudo yum -y install libstdc++-docs.i686

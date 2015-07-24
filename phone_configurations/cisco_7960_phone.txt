@@ -1,0 +1,60 @@
+cisco 7960
+----------
+pass: cisco
+
+
+Configuring cisco 2621XM
+------------------------------
+
+# prevent EXEC facility from timing out
+Router(config)# line con 0
+Router(config-line)# exec-timeout 0 0
+Router(config-line)# exit
+
+# configure FastEthernet interface
+Router>enable
+Router# config terminal
+Router(config)# ip routing
+Router(config)# interface FastEthernet 0/0
+Router(config-if)#ip address 192.168.1.26 255.255.255.0
+Router(config-if)#exit
+Ctrl-z
+Router(config)#
+
+
+
+# checking interface configuration
+show version
+show controllers
+
+show interface fastethernet 0/0
+show protocols fastethernet 0/0
+
+show running-config
+
+show startup-config                 # configuration stored in NVRAM
+
+show interface ip brief             # show all interfaces
+
+
+# configuring ppp
+peer default ip address pool <name>
+
+
+ip local pool dialin_pool 10.1.2.1 10.1.2.50
+ip default-gateway 10.1.1.1
+ip classless
+
+
+# configure T1
+controller t1 0/0
+channel-group 0 timeslots 1-24 speed 64
+
+interface serial 0/0:0
+ip address 10.1.15.1 255.255.255.0
+
+# bgp
+Router> en
+Router# show ip bgp
+Router# show ip bgp neighbors
+

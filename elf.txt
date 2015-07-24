@@ -1,0 +1,104 @@
+Types of ELF objects
+---------------------
+- Relocatable file: .o or .ko file 
+  obtained by gcc -c test.c
+
+- Executable file: output of gcc -o test test.c
+
+- Shared object: .so file
+
+
+Detect type of ELF object
+-------------------------
+readelf -h /bin/ls             Type: EXEC
+readelf -h /usr/lib/crt1.o     Type: REL
+readelf -h /lib/libc-2.13.so   Type: DYN
+
+
+List Section of ELF file
+--------------------------
+readelf -S test
+
+
+disassemble a section
+--------------------------
+objdump -d -j .text test
+objdump -d -j .data test
+objdump -d -j .data test
+
+
+
+BSS
+--------------------------
+Block started by Section
+contains uninitialized data. It is a bunch of zeros because in linux
+all unitialized variables are set as zero.
+
+
+
+Symbol Table
+--------------------------
+readelf -s ./test
+correlation between symbol name and its address.
+symbols table can be removed with the strip utility
+
+
+Examining Program Header Table(PHT).
+------------------------------------
+readelf -l ./test
+
+PHT tells kernel which section of ELF goes into which segment of process. 
+Segment is the way operating system "sees" our program. Segment is also
+known as VMA (virtual memory area)
+
+VirtAddr:
+    virtual start address of each column
+
+PhysAddr:
+    ignore this column.
+
+Type column:
+    LOAD: segment content loaded from executable file. "Offset" is where the
+    reading should start and "FileSiz" tells how many bytes to read from file
+
+    STACK: The segment is stack area. Kernel decides where this segment starts
+    and how big. threfore all fields are zero except "Flg" and "Align"
+
+Flg:
+    W: segment is writable, R: Readable, E: Executable
+
+Section to Segment mapping:
+    In which segment a particular section is mapped.
+
+
+
+cat /proc/`pgrep test`/maps
+----------------------------
+first field is VMA address range, Last field is backing file
+PHT addresses are rounded down to nearest 4K page boundary.
+
+
+STACK
+----------------------------
+Stack is mapped by kernel to the highest virtual address possible 
+in userspace. In intel compatible processors, each process address
+space is divided into two parts. User space and Kernel space. 
+User space: 0x00000000-0xc0000000 
+Kernel space: 0xc0000000 onwards
+stack is assigned address range near the 0xc0000000 boundary. 
+The end address is static, while the start address is changing 
+according to how many values are stored on stack
+
+
+GOT and PLT
+-----------
+GOT: Global offset table
+Each time a shared library needs to reference a global variable, it 
+first loads the address of the variable from GOT. On 386 the register
+%ebx contains the address of GOT. GOT has one pointer for each global
+variable defined or referenced in the library
+
+PLT: Procedure Linkage Table
+contains jump instructions for each function in the library.
+
+

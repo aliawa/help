@@ -1,0 +1,33 @@
+1. mkdir $OSTOP/user/testApp
+   copy the source files and Makefiles to this directory
+
+2. Sample Makefile
+   -----------------------------------------------------------
+	EXEC = testApp
+	OBJS = main.o
+	CXXFLAGS += -I/usr/local/i686-linux/include/c++/3.2.3/ \
+            -I/usr/local/i686-linux/include/c++/3.2.3/i686-linux
+	LDLIBS += -lstdc++
+
+	$(EXEC): $(OBJS)
+    	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS)
+
+	romfs:
+    	$(ROMFSINST)    /usr/bin/$(EXEC)
+
+	clean:
+    	-rm -f $(EXEC) *.o
+
+	---------------------------------------------------------
+
+	Add special include directories to CXXFLAGS needed to make
+    each source file
+    Add special libraries to LDLIBS.
+    romfs target will copy the executable to /usr/bin
+
+
+3. Add to $OSTOP/user/Makefile
+   dir_y += testApp 
+
+
+

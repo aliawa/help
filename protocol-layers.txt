@@ -1,0 +1,22 @@
+### OSI ###
+
+Layer   Protocol
+------  -----------------------------
+1       
+2       HDLC, PPP, FrameRelay
+3       IP, ARP
+4       UDP
+5       DNS
+
+
+### OTHER VIEW ###
+
+Layer   Protocol
+------  -----------------------------
+1       Ethernet, PPP, loopback, Wifi
+2       IP
+3       UDP, TCP
+4       BGP
+
+
+

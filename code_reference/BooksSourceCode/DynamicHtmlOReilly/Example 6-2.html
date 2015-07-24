@@ -1,0 +1,74 @@
+<!-- ***********************************************************
+Example 6-2
+"Dynamic HTML:The Definitive Reference"
+by Danny Goodman
+Published by O'Reilly & Associates  ISBN 1-56592-494-0
+http://www.oreilly.com
+Copyright 1998 Danny Goodman.  All Rights Reserved.
+************************************************************ -->
+
+<HTML> 
+<HEAD> 
+<TITLE>Modifiers Keys Properties</TITLE> 
+<STYLE TYPE="text/css">
+	.flags {position:relative; clip:rect(0,80,18,0); background-color:white}
+</STYLE>
+<SCRIPT LANGUAGE="JavaScript"> 
+// Global variables for browser versions and platform equivalencies
+var isNav, isIE
+var coll = ""
+var styleObj = ""
+if (parseInt(navigator.appVersion) >= 4) {
+	if (navigator.appName == "Netscape") {
+		isNav = true
+	} else {
+		isIE = true
+		coll = "all."
+		styleObj = ".style"
+	}
+}
+// API function for setting a positionable element's background color
+function setBGColor(objIn, color) {
+	var obj = eval("document." + coll + objIn + styleObj)
+	if (isNav) {
+		obj.bgColor = color
+	} else {
+		obj.backgroundColor = color
+	}
+}
+// Invoked with each click of the link or typed key of the field, this function
+// checks the modifier key and sets the element background color accordingly
+function checkModKeys(evt) { 
+	var alt = (isNav) ? evt.modifiers & Event.ALT_MASK : window.event.altKey 
+	var ctrl = (isNav) ? evt.modifiers & Event.CONTROL_MASK : window.event.ctrlKey 
+	var shift = (isNav) ? evt.modifiers & Event.SHIFT_MASK : window.event.shiftKey 
+	var meta = (isNav) ? evt.modifiers & Event.META_MASK : false
+	setBGColor("ctrl1",((alt) ? "red" : "white"))
+	setBGColor("ctrl2",((ctrl) ? "red" : "white"))
+	setBGColor("ctrl3",((shift) ? "red" : "white"))
+	setBGColor("ctrl4",((meta) ? "red" : "white"))
+	return false 
+} 
+</SCRIPT> 
+</HEAD> 
+<BODY> 
+<H1>Events and Modifier Keys</H1> 
+<HR>
+<TABLE BORDER=1>
+<TR HEIGHT=20 >
+<TH>Modifier Keys:</TH>
+<TD WIDTH=80 HEIGHT=20 ALIGN=MIDDLE ID=ctrl1 CLASS=flags>Alt</TD>
+<TD WIDTH=80 ALIGN=MIDDLE ID=ctrl2 CLASS=flags>Control</TD>
+<TD WIDTH=80 ALIGN=MIDDLE ID=ctrl3 CLASS=flags>Shift</TD>
+<TD WIDTH=80 ALIGN=MIDDLE ID=ctrl4 CLASS=flags>Meta</TD>
+</TABLE>
+<P>Hold one or more modifier keys and click on 
+<A HREF="javascript:void(0)" onMouseDown="return checkModKeys (event)" 
+onClick="return false"> 
+this link</A> to see which keys you are holding.</P> 
+<FORM NAME="output"> 
+<P>Enter some text with uppercase and lowercase letters: 
+<INPUT TYPE="text" SIZE=40 onKeyPress=" checkModKeys (event)"></P> 
+</FORM> 
+</BODY> 
+</HTML>

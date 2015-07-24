@@ -1,0 +1,137 @@
+<!-- ***********************************************************
+Example 4-7
+"Dynamic HTML:The Definitive Reference"
+by Danny Goodman
+Published by O'Reilly & Associates  ISBN 1-56592-494-0
+http://www.oreilly.com
+Copyright 1998 Danny Goodman.  All Rights Reserved.
+************************************************************ -->
+
+<HTML>
+<HEAD>
+<SCRIPT LANGUAGE="JavaScript">
+// ***Begin library code better placed in an external API***
+// Set global variables for browser detection and reference building
+var isNav, isIE, intervalID
+var coll = ""
+var styleObj = ""
+if (parseInt(navigator.appVersion) >= 4) {
+	if (navigator.appName == "Netscape") {
+		isNav = true
+	} else {
+		isIE = true
+		coll = "all."
+		styleObj = ".style"
+	}
+}
+// Utility function returns height of object in pixels
+function getObjHeight(obj) {
+	if (isNav) {
+		return obj.clip.height
+	} else {
+		return obj.clientHeight
+	}
+}
+// Utility function returns width of object in pixels
+function getObjWidth(obj) {
+	if (isNav) {
+		return obj.clip.width
+	} else {
+		return obj.clientWidth
+	}
+}
+// Utility function returns the x coordinate of a positionable object
+function getObjLeft(obj)  {
+	if (isNav) {
+		return obj.left
+	} else {
+		return obj.pixelLeft
+	}
+}
+// Utility function returns the y coordinate of a positionable object
+function getObjTop(obj)  {
+	if (isNav) {
+		return obj.top
+	} else {
+		return obj.pixelTop
+	}
+}
+// Utility function returns the available content width space in browser window
+function getInsideWindowWidth() {
+	if (isNav) {
+		return window.innerWidth
+	} else {
+		return document.body.clientWidth
+	}
+}
+// Utility function returns the available content height space in browser window
+function getInsideWindowHeight() {
+	if (isNav) {
+		return window.innerHeight
+	} else {
+		return document.body.clientHeight
+	}
+}
+// Utility function sets the visibility of an object to visible
+function show(obj) {
+	obj.visibility = "visible"
+}
+
+// Utility function sets the visibility of an object to hidden
+function hide(obj) {
+	obj.visibility = "hidden"
+}
+// Utility function to position an element at a specific x,y location
+function shiftTo(obj, x, y) {
+	if (isNav) {
+		obj.moveTo(x,y)
+	} else {
+		obj.pixelLeft = x
+		obj.pixelTop = y
+	}
+}
+// Utility function to move an object by x and/or y pixels
+function shiftBy(obj, deltaX, deltaY) {
+	if (isNav) {
+		obj.moveBy(deltaX, deltaY)
+	} else {
+		obj.pixelLeft += deltaX
+		obj.pixelTop += deltaY
+	}
+}
+// ***End library code***
+
+// Set initial position offscreen and show object and
+// start timer by calling glideToCenter()
+function intro() {
+	var obj = eval("document." + coll + "banner" + styleObj)
+	var contentObj = eval("document." + coll + "banner")
+	shiftTo(obj, getInsideWindowWidth(), Math.round((getInsideWindowHeight()/2) - (getObjHeight(contentObj)/2)))
+	show(obj)
+	glideToCenter()
+}
+// Move the object to the left by 5 pixels until it's centered
+function glideToCenter() {
+	var obj = eval("document." + coll + "banner" + styleObj)
+	var contentObj = eval("document." + coll + "banner")
+	shiftBy(obj,-5,0)
+	var a = getObjLeft(obj)
+	var b = Math.round((getInsideWindowWidth()/2) - (getObjWidth(contentObj)/2))
+	if (a <= b) {
+		clearTimeout(intervalID)
+	} else {
+		intervalID = setTimeout("glideToCenter()",1)
+	}
+}
+</SCRIPT>
+</HEAD>
+<BODY onLoad="intro()" >
+<DIV ID="banner" STYLE="position:absolute; visibility:hidden; left:0; top:0;
+ background-color:yellow; width:1; height:1">
+<P ID="txt" STYLE="position:absolute; left:0; top:0; font-size:36pt; color:red">
+Congratulations!
+</P>
+</DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,7 @@
+See the following man pages:
+
+tcp
+getsockopt
+getprotoent
+socket
+

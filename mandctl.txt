@@ -1,0 +1,17 @@
+# undocumented commands
+crash
+deadlock
+reload
+failover
+dhcp
+dhcp6
+
+
+# usage
+mandctl crash
+password: 3dg3
+
+
+
+# Log to file
+mandctl log 0x9 /var/ramdisk/mandlog.txt

@@ -1,0 +1,57 @@
+DNS query types
+-------------------------------------------------------------------
+  A         IPv4    
+  AAAA      IPv6    
+  SRV       Service Locator
+  NAPTR     Naming Authority Pointer
+  NS 
+
+
+host
+-------------------------------------------------------------------
+$ host -t NAPTR as.iop1.broadworks.net.
+  as.iop1.broadworks.net has NAPTR record 1 50 "s" "SIP+D2U" "" _sip._udp.as.iop1.broadworks.net.
+  as.iop1.broadworks.net has NAPTR record 2 50 "s" "SIP+D2T" "" _sip._tcp.as.iop1.broadworks.net.
+
+$ host -t SRV _sip._udp.as.iop1.broadworks.net.
+  _sip._udp.as.iop1.broadworks.net has SRV record 2 50 5060 as2.iop1.broadworks.net.
+  _sip._udp.as.iop1.broadworks.net has SRV record 1 50 5060 as1.iop1.broadworks.net.
+
+
+$ host -t A as1.iop1.broadworks.net.
+  as1.iop1.broadworks.net has address 199.19.193.10
+
+
+
+dig
+-------------------------------------------------------------------
+  A lookup
+  dig repro2.private.awais
+
+  MX record lookup
+  dig petekeen.net mx
+
+- Query a specific DNS server
+  dig @10.10.13.164 repro2.private.awais
+
+- NAPTR lookup for 2408881029
+  dig @10.10.13.164 9.2.0.1.8.8.8.0.4.2.ewn.e164.arpa NAPTR  
+
+- Bob's DNS Server
+  dig @204.130.216.2 3.0.0.2.5.5.5.5.5.5.1.seiri.com NAPTR
+
+
+
+enum entry
+-------------------------------------------------------------------
+1.0.0.2.5.5.5.5.5.5.1.seiri.com. 60 IN  NAPTR   100 10 "u" "E2U+SIP" "!^.*$!sip:15555552001@repro2.seiri.com!" .
+
+
+PUBLIC DNS SERVERS
+-----------------------
+
+4.2.2.2   : private DNS from Level 3, use for testing
+8.8.8.8   : Google
+8.8.4.4   : Google
+
+

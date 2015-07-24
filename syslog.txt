@@ -1,0 +1,45 @@
+Listen for syslog messages from external clients:
+
+1. edit /etc/sysconfig/syslog
+   change line SYSLOGD_OPTIONS="-m 0"
+   to SYSLOGD_OPTIONS="-m 0 -r"
+
+
+2. Send messages with Facility=any and Priority=debug to debug_messages file
+   edit /etc/syslog.conf
+   add *.debug		/var/log/debug_messages
+
+
+3. open port 514
+   Gnome: System->Administration->SecurityLevel and Firewall->Firewall Options
+          ->Other Ports
+   KDE  : System Settings->Security Level->Firewall Options->Other Ports
+
+
+4. service syslog restart
+
+
+syslogd replacements
+--------------------
+rsyslog
+syslog-ng
+
+Listen to remote syslog messages on port 514
+in /etc/sysconfig/rsyslog
+change SYSLOGD_OPTIONS="-m 0"
+to     SYSLOGD_OPTIONS="-m 0 -r514"
+
+
+Edgemarc syslogd
+----------------
+- normal command line (with m0=no mark lines, n=needed when started by init
+  h=send msgs to remote hosts)
+  /sbin/syslogd -m0 -n -h
+
+- re-initialize
+  kill -SIGHUP `cat /var/run/syslogd.pid`
+
+- Is domain name allowed in syslog.conf - Yes e.g:
+  *.7  @tacev.edgewaternetworks.com
+  
+

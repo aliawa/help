@@ -1,0 +1,9 @@
+
+testparser: flexbison_test.l flexbison_test.y
+	bison -d flexbison_test.y
+	flex -oflexbison_test.lex.c flexbison_test.l
+	gcc -o $@ flexbison_test.tab.c flexbison_test.lex.c
+
+clean:
+	rm flexbison_test.lex.c flexbison_test.tab.c flexbison_test.tab.h flexbison_testparser 
+

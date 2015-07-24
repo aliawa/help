@@ -1,0 +1,26 @@
+
+Adding a mandctl dbg command
+-----------------------------
+in $PTOP/config/mandctl/mandctl.c
+
+1. Help message to Help_dbg()
+2. PARSE_CMD(CMD_REPLAY, dbgsiptcp) to Parse_dbg()
+
+3. Add:
+  static MANDCTL_RESULT Parse_dbgsiptcp() {
+    return SendRequest(DEBUG_SOCK_NAME,
+                       CMD_DBG " " CMD_SIPTCP);
+
+4. in mandCtlTask.h
+   Add: #define CMD_SIPTCP             "siptcp"
+
+5. in mandCtlTask.c
+   Add:
+        CMD_LEAF_START(dbgsiptcp)
+                sipTcpDump();
+                return MANDCTL_OK;
+        CMD_LEAF_END()
+
+6. in CMD_NODE_START(dbg)
+   add DO_CMD(CMD_SIPTCP, siptcp)
+

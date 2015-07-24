@@ -1,0 +1,47 @@
+Help
+Esc+z
+
+Exit
+Alt+q or Alt+x
+
+starting
+---------------------------------
+for 250:             minicom 250
+for other platforms: minicom
+
+configuration file
+---------------------------------
+/etc/minirc.dfl
+/etc/minirc.250
+
+
+
+Initial settings (old): Esc+o -> Modem and Dialing
+
+ +--------------------[Modem and dialing parameter setup]---------------------+
+ |                                                                            |
+ | A - Init string ......... ~^M~AT S7=45 S0=0 L1 V1 X4 &c1 E1 Q0^M           |
+ | B - Reset string ........ ^M~ATZ^M~                                        |
+ | C - Dialing prefix #1.... ATDT                                             |
+ | D - Dialing suffix #1.... ^M                                               |
+ | E - Dialing prefix #2.... ATDP                                             |
+ | F - Dialing suffix #2.... ^M                                               |
+ | G - Dialing prefix #3.... ATX1DT                                           |
+ | H - Dialing suffix #3.... ;X4D^M                                           |
+ | I - Connect string ...... CONNECT                                          |
+ | J - No connect strings .. NO CARRIER            BUSY                       |
+ |                           NO DIALTONE           VOICE                      |
+ | K - Hang-up string ...... ~~+++~~ATH^M                                     |
+ | L - Dial cancel string .. ^M                                               |
+ |                                                                            |
+ | M - Dial time ........... 45      Q - Auto bps detect ..... No             |
+ | N - Delay before redial . 2       R - Modem has DCD line .. Yes            |
+ | O - Number of tries ..... 10      S - Status line shows ... DTE speed      |
+ | P - DTR drop time (0=no). 1       T - Multi-line untag .... No             |
+ |                                                                            |
+ | Change which setting?       (Return or Esc to exit)                        |
+ +----------------------------------------------------------------------------+
+
+
+
+

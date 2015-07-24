@@ -1,0 +1,15 @@
+# open a file
+yelp file:///usr/share/gnome/help/gcalctool/C/gcalctool.xml
+
+# Access GNOME help documents, which are written in DocBook format.
+yelp ghelp:gcalctool
+yelp ghelp:user-guide?yelp-advanced-cmdline
+
+# man page
+yelp man:gcalctool
+yelp 'man:intro(1)'
+yelp 'man:intro(2)'
+
+
+# GNU info page.
+yelp info:make

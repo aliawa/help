@@ -1,0 +1,124 @@
+handle SIG32 nostop
+
+
+using gdbserver with 5300
+---------------------------
+1. In $OSTOP/config/.config
+CONFIG_USER_GDBSERVER_GDBSERVER=y
+
+2. under $OSTOP/user create a directory gdbserver. Move the alredy
+   present gdbserver directory away because that version does not work
+   copy gdbserver to the new directory. Add a makefile like this:
+   
+	gdbserver:
+
+
+	romfs:
+        $(ROMFSINST) /bin/gdbserver
+
+
+3. Add to $OSTOP/glibc/build/Makefile under romfs target
+$(ROMFSINST) lib/libthread_db.so.1 /lib/libthread_db.so.1
+
+
+
+
+# Usage
+# --------
+gdb a.out
+enter           repeat last command
+
+
+# breakpoints and watchpoints
+# ------------------------------
+b main          set breakpoint at main
+b 21 if val==v1 break on line 21 when (val==v1)
+wa var1==var2   break when the expression (var1==var2) becomes true
+
+# Execute commands when a breakpoint is reached
+b foo if x>0    
+commands        
+silent
+printf "x is %d\n",x
+cont
+end
+
+info break      List all breakpoints
+ignore 3 10     Dont stop at breakpoint nr 3 the next 10 times
+dis             Disable all break points
+enable 3 4      Enable breakpts num. 3 and 4
+clear foo.c:21  Delete breakpoint at line nr 21 of foo.c
+
+
+# Examin Code:
+# ------------
+set listsize 20         Print 20 lines (default is 10)
+l                       list 
+l line
+l function
+l file:line
+l file:function
+l *address
+edit                    edit the source
+shell make              compile
+
+
+
+# Examin Data:
+# ------------
+bt                      show frame stack
+frame                   show info about current frame
+fram frame-number       chanage frame to operate on
+up, down                move up down the stack
+thread thread-number    change thread to operate on
+inf locals              print all local variables
+
+# Print values of expressions.
+p $register
+p variable
+p *address
+p *(int *)address
+p *(char **)address
+p myfunc(p1, p2)        # will actually execute it and return result!
+p *a = 123              # will actually change *a value and return 123!
+p file::variable
+p function::variable
+
+# Disassembly
+disassemble
+disassemble file:line
+
+
+# Run 
+# -----------------
+r agr1 arg2     run with command line args: arg1, arg2
+n               step over
+s               step into
+finish          step out
+c               continue
+
+
+# Manipulate Data
+# ---------------
+set var=1       change the value of a variable
+
+
+
+info functions -- All function names
+info macros -- Show the definitions of all macros at LINESPEC
+info scope -- List the variables local to a scope
+info sharedlibrary -- Status of loaded shared object libraries
+info source -- Information about the current source file
+info sources -- Source files in the program
+info stack -- Backtrace of the stack
+info symbol -- Describe what symbol is at location ADDR
+info threads -- Display currently known threads
+info variables -- All global and static variable names
+info vtbl -- Show the virtual function table for a C++ object
+
+sharedlibrary libnl
+
+show environment [varname] 
+set environment varname [=value]
+
+set solib-search-path ~/project/host_tt/snapgear/lib/libnl-1.1/lib

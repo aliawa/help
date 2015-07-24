@@ -1,0 +1,26 @@
+Closing Application
+===================
+
+WM_CLOSE
+--------
+sent before WM_DESTROY
+
+An application can prompt the user for confirmation, prior to destroying a window, by processing the WM_CLOSE message and calling the DestroyWindow function only if the user confirms the choice. 
+
+
+WM_DESTROY
+----------
+If an application processes this message, it should return zero. 
+
+in a dialog the handler is always called when ok,cancel or the title close button is pressed
+
+
+
+WM_QUIT
+---------
+The PostQuitMessage function posts a WM_QUIT message to the thread's message queue and returns immediately; the function simply indicates to the system that the thread is requesting to quit at some time in the future. 
+
+When the thread retrieves the WM_QUIT message from its message queue, it should exit its message loop and return control to the system. The exit value returned to the system must be the wParam parameter of the WM_QUIT message. 
+
+
+

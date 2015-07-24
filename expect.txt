@@ -1,0 +1,32 @@
+#!/usr/bin/expect -f
+
+# all output upto the matched pattern, includes the matched string
+expect_out(buffer)
+
+# The string matching the entire pattern
+expect_out(0,string)
+
+# regex substring matches (upto 9)
+expect_out(1,string) - expect_out(9,string)
+
+# global variable containing spawned process descriptor
+span_id
+
+
+# send log output to exp.log
+log_user 1
+log_file exp.log
+
+
+# regular expression
+expect -re "failed|invalid password" abort
+
+# global disable timeout
+set timeout -1
+
+# wait for spawned process to terminate
+wait
+
+
+
+

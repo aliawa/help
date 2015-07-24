@@ -1,0 +1,223 @@
+# ---------------------------------------------
+# Diagnostic tools
+# ---------------------------------------------
+Ping for IPv4       |  ping
+Ping for IPv6       |  ping6
+Traceroute for IPv4 |  traceroute -4
+Traceroute for IPv6 |  traceroute -6
+Interface Info      |  ip address show
+IPv4 arp table      |  arp -an
+IPv6 ndp table      |  ip -6 neighbor show
+
+
+
+
+# ----------------------
+# ip address
+# ----------------------
+
+# show
+ip a s 
+ip a s up
+ip a s label eth*
+
+# add
+ip a a 192.168.30.30 dev eth0
+
+# del 
+ip a d 192.168.20.1 dev eth0
+
+
+# ----------------------
+# ip route
+# ----------------------
+
+# show (fmly is -6 or -4, default:-4)
+ip [fmly] r s
+ip [fmly] r | column -t
+
+# add
+ip r a 192.168.20.0/24 dev eth0
+
+# static throug a router
+ip r a to <addr> via <router_addr> dev eth0
+
+# default route (special prefix:"default" equivalent to ipv4 0/0 and ipv6 ::/0
+ip r a default via ADDRESS dev eth1
+
+# replace
+ip r r 192.168.20.0/24 dev eth0 src 192.168.20.20
+
+# routing rules
+ip route list
+ip route list all
+ip route list table all
+ip route list table 6
+
+
+
+# ----------------------
+# ip neighbor
+# ----------------------
+
+ip neigh add to <addr_of_neigh> dev eth1 lladdr <HW_addr_neigh> nud reachable
+
+
+# ----------------------
+# ip link
+# ----------------------
+
+# set
+ip l set eth1 up
+
+# show
+ip l show
+
+
+
+# -------------------------
+# ip rule (policy routing)
+# -------------------------
+
+ip rule list
+
+
+
+
+
+# changing host name
+# ------------------
+
+hostname:
+    hostnamectl set-hostname xps2.ewn
+    
+check:
+     uname -n
+     hostname
+     cat /proc/sys/kernel/hostname
+     cat /etc/hostname
+     hostnamectl status
+
+
+
+
+
+netstat: listening services
+---------------------------
+states:
+  netstat -aptn
+  netstat -apnu
+
+protocol statistics:
+  netstat -aps
+
+routing table:
+  netstat -r
+
+interfaces:
+  netstat -i 
+
+
+
+Interface tools
+----------------
+ethtool -p eth0 15  : Blink eth0 for 15 seconds
+ethtool -S eth0 ... : Change setting on eth0
+
+old:
+mii-tool eth0
+
+
+
+vlans
+-----
+# using ip-link
+# create vlan
+ip link add link eth2 name eth2.30 type vlan id 30
+ip addr add 192.168.30.11/24 brd 192.168.30.255 dev eth2.30
+ip link set dev eth2.30 up
+
+# turn down
+ip link set dev eth0.100 down
+
+# delete
+ip link delete eth0.100
+
+
+# old method
+# create a VLAN device with VLAN-ID of 5 on eth0
+vconfig add eth0 5
+
+# delete a VLAN
+vconfig rem eth0.5
+
+# give vlan an ip
+ip a a 192.168.2.1 dev eth0.5
+ip r a 192.168.2.0/24 dev eth0.5
+ip link set eth0.5 up
+
+
+
+
+DHCP 
+-------------
+* Server:
+config file: /etc/dnsmasq.conf
+start: sudo service dnsmasq restart
+sudo chkconfig dnsmasq on
+
+
+* Client:
+Renew lease:
+EM: 
+  killall dhcpcd
+Fedora:
+  sudo dhclient -r eth2
+  sudo dhclient eth2
+
+
+
+port forwarding
+------------------
+1. check if forwarding is enabled:
+  sysctl net.ipv4.conf.eth0.forwarding
+  or> cat /proc/sys/net/ipv4/ip_forward
+
+2. Enable forwarding
+  sysctl net.ipv4.conf.eth0.forwarding=1
+  or> echo 1 > /proc/sys/net/ipv4/ip_forward
+
+3. NAT rule for EM
+iptables -t nat -A PREROUTING -p tcp  -d 192.168.1.250 --dport 8001 -j DNAT \
+        --to-destination 192.168.50.10:8
+
+4. Filter rule
+iptables -I FORWARD 3 -p tcp -i eth0+ -o eth0+ --dport 80 -m state \
+        --state NEW,ESTABLISHED,RELATED -j ACCEPT
+
+
+
+setting up dnsmasq
+-----------------------
+dnsmasq directly uses the following files:
+/etc/hosts
+/etc/resolv.conf
+/etc/dnsmasq.conf
+
+- Add all local hosts to /etc/hosts
+  192.168.1.12 xps 
+
+- Add upstream dns servers to /etc/resolv.conf
+  nameserver 8.8.8.8
+
+- Prevent NetworkManager from overwriting /etc/resolv.conf
+  Add under [main] in /etc/NetworkManager/NetworkManager.conf
+  dns=none
+
+- Make dsnmasq go to local server for local addresses
+  server=/ewn.local/10.10.22.31
+
+- restart
+  service dnsmasq restart
+
+

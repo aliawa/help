@@ -1,0 +1,89 @@
+<!-- ***********************************************************
+Example 5-10
+"Dynamic HTML:The Definitive Reference"
+by Danny Goodman
+Published by O'Reilly & Associates  ISBN 1-56592-494-0
+http://www.oreilly.com
+Copyright 1998 Danny Goodman.  All Rights Reserved.
+************************************************************ -->
+
+<HTML>
+<HEAD>
+<TITLE>A Hot Time</TITLE>
+<STYLE TYPE="text/css">
+	#hot1 {position:relative; color:red; visibility:visible}
+	#hot2 {position:absolute; color:green; visibility:hidden}
+	#hot3 {position:absolute; color:yellow; visibility:hidden}
+	#hot4 {position:absolute; color:blue; visibility:hidden}
+</STYLE>
+<SCRIPT LANGUAGE="JavaScript">
+var currHot = 1
+var totalCycles = 0
+var isNav, isIE, intervalID
+var coll = ""
+var styleObj = ""
+if (parseInt(navigator.appVersion) >= 4) {
+	if (navigator.appName == "Netscape") {
+		isNav = true
+	} else {
+		isIE = true
+		coll = "all."
+		styleObj = ".style"
+	}
+}
+// Utility function returns the x coordinate of a positionable object relative to page
+function getPageLeft(obj)  {
+	if (isNav) {
+		return obj.pageX
+	} else {
+		return obj.offsetLeft
+	}
+}
+// Utility function returns the y coordinate of a positionable object relative to page
+function getPageTop(obj)  {
+	if (isNav) {
+		return obj.pageY
+	} else {
+		return obj.offsetTop
+	}
+}
+// Set absolute positions of three hidden elements to match visible's relative position 
+function init() {
+	// get object reference of visible element
+	var obj1 = eval("document." + coll + "hot1")
+	// get left/top location relative to document
+	var pageLeft = getPageLeft(obj1)
+	var pageTop = getPageTop(obj1)
+	// set position of three elements (hot2, hot3, and hot4)
+	for (var i = 2; i <= 4; i++) {
+		var obj = eval("document." + coll + "hot" + i + styleObj)
+		obj.left = pageLeft
+		obj.top = pageTop
+	}
+}
+// Advance the color by one
+function cycleColors() {
+	// get reference to element to be hidden
+	var objToHide = eval("document." + coll + "hot" + currHot + styleObj)
+	// reset coutner to 1 if it reaches 4; otherwise increment by 1
+	currHot = (currHot == 4) ? 1 : ++currHot
+	// get reference to element to be shown
+	var objToShow = eval("document." + coll + "hot" + currHot + styleObj)
+	// do the shuffle
+	objToHide.visibility = "hidden"
+	objToShow.visibility = "visible"
+	// invoke this function again until total = 27 so it ends on red
+	if (totalCycles++ < 27) {
+		intervalID = setTimeout("cycleColors()", 100)
+	} else {
+		clearTimeout(intervalID)
+	}
+}
+</SCRIPT>
+</HEAD>
+<BODY onLoad="init(); cycleColors()">
+<H1>Welcome to the <SPAN ID=hot1>Hot Zone</SPAN><SPAN ID=hot2>Hot Zone</SPAN>
+<SPAN ID=hot3>Hot Zone</SPAN><SPAN ID=hot4>Hot Zone</SPAN> Web Site</H1>
+<HR>
+</BODY>
+</HTML>

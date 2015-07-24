@@ -1,0 +1,541 @@
+
+Multiple (multiple) files
+-----------------------
+:e file2
+Ctrl-^           toggle between files (also :e#)
+:n               next file (when started as: vim file1 file2)
+
+:tabe file.txt   (open new tab)
+:tabn :tabp      (next prev tab)
+gt gT            (next prev tab)
+
+:ls              (list of current buffers)
+:b#              (go to numbered buffer, given by ls command)
+:bn :bp          (buffer next prev)
+:bd#             (delete/close buffer number #)
+:bp|bd#          close buffer without closing the window
+
+:qall            (close all files)
+
+:e %<.h          open corresponding header file
+:e %<.c          open corresponding source file
+:e!              discard all changes to current buffer.
+
+
+" -------------------------------------------------------------
+"                           searching
+" ------------------------------------------------------------
+
+the\>    "words ending in the
+\<the\>  "search for the word 'the' exactly
+
+*        "search the string under cursor
+#        "search the string under cursor backwards
+[I:      "Show all lines containing word under cursor 
+
+s/ /^M/g "replace all occurances of space with new line:
+         "to get the ^M depress and hold the ctrl-V and then press 'm'
+
+"flags
+    \c  "ignore case for this pattern (/\cpattern)
+    \C  "don't ignore case
+
+
+set hls "Highlight search pattern
+noh     "No highlight search pattern
+
+
+"Searching on multiple lines
+"Search for "INVITE at begining of line followed by Content-Length:
+    /^"INVITE\_.\{-}Content-Length:
+
+
+"comment out lines (comment characters placed after the initial space)
+    s/\(^\s\+\)/\1\/\//
+
+:vimgrep /^\w\+\ze(/j % "Search for functions in current file '%'
+
+:vimgrep term *.c* *.h         "Search 'term' in current directory
+:vimgrep term **/*.c* **/*.h   "Search 'term' in current and all 
+                               "sub-directories
+
+:set nows              "will not search past the top or bottom.
+:%s/CTRL-v CTRL-m//g   "will strip out all the Windows newlines
+
+
+cut long lines
+---------------
+selection: gp
+current paragraph: gqap
+
+
+
+
+Get Info
+----------
+Ctrl-G: current file name
+1 Ctrl-G: Full path of current file
+
+
+
+Fast cursor movement
+-------------------
+H: top of screen
+M: middle of screen
+L: bottom of screen
+
+89G: Go to line 89
+`. : move to last edit position
+
+
+Fast text Movement
+------------------
+zt or zENTER: make the line with the cursor the top line of the screen.
+zz or z.    : center
+zb or z-    : bottom
+zs and ze   : move document like the hand tool in acrobat zs moves rigth
+              and ze moves left
+zh and zl   : scroll right,left by character
+zH and zL   : scroll right, left by half a screen
+Note        : use g^ and g$ instead of ^ and $ when the document is scrolled
+
+
+
+
+Matching Bracket
+-----------------
+%
+
+
+
+Auto Completion
+--------------
+
+Ctrl-p : search backwards
+Ctrl-n: search forwards
+Ctrl-x Ctrl-f: complete filename.
+
+:set dictionary=file
+Ctrl-x  Ctrl-k : enter dictionary completion mode
+
+
+
+Indent
+-----
+== adjust indent
+=G adjust indent to the end of file
+
+
+Diff
+-----
+]c [c : next change, previous change
+dp: put Block
+do: get Block
+:diffupdate
+:[range]diffget
+:[range]diffput
+
+diff with saved version
+:w !diff % -
+
+:diffsplit {filename}
+:diffthis 
+:diffpatch {patchfile}
+:diffoff
+:diffoff!  switch off diff in all windows
+
+
+
+Manually delete multiple lines
+-----------------------------
+dd
+. (press dot)
+. (press dot again)
+
+
+di) delete everything between parenthesis
+di} delete everything between curly brackets
+
+
+Coding coding
+--------------
+gd : find local declaration
+gD : find global declaration
+gf : file under cursor, Ctrl-O to come back.
+#include "f CTRL−X CTRL−F"
+:set dictionary=file
+Ctrl-X Ctrl-K : complete from dictionary
+[[ go to start of function
+
+
+
+Executing commands (v and g)
+-----------------------------
+:[range]g/{pattern}/[cmd]
+             Execute Ex command [cmd] (default: ":p") on the lines
+                within [range] where {pattern} matches.
+:[range]g!/{pattern}/[cmd]     or    :[range]v/{pattern}/[cmd]
+             Execute Ex command [cmd] (default: ":p") on the lines
+                within [range] where {pattern} does NOT match.
+Examples:
+:%g/^a/-1join     join lines starting with character 'a' to previous line
+:%g/^ *$/d        delete empty lines
+:g/^$/d           delete all blank lines
+:g/^\s\+$/d       remove all lines with only whitespace (space or tab)
+:g/^\s*$/d        remove all lines with only whitespace or nothing
+:%v/vim/m 1       move lines not matching the word 'vim' to line 1
+:%g/^a/+1d        delete lines after the ones starting with character 'a'
+
+
+
+
+switch esc and caps lock
+------------------------
+- create .Xmodmap
+  keycode 9=Caps_Lock
+  keycode 66=Escape
+  
+
+
+marks
+---------
+  mx   tells Vim to add a mark called x.
+  `x tells Vim to return to the line and column for mark x.
+  'x tells Vim to return to the beginning of the line where mark x is set.
+  `. moves the cursor to the line and column where the last edit was made.
+  '. moves the cursor to the line where the last edit was made.
+  '" moves the cursor to the last position of the cursor when you exited the
+     previous session.
+  :marks shows all marks set.
+  :marks x shows the mark named x.
+  :jumps shows the jumplist.
+  Ctrl-o moves the cursor to the last jump.
+  Ctrl-i moves the cursor to the previous jump.
+  H moves the cursor to the top of the screen or viewport.
+  M moves the cursor to the middle of the screen or viewport.
+  L moves the cursor to the bottom of the screen or viewport.
+  
+  Examples:
+  -----------
+  :'g,'k d   
+    delete lines between mark g and k
+  
+  :'s,. w ~/tmp/file.txt 
+    write text between mark s and current cursor position to ~/tmp/file.txt
+
+
+visual selection
+----------------
+v       selection mode
+V       select by line
+Ctrl V  block select
+gv      select previous visual area
+
+
+show hidden symbols
+-------------------
+:set list
+:set nolist
+
+
+
+
+
+
+
+Visible screen actions
+----------------------
+dL - Delete to end of page, in other words, everything visible.
+
+
+tricks
+------
+daw     : delete whole word
+imap <M-f> <E
+:.,$ g/FINDME/p  search from cursor to end of file
+visual mode selection followed by !sort is really useful for sorting lines
+C - Often overlooked: chop off end of line and go into insert mode.
+c/"[enter] Great for modifying things in quotes:
+Much easier is to use :a! (or :i!), paste your text and then end the paste 
+    with a line containing just .
+zf, zo, zc: fold creation, open, close (hides sections of your code)
+:sp to split the screen er ctrl-w-w
+gF: Open the file under the cursor,
+
+(ctrl-v) -> visually select a column
+(shift-i) -> go to insert mode
+(your favorite character here - I like #)
+esc, esc
+
+Ctrl-A and Ctrl-X [vim.org] find the next number on the line starting at the
+cursor, and then increment or decrement it respectively.
+
+1. Tags. No learning curve. Generate tags with !ctags -R *.c *.h (if you are
+looking at a C code base). Ctrl-] on any function name, structure name/field,
+etc. to jump to the declaration point. Ctrl-T to come back. Tag stack is
+maintained. Then, :ta to jump to the tag. Auto completion for the tag name
+makes it a breeze. Ctrl-], Ctrl-T, and :ta are enough to save 50% of your
+time.
+
+2. Ctrl-P and Ctrl-N for very smart auto-completion can save another 30-50% of
+your time.
+
+3.  recording command sequence
+qc  record typed character in register c
+q   stop recording
+@c  execute the contents of c
+@@  repeat previous @ command
+
+
+or d/regex to delete until regex match
+when dealing with a log file with lots of useless information using
+:g/pattern/d to remove all of the lines that don't have any use
+
+vip : select upto next blank line
+
+
+
+
+Or right in VIM - :E - would list files in :pwd.
+
+:sh works well when you don't know root, but have sudo privs.
+
+
+These make it so when a line has wrapped, jk navigation moves one line on the screen, instead of one line in the file
+nnoremap j gj
+nnoremap k gk
+vnoremap j gj
+vnoremap k gk
+nnoremap <Down> gj
+nnoremap <Up> gk
+vnoremap <Down> gj
+vnoremap <Up> gk
+inoremap <Down> <C-o>gj
+inoremap <Up> <C-o>gk
+
+this gives you a current-row and current-column highlight, so you never lose your cursor
+set cursorcolumn
+set cursorline
+hi cursorcolumn ctermbg=red
+
+
+
+
+Ctrl-C instead of Esc for switching from insert mode into command mode
+Ctrl-[, which does exactly the same as Escape, and Ctrl-C
+
+To view man page of a word under curser, type K(shift+K)
+
+
+Deleting empty lines from a file: :%g:^\s*$:d
+
+firefox extension: vimperator
+
+
+Editing binary files
+--------------------
+cp prog.bin prog.new.bin
+vi prog.new.bin
+<now editing in vi>
+[esc] :%!xxd 
+<now editing prog.new.bin in hex>
+[esc] :%!xxd -r
+[esc] :wq!
+
+also:
+  :set display=uhex
+
+
+Syntax files and color schemes
+----------------------------------
+location: ~/.vim/syntax/mlg.vim
+
+using in vim:
+  :set syntax=mlg
+
+common commands in syntax files:
+  :syntax keyword
+  :syntax match
+  :highlight link
+
+colorschemes are stored in:
+  /home/aawais/.vim/colors
+
+set default colorscheme in .vimrc
+  colorscheme aawais
+
+
+
+
+windows (^ means Ctrl )
+-------
+^Ws: horizontal split
+^Wn: horizontal split with new file
+^Wv: vertical split
+^ww: changes between the panes.
+^w+: increase height by 1
+^w-: decrease height by 1
+^W>: increase width by 1
+^W<: decrease width by 1
+^w=: makes all panes the same size.
+^W_: maximize current window 
+^W<direction_key>: to move between windows; direction key relative horizontal or vertical split
+^Wx: swap windows
+
+:on fill screen with current buffer.
+:sp filename.txt  :opens the file in a new horizontal pane.
+:vsp filename.txt :opens the file in a new vertical pane.
+:vert sb 5 : open buffer 5 in a vertical split
+
+
+
+edit-compile-edit cycle
+-----------------------
+Using quickfix commands
+    cope:           open errors window (means: copen or cw)
+    ccl:            close errors window
+
+    <Enter>:        Jump to error
+    Ctrl-<Enter>:   Open a new window and jump to error there
+
+    cn:             Next error
+    cp:             Previous error
+
+    cl:             See all errors
+    cc:             See full error text
+    cc [nr]:        Jump to [nr]
+    cfir:           Jump to first error
+    clas:           Jump to last error
+
+
+
+
+copy to X11 clipboard
+------------------------
+"*yy:   copy to X11 clipboard so that it can pasted with middle mouse button
+"*p:    paste text form X11 clipboard.
+
+"+yy:   copy to X11 copy/paste clipboard (not needed when compiled with 
+        -xterm_clipboard)
+"+p:    paste from X11 copy/paste clipboard 
+
+
+
+spelling
+---------
+:set spell spelling=en_us
+:set nospell
+]s next misspelled
+[s previous
+z= suggestions
+zg add word to dictionary
+
+
+Using vim instead of more or less (read from stdin)
+---------------------------------------------------
+cvs log Interface.cpp | vim -R -
+
+
+# Quick changes
+find the word with *
+change it with cw
+find next occurence *
+repeat the change . (dot)
+
+
+# Macro
+qa start recording in register 'a'.
+q end recording
+@a repeat recorded commands
+
+
+# Quick Jumps
+[{ jump back to "{" at the start of current block
+gd jump from use of variable to its local declaration.
+
+
+# Encrypted file
+:X 
+:set viminfo=
+:set local cm=blowfish
+
+
+# installing plugin in vim for bundle
+cd ./vim/bundle
+curl 'www.vim.org/scripts/download_script.php?src_id=21351' > counterpoint.zip
+unzip -d counterpoint counterpoint.zip
+
+
+
+# ----------------------------------------------------------------------------
+#                             installing lightline
+# ----------------------------------------------------------------------------
+# 1. install lightline
+git clone https://github.com/itchyny/lightline.vim ~/.vim/bundle/lightline.vim
+
+# 2. get fontpatcher
+git clone https://github.com/Lokaltog/vim-powerline.git ~/tmp/vim-powerline
+
+# 3. which fonts are available to patch
+fc-list
+
+# 4. Install fontforge
+sudo yum install fontforge
+
+# 5. Patch font
+cd ~/tmp/vim-powerline/fontpatcher
+cp /usr/share/fonts/liberation/LiberationMono-Regular.ttf .
+fontpatcher LiberationMono-Regular.ttf 
+cp LiberationMono-Regular-Powerline.ttf ~/.fonts/
+sudo fc-cache -vf ~/.fonts/
+
+# 6. Now any monotype font will work properly
+
+
+# ----------------------------------------------------------------------------
+#                                untested
+# ----------------------------------------------------------------------------
+set pastetoggle=
+that will make `set paste` on pasting and `set nopaste` when it's done..
+
+
+
+
+# ----------------------------------------------------------------------------
+#                                history
+# ----------------------------------------------------------------------------
+q: # show command history
+Ctrl-c Ctrl-c to exit
+
+
+# ----------------------------------------------------------------------------
+#                                Plugins
+# ----------------------------------------------------------------------------
+
+#** Tabular
+Tab /=    # align on =
+
+
+" -------------------------------------------------------------
+"                              vim setup
+" ------------------------------------------------------------
+# install pathogen
+mkdir -p ~/dotfiles/vim/autoload ~/dotfiles/vim/bundle
+cd ~/dotfiles
+curl -LSso ./vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+
+# install plugins
+cd ./vim/bundle
+git submodule add https://github.com/mileszs/ack.vim ack.vim
+git submodule add https://github.com/chriskempson/base16-vim.git base16-vim
+git submodule add https://github.com/moll/vim-bbye.git bbye
+git submodule add  git://github.com/jpetrie/vim-counterpoint.git vim-counterpoint
+git submodule add https://github.com/itchyny/lightline.vim lightline.vim
+git submodule add https://github.com/mtth/scratch.vim scratch.vim
+git submodule add git://github.com/altercation/vim-colors-solarized.git vim-colors-solarized
+git submodule add git://github.com/tpope/vim-fugitive.git vim-fugitive
+git submodule add https://github.com/christoomey/vim-tmux-navigator.git vim-tmux
+git submodule status
+
+
+

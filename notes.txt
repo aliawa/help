@@ -1,0 +1,151 @@
+
+Send process to background
+--------------------------
+Ctr+z then bg 1
+
+
+
+mounting a winnt directory
+-------------------------
+create local mountpoint		mkdir /mnt/winnt
+mount				smbmount //albab/shared /mnt/winnt -o username=aawais%<passwd>
+unmount				smbumount /mnt/winnt
+
+
+
+
+
+Mounting a floppy drive
+-----------------------
+mount /mnt/floppy
+
+
+
+
+
+
+Module management
+-----------------
+lsmod:			list of loaded modules same as catproc/modules
+inod:			install module
+modprobe:		load, remove modules along with dependencies
+modules.dep:		contains module dependencies
+/etc/modules.conf:	controls behavior of modprobe
+rmmod:			remove module
+depmod:			create dependency file for modules
+
+example:		load 'bridge' module, verbose mode:
+			modprobe -v bridge
+
+
+
+
+tar
+-----------------------
+extract:
+  tar -xzvf pwlib_min_1.14.tar.gz
+
+create:
+  tar -cvf archive.tar *
+
+
+Install RPM
+-----------
+rpm -i <rpm file>
+rpm -U <package name> (upgrage a package)
+
+
+Dialup on Linux
+----------------
+1. Programs->Internet->Dialup Configuration->Accounts Add
+   follow wizard
+2. ln -s/dev/ttyS1 /dev/modem
+3. Programs->Internet->Dialup Configuration->Modems tab Add
+   Modem Device: /dev/modem
+   Baud rate:    115200
+4. To connect select account in Configuration applet and press Debug
+   RH PPP dialer does not work.
+5. Close the Debug window to close the connection
+6. ifup eth0 starts the LAN
+
+
+
+List all running processes in sorted order
+------------------------------------------
+ps -A | sort -f -k 4,4  
+(-f:ignore case, -k:key starts at pos4 and ends at pos4)
+
+
+
+
+scp
+------------------
+$ scp file.txt aawais@192.168.1.5:file.txt
+
+
+
+
+empty out a file, reduce the size to zero
+-----------------------------------------
+cat /dev/null > file
+
+
+
+
+
+Paste Selection KDE
+------------------------
+Ctrl-Shift-Insert
+
+
+
+
+process CPU usage
+----------------
+ps -aux
+top -c
+
+
+
+
+print system state every 5 seconds
+----------------------------------
+vmstat 5
+
+
+
+
+binary files
+-----------------------------------
+- print the value of the 10th byte as a decimal unsigned number
+  od -An -vtu1 -j9 -N1 < file
+
+- find ascii value of a character
+  echo -n "A" | od -An -tu1
+
+- list a file as ascii codes
+  cat ~/tmp/file.txt |  od -An -tu1
+
+- print the strings of printable characters in files.
+  strings 
+
+
+trick a process that reads/writes from files to read from std input
+------------------------------------------------------------------
+for example toupper only reads from a file.
+somecommand | toupper /dev/fd/0
+Also
+    /dev/fd/0 is same as /dev/stdin
+    /dev/fd/1 is same as /dev/stdout
+    /dev/fd/2 is same as /dev/stderr
+
+
+Force a program to dump core
+----------------------------
+kill -3 or Ctrl+\
+
+get glibc mtrace output on stdout
+---------------------------
+export MALLOC_TRACE=`tty`
+
+

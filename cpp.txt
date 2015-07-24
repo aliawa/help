@@ -1,0 +1,151 @@
+class declaration is the same as class definition.
+
+static member:
+A variable that is part of a class yet is not part of an object of that class.
+
+static member function:
+A function that needs access to members of a class, yet doesn't need to be invoked for a particular object.
+
+copy constructor:
+X::X(const X&)
+
+assignment operator:
+Table& Table::operator=(const Table& t) {
+    if (this != &t) { // beware of self-assignment: t = t
+        delet[] p;
+        p = new Name[sz=t.sz];
+        for (int i=0; i<sz; i++) p[i]=t.p[i];
+    }
+    return *this;
+}
+
+General strategy for assignment operator:
+1. protect against self assignment
+2. delete old elements
+3. initialize
+4. copy in new elements (usually every non static member)
+
+How is assignment operator different from copy constructor
+A copy constructor initializes uninitialized memory, whereas the copy assignment operator
+must xorrectly deal with a well-constructed object.
+
+
+
+*this
+refers to the object for which a member function is invoked.
+Type of this in non-const member funciton is X*
+Type of this in const member funciton is const X*
+
+
+mutable specifier:
+A const member function cannot change member variables, but it can change mutable members.
+Also mutable members of const objects can be modified. In other words const specifier 
+never affects the mutable members.
+
+
+inline:
+member functions defined in class definition is taken to be inline member function.
+or explicitly: inline int Date::day() const { return d; }
+
+
+temporary objects:
+A temporary can be assigned to a const reference
+
+void h (string& s1, string& s2) {
+    const string& s = s1 + s2; // ok
+    string& ss = s1 + s2; // not ok
+}
+
+
+class X {
+    X* operator--(); // prefix increment
+    X* operator--(int); // postfix increment
+    X operator-(X); // binary minus
+}
+
+
+General rule for make operators members or non-members:
+Make member: operators that inherently modify the value of their first argument, example +=
+Make non-member: operators that simply produce a new value based on argumnets, example +
+
+class complex {
+    double re, im;
+public:
+    complex& operator+=(complex a);
+}
+
+complex operator+(complex a, complex b) {
+    complex r=a;
+    return r +=b; // access representation through +=
+}
+
+
+
+Conversion operator:
+X::operator T(); // the return type is T and should not be specified.
+
+
+friend:
+If a friend takes an argument of class then it can be declared in the declaration
+of the class.
+
+class X {
+    X(int);
+    int m1();
+
+    friend int f1(X&);
+};
+
+Essential Operators:
+class X {
+    X(Sometype); // constructor
+    X(const X&); // copy constructor
+    X& operator= (const X&); // assignment operator
+    ~X(); // Destructor
+};
+
+
+
+Value semantics: After s1=s2, s1 and s2 are fully distinc and changes to one does 
+not affect the other.
+Poiter semantics: After s1=s2, changes to s2 affect s1.
+
+
+Derived class refers to its base
+
+Employee
+  ^
+  |
+  |
+Manager
+
+
+slicing:
+Employee e = m; // construct e from Employee part of m
+
+polymorphic behavior in C++:
+only when virtual member function is called and the object is 
+manipulated through pointer or reference
+
+polymorphic class:
+A class that declares or inherits at least one virtual function 
+is called a polymorphic class.
+
+
+Abstract class:
+A class with one or more pure virtual functions.
+
+
+operator<<
+----------
+ostream& operator<<(ostream&, const string&);
+
+Funcion Object
+-------------
+An object of class with an application operator "operator()"
+
+Predicate
+-----------
+A function object or function that returns a bool
+
+

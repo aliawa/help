@@ -1,0 +1,74 @@
+find
+-------------------------------------------------------------
+-name -iname
+    match just the file name '*.[ch]'
+-path -ipath
+    match the whole path     '*mand/*.c'
+-regex
+    path matches regular expression  './b2bua.*\(h\|cpp\)'
+
+
+Patterns
+----------------
+-name
+'*.[ch]'                    .c and .h files
+'\.*'                       filename starts with '.'
+
+-regex
+'.\.*[ch]\(pp\)?'           c, h, cpp, hpp files
+'.*\.\(h\|cpp\)'            h ,cpp files
+
+
+Time
+-----
+-mtime 0                    modified in last 24 hours
+-newer image.bin            modified after the modification time of image.bin.acn
+\! -newer image.bin         modified befoer image.bin
+\! -newermt '2011-06-08'    older than 2011-06-08 
+
+
+Location
+--------
+-maxdepth 1                 current directory only
+-maxdepth 4                 reachable by executing cd 4 times fromt the start dir
+-path ./src -prune -o -name 'b2*' -print
+                            files starting with 'b2' that are not in ./src
+
+Actions
+--------
+-exec cp '{} . \;           cp to current dir
+-exec grep -H 'mailto' {} \;
+-delete                     delete the file
+
+
+
+Tips and Tricks
+----------------
+
+* The construct -prune -o \( ... -print0 \):
+  The expression before prune matches things that are pruned, the right hand side
+  of -o is evaluated only for those directories that did not get pruned.
+  For example to exclude directory use: -path <dir_to_ignore> -prune -o
+  find . -path ./adir -prune -o -name 'file*' -print
+
+
+* global search and replace:
+  find . -regex './b2bua.*\(h\|cpp\)' -exec vim -c "%s/DBG_ALI/DBG_SIP/ge |w|q" {} \;
+  find . -type f -exec sed -i 's/ReplaceThis/WithThis/' {} \;
+
+
+* Using OR:
+  find $userHome \
+    -type f             # if item in question is a plain file, not a directory
+    -user "$userName" \ # if the owner of the file is correct
+    -perm "-o-wx" \     # if the permissions bits are acceptable
+    -printf "" \        # then the file is OK, so print nothing
+  -o \                  # or else...
+    -print \            # assume the file is "bad", so print its path (prepending "$userHome")
+  >>"$userName.unsanctioned-files.list"
+
+
+* SUB-SHELL:
+  send output of find to a sub shell
+  find . -name '*.pdf' | (while read F; do echo $F; mv $F ../pdf/; done)
+

@@ -1,0 +1,47 @@
+<!-- ***********************************************************
+Example 2-2
+"Dynamic HTML:The Definitive Reference"
+by Danny Goodman
+Published by O'Reilly & Associates  ISBN 1-56592-494-0
+http://www.oreilly.com
+Copyright 1998 Danny Goodman.  All Rights Reserved.
+************************************************************ -->
+<HTML> 
+<HEAD> 
+<TITLE>MegaCorp On The Web</TITLE> 
+<SCRIPT LANGUAGE="JavaScript"> 
+<!-- 
+var isNav4, isIE4
+if (parseInt(navigator.appVersion) >= 4) {
+	isNav4 = (navigator.appName == "Netscape")
+	isIE4 = (navigator.appName.indexOf("Microsoft") != -1)
+}
+//-->
+</SCRIPT> 
+</HEAD>
+
+<BODY>
+Some regular text
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+var output = ""
+if (isIE4) {
+	output += "<DIV ID='help' "
+	output += "STYLE='position:absolute; top:75; width:350; border:none; "
+	output += "background-color:#98FB98;'>"
+	output += "<P STYLE='margin-top:5; align:center'><B>Instructions</B></P>"
+	output += "<HR><OL STYLE='margin-right:20'>"
+	output += "<LI>Step 1."
+	output += "<LI>Step 2."
+	output += "<LI>Step 3."
+	output += "</OL><DIV align='center'><BUTTON "
+	output += "onClick='document.all.help.style.visibility=\"hidden\" '>"
+	output += "Click Here</BUTTON></DIV></DIV>"
+} else if (isNav4) {
+	output += "<LAYER ID='help' TOP=75 WIDTH=350 SRC='help.html'></LAYER>"
+}
+document.write(output)
+//-->
+</SCRIPT>
+</BODY> 
+</HTML>

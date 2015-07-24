@@ -1,0 +1,28 @@
+Creating a desktop icon that will start kdevelop as root
+-------------------------------------------------------
+
+$ cd /usr/bin
+$ sudo ln -s /usr/bin/consolehelper kdevelop-root
+$ cd /etc/pam.d
+$ sudo cp up2date-config kdevelop_root
+  cat kdevelop-root
+  
+  #%PAM-1.0
+  auth       sufficient   pam_rootok.so
+  auth       sufficient   pam_timestamp.so
+  auth       required 	  pam_stack.so service=system-auth
+  session    required 	  pam_permit.so
+  session    optional 	  pam_xauth.so
+  session    optional     pam_timestamp.so
+  account    required  	  pam_permit.so
+
+
+
+$ cd /etc/security/console.apps
+$ vi kdevelop_root
+  USER=root
+  PROGRAM=/usr/bin/kdevelop
+  SESSION=true
+  FALLBACK=true
+
+Now point the desktop link to /usr/bin/kdevelop-root

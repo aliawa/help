@@ -1,0 +1,80 @@
+in order to run ftp, first make sure that inetd is running
+
+ps -A | grep inetd
+
+
+inetd
+-----
+configuration file: /etc/inetd.conf
+configuration file entries:
+
+[host:]service_name     socket_type     protocol     wait/nowait[.max]     user server_program     server_program_args
+
+[host:] 			optional, which addresses to listen on
+        			*: = INADDR_ANY, listen on all local addresses
+
+service_name: 		valid name from /etc/services: ftp, tftp etc.
+
+socket_type: 		stream, dgram, raw, rdm
+
+protocol: 			from /etc/protocols, tcp, udp etc
+
+wait/nowait: 		multithreaded (nowait), single threaded (wait)
+
+server_program: 	"internal" if inetd itself provides the service, echo, time
+
+
+starting inetd
+--------------
+$ /usr/sbin/inetd
+  when inetd is runing it creates /var/run/inetd.pid
+
+To start inetd in foreground with debug output
+$ inetd -d
+
+restart
+$ inetd restart
+
+
+
+how inetd starts ftp
+--------------------
+inetd --> tcpd --> in.ftpd
+
+tcpd looks at /etc/hosts.allow and /etc/hosts.deny
+
+
+
+format of hosts.allow
+---------------------
+
+service : hosts : allow/deny access
+
+example:
+in.ftpd : 192.168.1.* : ALLOW
+in.ftpd : 66.52.177.*,65.113.32.38 : ALLOW 
+ALL : ALL@ALL : DENY
+
+
+
+creating a user for ftp access
+------------------------------
+the user used for ftp login must have
+ 1. a password
+ 2. a login shell
+
+
+
+Allow anonymous access
+----------------------
+- remove line "anonymous" and "ftp" from /etc/ftpusers
+- create a user "ftp" with home dir "/home/ftp" passwd "*"
+  no login shell. (System->KUser or useradd -m ftp)
+- make sure /home/ftp exists
+- to make "ls" work follow the instructions in "man ftpd"
+  or very nice instructions at 
+  http://www.opennet.ru/man.shtml?topic=ftpd&category=1
+
+
+
+

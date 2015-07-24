@@ -1,0 +1,65 @@
+Built in Scenario
+------------------
+Server:
+$ ./sipp -sn uas -i 192.168.1.166
+Client:
+$ ./sipp 192.168.1.5 -t tn -m 1 -sn uac
+
+
+Remote Control
+-----------------
+$ echo p >/dev/udp/x.y.z.t/8888
+put SIPp in pause state (p key)
+
+
+
+UDP Client and Server
+----------------------
+Server listening on 10.10.13.159
+./sipp -i 10.10.13.159 -sf registrar.sn
+
+Client using 192.168.1.166 as local address
+./sipp 192.168.1.5  -m 1 -s 2408881028 -i 192.168.1.166 -sf register_no_wait_for_ok.sn
+
+
+
+TCP Client and Server
+---------------------
+Server using 10.10.13.159 as local address
+./sipp -i 10.10.13.159 -t tn -sf registrar.sn
+
+Client using 192.168.1.166 as local address
+./sipp 192.168.1.5  -m 1 -s 2408881028 -i 192.168.1.166 -t tn -sf register_no_wait_for_ok.sn
+
+
+
+
+Useful Options
+--------------
+-i <ip-addr>
+   other wise sipp puts 127.0.0.1 in Via, From and Contact 
+   so no responses are received
+
+-s <calling-user>
+   this is what you want the user portion in request URI and
+   To header to be
+
+-m 1
+   otherwise sipp is going to send a barage of INVITEs without
+   waiting for earlier calls to complete.
+
+<to-address>
+   The address in Request URI and To header.
+
+-sd uac
+   Start creating a scenario: ./sipp -sd uac > uac_builtin.sn 
+
+
+Tricks
+------
+to get a previous branch id use [branch-N]
+
+branch-4 will give the branch id of fourth previous message counting 
+all sent and received messages.
+
+

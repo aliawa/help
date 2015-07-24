@@ -1,0 +1,94 @@
+
+# To find the original name of the EM directory
+# ---------------------------------------------
+- cd snapgear
+- ls -l lib/glibc
+  ls -l ./user/edgewater/cgi
+
+
+
+# uprade the firmware
+# ---------------------
+
+rm /etc/config/.netrc
+echo "default login anonoymous password edge" > /etc/config/.netrc
+/etc/conf/bin/config-upgrade <IP-Addr-of-ftp-sever> <filename>:
+
+
+# Essential mand include files
+# -----------------------------
+
+#include <strl.h>                   // strlcpy
+#include <sipConst.h>               // sip constants
+#include <dbg_lib.h>                // MEM_STRDUP
+#include "cpLog.h"                  // MAND_LOG
+#include <common.h>                 // MIN, MAX, DBG_SIP etc.
+
+
+
+# Edgemarc ports
+# -----------------------------
+
+LAN
+---------------------------------------------
+process  | UDP            | TCP       | RAW |
+---------------------------------------------
+ntpd     | 123            |           |     |
+snmpd    | 161            |           |     |
+mand     |                | 8998      |     |
+
+
+
+LOOP-BACK
+---------------------------------------------
+process  | UDP            | TCP       | RAW |
+---------------------------------------------
+ntpd     | 123            |           |     |
+
+
+
+LAN VIP
+---------------------------------------------
+process  | UDP            | TCP       | RAW |
+---------------------------------------------
+asterisk | 6050           |           |     |
+ntpd     | 123            |           |     |
+mand     | 5060,5070,5075 | 5060,5061 | 255 |
+
+
+
+ALL (0.0.0.0)
+---------------------------------------------
+process  | UDP            | TCP       | RAW |
+---------------------------------------------
+boa      |                | 80,443    | 1   |
+dhcpd    | 29235,67,5618  |           | 1   |
+dnsmasq  | 53             | 53        |     |
+failover | 8998           |           |     |
+inetd    |                | 23        |     |
+ntpd     | 123            |           |     |
+snmpd    | 55787          |           |     |
+sshd     |                | 22        |     |
+syslogd  | 514            |           |     |
+mand     |                |           | 255 |
+
+
+
+WAN
+---------------------------------------------
+process  | UDP            | TCP       | RAW |
+---------------------------------------------
+ntpd     | 123            |           |     |
+snmpd    | 161            |           |     |
+mand     |                | 8998      |     |
+
+
+
+WAN VIP
+---------------------------------------------
+process  | UDP            | TCP       | RAW |
+---------------------------------------------
+ntpd     | 123            |           |     |
+mand     | 5060,5070,5075 | 5060,5061 | 255 |
+
+

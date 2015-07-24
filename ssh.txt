@@ -1,0 +1,77 @@
+# --------------------------------------
+# Setting up password less ssh login
+# --------------------------------------
+# method 1:
+1. ssh-keygen
+2. cat ~/.ssh/id_rsa.pub | ssh aawais@lin.loc "umask 0077; mkdir -p ~/.ssh; cat >> ~/.ssh/authorized_keys"
+3. ssh-add
+
+# method 2:
+1. ssh-keygen
+2. ssh-copy-id aawais@lin.ewn
+3. ssh-add
+
+
+# method 3: when ~/.ssh is not writable for example EM
+ssh-keygen -f /var/id_rsa
+cat /var/id_rsa.pub | ssh aawais@192.168.1.193 "cat >> ~/.ssh/authorized_keys"
+sh -i /var/id_rsa -o StrictHostKeyChecking=no aawais@192.168.1.193
+
+# method 4: when ~/.ssh is not writable
+mount -t tmpfs tmpfs /.ssh -o size=1M
+cat ~/.ssh/id_rsa.pub | ssh aawais@192.168.1.193 "cat >> ~/.ssh/authorized_keys"
+
+
+
+
+# --------------------------------------
+# ssh tunnel
+# --------------------------------------
+
+# Setup a tunnel from 10.10.10.40:4545 to 192.168.30.1:80
+# to reach the EM GUI.
+ssh -f -L 10.10.10.40:4545:192.168.30.1:80 root@192.168.30.1 -N
+
+# Tunnel to ssh
+ssh -f -L 10.10.10.40:4545:192.168.20.1:22 root@192.168.20.1 -N
+
+# Use as
+ssh 10.10.10.40 -p 4545 -l root
+
+# Another approach: ssh to C through B  (A--->B--->C)
+# with B=10.10.10.40 and C=192.168.30.1
+ssh -t aawais@10.10.10.40 "ssh root@192.168.30.1"
+
+
+
+# --------------------------------------
+# ssh debugging public key authentication
+# --------------------------------------
+
+# Get more debug info from ssh client
+ssh chuyeow@remotehost -v -v -v
+
+# Debugging the server side 
+# start server in debug mode and then connect to port 2222
+/usr/sbin/sshd -d -p 2222
+
+# Check Authentication log file
+tail -f /var/log/auth.log
+
+# Make sure ssh key agent is running
+ps aux|grep ssh-agent
+
+# Make sure your private key is added to the ssh key agent
+ssh-add -l
+
+# check permissions
+stat -c "%a %n" ~ ~/.ssh ~/.ssh/authorized_keys
+700 /home/aawais
+700 /home/aawais/.ssh
+600 /home/aawais/.ssh/authorized_keys
+
+# check sshd config
+/etc/ssh/sshd_config
+
+
+

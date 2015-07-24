@@ -1,0 +1,86 @@
+starting
+-------
+cd ~/asterisk-1.2.10
+sudo ./asterisk -vvvc
+
+
+configuration
+-------------
+cd /etc/asterisk
+sudo vi sip.conf
+search for [snom]
+
+
+minimalist client entry in sip.conf
+----------------------------------
+[UserName]
+type=friend
+host=dynamic
+
+
+
+connect to  running asterisk
+-----------------------------
+asterisk -r 
+
+
+Asterisk Logging
+-----------------
+1. Specify the directory for log files in /etc/asterisk/asterisk.conf
+   	astlogdir => /var/log/asterisk
+   in Edgemarc this is set to /var/asterisk
+
+2. Specify files for each type of message in /etc/asterisk/logger.conf
+        [logfiles]
+	debugMsgs.txt => debug
+	console => notice, warning, error
+   debug messages go to debugMsgs.txt and notice, warning and error
+   messages go to the console.
+
+3. CLI messages go to /var/asterisk/messages
+4. uncomment "full => notice,warning,error,debug,verbose" line to get all messages
+   in /var/log/asterisk/full.
+
+   
+
+
+common debug commands
+------------------------------------------------------------------------
+sip debug         :  turn on sip debugging
+sip no debug
+set verbose 4     :  10 is the highest verbosity
+show dialplan
+sip show domains  :  show domains as configured in sip.conf
+sip show settings :  for example on what port is asterisk listening
+sip show peers    :  show ua's who's IP is known i.e. ua's with host=IP
+                     and registered ua's with host=dynamic
+sip show users    :  all users listed in sip.conf
+sip show settings :  does not work in Edgemarc asterisk
+sip show registry
+
+
+extensions reload :  reload extensions.conf
+reload		      :  reload configuration
+stop now	      :  stop it
+restart now	      :  restart immediately
+
+
+TLS (sip.conf)
+------------------------------------------
+[general] 
+tlsenable=yes
+tlscertfile=/etc/asterisk/certs/10.10.10.148_cert.pem
+tlscafile=/etc/asterisk/certs/root.pem
+tlsprivatekey=/etc/asterisk/certs/10.10.10.148_key.pem
+tlscipher=ALL
+tlsclientmethod=tlsv1
+tlsbindaddr=10.10.10.148:5061
+
+
+
+
+
+
+
+
+

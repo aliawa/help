@@ -1,0 +1,24 @@
+
+# source window
+# -------------
+[space]         toggle break point
+t               temporary break point
+-               shrink 1 line
+_               shrink 25%
+=               grow 1 line
++               grow 25%
+i               go to gdb window
+C-l             redraw screen
+
+
+# gdb window
+# ------------
+[ESC]           go to command window
+[F5]            run
+[F6]            continue
+[F7]            finish
+[F8]            next
+[F10]           step
+
+
+

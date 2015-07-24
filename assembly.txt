@@ -1,0 +1,125 @@
+Notes:
+    In C++ the first parameter of every function is the "this" pointer.
+
+
+PPC:
+
+http://www.cs.uaf.edu/2011/fall/cs301/support/ppc/index.html
+http://pds.twi.tudelft.nl/vakken/in101/labcourse/instruction-set/
+http://www.engr.uconn.edu/~zshi/course/cse4903/refs/ppc_inst.pdf
+
+
+r1      : stack pointer
+r0      : link register value of caller
+r3      : return value of a fuction.
+r3-r10  : first 8 integer arguments of the function.
+r13-r31 : Save on entry and restore on exit
+
+cr      : condition register
+lr      : link register (contains return address from subroutine)
+
+li   : load immediate li r3,5, load 5 into return register r3
+blr  : branch on link register
+stwu : store word and update, stwu r1, -64(r1), store the value of r1 at r1-64 then 
+       store r1-64 in r1.
+stw  : store word: stw r30, 104(r1) : *(r1+104) = r30
+lwz  : load word and zero, lwz r0, 8(r1), r0 = value from r1+8
+lis  : load immediate shifted
+ori  : or immediate
+
+bl   : branch and link, stores address of next instruction in link register and
+       then branches to the specified address. So the callee can then execute blr 
+       which will simply load the address in link register into the program counter.
+
+mflr : move from link register, mflr r0, copy the contents of link register to r0.
+mtlr : move to link register, mtlr r0, copy contents of r0 to link register.
+mtctr: move to counter register.
+mr   : copy contents of one register into other, mr r31, r3, r31=r3
+
+add  : add r2,r3,r4 : r2=r3+r4
+addi : add immediate, addi r1,r1,64, r1=r1+64
+or   : or r5,r6,r7 : r5 = r6 | r7
+ori  : or r5,r6,0x10 : r5=r6 | 0x10
+xor  :
+xori :
+nor  :
+nand : 
+
+
+ld   : load register with the content of memory location, ld r4, 0(r5), r4 = *r5
+lbz  : load byte and zero out rest of the register
+lhz  : load half word and zero out the rest of the register
+lwz  : load word and zero out the rest of the register.
+
+cmpd : compare contents of two registers and set the status register: cmpd r5,r6 
+
+beq  : branch to address when equal: beq <address>
+bne  : branch when not equal
+blt  : branch when less than
+bgt  : branch when greater than
+ble  : branch when less than or equal
+bge  : branch when greater than or equal.
+beq- : branch when equal but the branch will probably not be taken
+beq+ : branch when equal but the branch will probably be taken
+
+std  : save content of first operant to the mem location pointed to by the 
+       second operand. std r5, 0(r6)
+stb  : store byte
+sth  : store half word
+stw  : store word.
+
+sc   : system call to kernel
+
+
+
+
+Function Entry code:
+---------------------
+100595b0:	stwu    r1,-112(r1)   # save r1 at r1-112 and then make r1 point at that location
+100595b4:	mflr    r0            # save link register contents in r0
+100595bc:	stw     r30,104(r1)   # save r30 at r1+104 because the function will use this register
+100595c0:	mr      r30,r3        # put first passed function parameter in r30
+100595c4:	stw     r31,108(r1)   # save r31 at r1+108
+100595c8:	mr      r31,r4        # put the second passed function parameter in r31
+100595cc:	stw     r0,116(r1)    # save r0 at r1+116, r0 has the contents of link register
+
+
+
+
+Function Exit code:
+-------------------
+100595f8:	mr      r3,r0        # move contents of r0 to r3, this will be the return value of the function
+100595fc:	lwz     r30,104(r1)  # restore contents of r30 from the location r1+104
+10059600:	lwz     r0,116(r1)   # restore contents of r0 from the location r1+116
+10059604:	lwz     r31,108(r1)  # restore contents of r31 from the location r1+108
+10059608:	addi    r1,r1,112    # destroy local stack, i.e., restore r1
+1005960c:	mtlr    r0           # restore link register
+10059610:	blr                  # return from the function.
+
+
+
+Notes
+-------------------
+Assembler directives
+.file
+.text  
+
+Lables, named location in code
+main:
+.LFEO:
+
+%           register name
+$           constant value
+
+pushl       l says use the 32 bit version of push
+            it will decrement the SP appropriately
+
+%ebp        memory location pointed by ebp
+-4(%ebp)    offset fromt the memory location
+
+
+
+bss section
+-------------------
+Does not take any space in memory because it is initialized to zero
+

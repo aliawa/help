@@ -1,0 +1,48 @@
+<!-- ***********************************************************
+Example 5-9
+"Dynamic HTML:The Definitive Reference"
+by Danny Goodman
+Published by O'Reilly & Associates  ISBN 1-56592-494-0
+http://www.oreilly.com
+Copyright 1998 Danny Goodman.  All Rights Reserved.
+************************************************************ -->
+
+<HTML>
+<HEAD>
+<TITLE>A Hot Time in IE</TITLE>
+<STYLE TYPE="text/css">
+	#hot1 {color:red}
+</STYLE>
+<SCRIPT LANGUAGE="JavaScript">
+// Set global variables
+var totalCycles = 0
+var currColor = 1
+var colors, intervalID
+// Build array of color names
+function init() {
+	colors = new Array(4)
+	colors[1] = "red"
+	colors[2] = "green"
+	colors[3] = "yellow"
+	colors[4] = "blue"
+}
+// Advance the color by one
+function cycleColors() {
+	// reset counter to 1 if it reaches 4; otherwise increment by 1
+	currColor = (currColor == 4) ? 1 : ++currColor
+	// set style color to new color from array
+	document.all.hot1.style.color = colors[currColor]
+	// invoke this function again until total = 27 so it ends on red
+	if (totalCycles++ < 27) {
+		intervalID = setTimeout("cycleColors()", 100)
+	} else {
+		clearTimeout(intervalID)
+	}
+}
+</SCRIPT>
+</HEAD>
+<BODY onLoad="init(); cycleColors()">
+<H1>Welcome to the <SPAN ID=hot1>Hot Zone</SPAN> Web Site</H1>
+<HR>
+</BODY>
+</HTML>

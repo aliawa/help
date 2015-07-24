@@ -1,0 +1,7 @@
+Hide user in login screen
+Edit /etc/gdm/custom.conf and add or change the Exclude directive in the
+[greeter] section:
+
+[greeter]
+Exclude=nobody,alice,bob
+

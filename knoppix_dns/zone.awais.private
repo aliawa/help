@@ -1,0 +1,16 @@
+;
+; awais.private 
+;
+$TTL 1D
+$ORIGIN awais.private.
+@              IN  SOA   @  root (
+                         1   ; Serial
+                         8H  ; Refresh
+                         15M ; Retry
+                         1W  ; Expire
+                         1D) ; Minimum TTL
+               IN   NS   @
+               IN   A    192.168.1.164
+1.0.0.1    60 IN NAPTR 100 10 "u" "E2U+SIP" "!^.*$!sip:15555551001@ewn-enum-1.seiri.com:6080!".
+
+

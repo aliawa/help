@@ -1,0 +1,32 @@
+General:
+    - vncserver: script to launch Xvnc
+	- Xvnc	: The actual vnc server
+	- vncpw : change vnc password
+
+
+Start:
+    - vncserver
+    - enter passwd at prompt
+
+Stop:
+    - vncserver -kill awaislinux.localdomain:1
+	- vncserver -kill :1
+
+Connecting to:
+    - in vnc server field enter: 192.168.1.166:1
+
+Start at startup
+    - chkconfig --level 5 vncserver on
+    - edit /etc/sysconfig/vncserver 
+    - put VNCSERVERS="1:aawais"
+    - put VNCSERVERARGS[1]="geometry 1024x768"
+
+Change window manager
+    - edit $HOME/.vnc/xstartup file
+    - for twm use: twm & 
+    - for gnome use: gnome-session &
+    - for kde use: startkde &
+
+Configue .twm 
+    - edit $HOME/.twmrc file
+

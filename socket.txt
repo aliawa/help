@@ -1,0 +1,15 @@
+- Get the local name (IP address and port)
+   EWN_IP localAddr;
+   int localAddrLen = sizeof(EWN_IP);
+   getsockname(sock, (struct sockaddr *)&localAddr, (socklen_t *)&localAddrLen);
+   MAND_LOG(DBG_SIPTCP, "TCP ServerConnection, start listening on %s",ip_addr2str1(&localAddr, EWN_SHOWPORT));
+
+
+- Socket retrun values:
+  -1 : failure, use errno to get system error. Be careful about thread safety
+       with errno.
+
+   0 : Socket is closed.
+
+
+

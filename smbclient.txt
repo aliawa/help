@@ -1,0 +1,44 @@
+
+ftp like client for windows shares (SMB)
+-----------------------------------------
+
+1.  available shares             
+    smbclient -L albab
+    smbclient -L 10.10.13.164
+
+2.  connect to share             
+    smbclient //albab/C$ -U aawais
+    smbclient //10.10.13.164/SharedDocs
+
+3.  commands:
+    --------
+    cd   [dir-name-on-server]
+    lcd  <local-dir-name>
+
+    put  <local-file-name>  [remote-file-name]
+    get  <remote-file-name> [local-file-name]
+
+    mget <mask>
+    mput <mask>
+    prompt    (turn of prompting for confirmation in mget mput)
+  
+    ?         (get list of commands)
+    quit
+    
+    rm <mask>
+    rd <dir-name-on-server>
+
+
+
+
+one line operation:
+------------------
+smbclient //albab/C$ -U aawais%<password> -c 'put /root/downloads/nat.cc tmp\nat.cc'
+
+
+
+get files from Snap2
+--------------------
+smbclient //EWNSNAP2/Pub1 -U aawais% -c 'get Ali\http.pcap http.pcap'
+
+

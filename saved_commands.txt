@@ -1,0 +1,35 @@
+- show files that have been locally modified 
+  $ smods | sed -e 's/^[AM] //' | sed '/^?.*/d'
+
+
+- get the beta version tags for a given NEW_TAG
+  $ cvs log Makefile | grep ${NEW_TAG}Beta | sed 's/^[ \t]*//;s/:.*$//'
+
+
+- ejecting a cd
+  $ cdrecord -eject
+
+  $ sudo mount -t iso9660 /dev/cdrom dvd/
+  $ sudo umount /dev/cdrom
+
+- verifying a cd image
+- get the size of written data for count= (see below)
+  $  echo $(( $(ls -l ver_7_11_4.iso | awk '{ print $5 }') / 2048 ))
+
+- md5 of cd
+  $ sudo dd if=/dev/sr0 bs=2048 count=1784600 | md5sum
+
+- md5 of iso image
+  $ cat ver_7_11_4.iso | md5sum
+
+
+- cvs2cl
+  $ cvs2cl -g '-q' --hide-filenames -W 3600 --no-times --no-indent
+  --follow-only trunk -R '^((?!NA:).)*$' --delta ver_7_11_4:qa_nightly_tag
+
+- get all checkins from a developer between given dates
+  cvs2cl -g '-q' -W 3600 --follow-only trunk -l -d"$2008-08-01<$2008-09-01" -l -wmmattsson .
+
+
+- get the mand symbols file:
+  scp x86qa@10.10.10.119:~/edgebuild941br/E4600/e30/mand/mand.symbols .

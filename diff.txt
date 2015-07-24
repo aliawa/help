@@ -1,0 +1,94 @@
+
+vimdiff            (1)  - edit two or three versions of a file with Vim and sh
+diff3              (1)  - find differences between three files
+
+diff               (1)  - find differences between two files
+lsdiff             (1)  - show which files are modified by a patch
+diffstat           (1)  - make histogram from diff-output
+
+bzdiff             (1)  - compare bzip2 compressed files
+zdiff              (1)  - compare compressed files
+
+
+Example 1: net-snmp has old files and net-snmp-new has newly changed files
+-------------------------------------------------------------------------
+1. from directory one level above net-snmp:
+
+   $ diff -b -B --unified=3 net-snmp/configure net-snmp-new/configure > configureDiff.txt
+
+   -b: ignore changes in white space
+   -B: ignore blank lines insertion/deletion
+   --unified=3: unified output file format with 3 lines of context
+
+2. in the net-snmp directory:
+
+   $ patch -p1 < configureDiff.txt
+
+   -p1: remove one directory level e.g:
+   "net-snmp/configure" is converted to "configrue"
+
+
+
+Example 2: files in src/new used to update files in proj/src/old
+-----------------------------------------------------------------
+1. create the pathfile
+   diff -burN proj/src/old  src/new > patchfile
+   The order is important the patch will be applied to the first file
+   
+
+2. Apply the patch
+   patch -p0 < patchfile
+
+   patch will be applied to first file listed in the patchfile, which in 
+   this case will be 'src/old'
+   -p0 is needed to preserve the path, otherwise 'proj/src/old' will 
+   become 'old'.
+   use -p1 if running patch from proj directory to tell patch to patch
+   src/old
+   
+
+
+
+Applying patch to some of the files in a directory
+---------------------------------------------------
+1. Creating patch:
+   cd repro
+   cat ~/workspace/changedFiles.txt | xargs -i diff -b -B --unified=3 {} \
+   ~/5300_box/snapgear/lib/resiprocate/repro{} >> resip-1.1.patch
+
+
+2. Applying patch:
+   patch < resip-1.1.patch
+
+
+Patching a files in current dir with files from another dir
+-----------------------------------------------------------
+cat changedFilesList.txt | xargs -i diff -burN {} ~/tmp/{} | patch
+
+
+What files differ in 2 directories
+----------------------------------
+1. create a file with exclude patterns with one pattern on each line
+   for example:
+   *.o
+   *~
+   *kdevelop*
+   *kdevses*
+
+2. diff --brief --exclude-from=excludepattern . ~/5300/e30/mand/ | egrep '^Files.*' \
+ | sed 's/and//
+
+
+Selecting only c h and cpp files
+--------------------------------
+
+find ~/project/5300_78/e30/mand -maxdepth 1 -regex '.*\.[ch]\(pp\)?' | xargs
+-i basename {} | xargs -i diff -buN mand/{} ~/project/5300_78/e30/mand/{} >
+patchfile2.txt
+
+
+
+
+patch files that match a pattern
+--------------------------------
+find . -regex './b2bua.*[hp]$' | xargs -i diff -u {} $DIFF_TARGET/ > patchfile.txt

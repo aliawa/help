@@ -1,0 +1,148 @@
+<!-- ***********************************************************
+Example 6-4
+"Dynamic HTML:The Definitive Reference"
+by Danny Goodman
+Published by O'Reilly & Associates  ISBN 1-56592-494-0
+http://www.oreilly.com
+Copyright 1998 Danny Goodman.  All Rights Reserved.
+************************************************************ -->
+
+<HTML> 
+<HEAD> 
+<TITLE>It's a Drag</TITLE> 
+<STYLE TYPE="text/css">
+	#imgA {position:absolute; left:50; top:100; width:120; border:solid black 1px; 
+		z-index:0}
+	#imgB {position:absolute; left:110; top:145; width:120; border:solid black 1px; 
+		z-index:0}
+</STYLE>
+<SCRIPT LANGUAGE="JavaScript">
+// Global variables for platform branching
+var isNav, isIE
+if (parseInt(navigator.appVersion) >= 4) {
+	if (navigator.appName == "Netscape") {
+		isNav = true
+	} else {
+		isIE = true
+	}
+}
+
+// ***Begin Utility Functions***
+// Set zIndex property
+function setZIndex(obj, zOrder) {
+	obj.zIndex = zOrder
+}
+// Set element background color (only works dynamically in IE)
+function setBorderColor(obj, color) {
+	obj.borderColor = color
+}
+// Position an object at a specific pixel coordinate
+function shiftTo(obj, x, y) {
+	if (isNav) {
+		obj.moveTo(x,y)
+	} else {
+		obj.pixelLeft = x
+		obj.pixelTop = y
+	}
+}
+// ***End Utility Functions***
+
+// Global holds reference to selected element
+var selectedObj
+// Globals hold location of click relative to element
+var offsetX, offsetY
+
+// Find out which element has been clicked on
+function setSelectedElem(evt) {
+	if (isNav) {
+		var clickX = evt.pageX
+		var clickY = evt.pageY
+		var testObj
+		for (var i = document.layers.length - 1; i >= 0; i--) {
+			testObj = document.layers[i]
+			if ((clickX > testObj.left) && 
+				(clickX < testObj.left + testObj.clip.width) && 
+				(clickY > testObj.top) && 
+				(clickY < testObj.top + testObj.clip.height)) {
+				selectedObj = testObj
+				if (selectedObj) {
+					setBorderColor(selectedObj, "red")
+					setZIndex(selectedObj, 100)
+					return
+				}
+			}
+		}
+	} else {
+		var imgObj = window.event.srcElement
+		selectedObj = imgObj.parentElement.style
+		if (selectedObj) {
+			setBorderColor(selectedObj, "red")
+			setZIndex(selectedObj,100)
+			return
+		}
+	}
+	selectedObj = null
+	return
+}
+// Drag an element
+function dragIt(evt) {
+	if (selectedObj) {
+		if (isNav) {
+			shiftTo(selectedObj, (evt.pageX - offsetX), (evt.pageY - offsetY))
+		} else {
+			shiftTo(selectedObj, (window.event.clientX - offsetX), 
+			(window.event.clientY - offsetY))
+			// prevent further system response to dragging
+			return false
+		}
+	}
+}
+// Turn selected element on
+function engage(evt) {
+	setSelectedElem(evt)
+	if (selectedObj) {
+		if (isNav) {
+			offsetX = evt.pageX - selectedObj.left
+			offsetY = evt.pageY - selectedObj.top
+		} else {
+			offsetX = window.event.offsetX
+			offsetY = window.event.offsetY
+		}
+	}
+	// prevent further processing of mouseDown event so that
+	// the Macintosh doesn't display the contextual menu and
+	// lets dragging work normally.
+	return false
+}
+// Turn selected element off
+function release(evt) {
+	if (selectedObj) {
+		setZIndex(selectedObj, 0)
+		setBorderColor(selectedObj, "black")
+		selectedObj = null
+	}
+}
+// Set event capture for Navigator
+function setNSEventCapture() {
+	if (isNav) {
+		document.captureEvents(Event.MOUSEDOWN | Event.MOUSEMOVE | Event.MOUSEUP)
+	}
+}
+// Assign event handlers used by both Navigator and IE
+function init() {
+	if (isNav) {
+		setNSEventCapture()
+	}
+	document.onmousedown = engage
+	document.onmousemove = dragIt
+	document.onmouseup = release
+}
+</SCRIPT> 
+</HEAD> 
+<BODY onLoad="init()"> 
+<H1>Element Dragging</H1> 
+<HR>
+<DIV ID=imgA><IMG SRC="myImage1.gif" WIDTH=120 HEIGHT=90 BORDER=0></DIV>
+<DIV ID=imgB><IMG SRC="myImage2.gif" WIDTH=120 HEIGHT=90 BORDER=0></DIV>
+</BODY> 
+</HTML>

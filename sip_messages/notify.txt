@@ -1,0 +1,167 @@
+NOTIFY sip:7405557000@192.168.1.101:5060;transport=tcp SIP/2.0
+Via: SIP/2.0/TCP 192.168.1.231:5060;branch=z9hG4bK-BroadWorks.12.48.203.191-12.48.202.231V5060-0-514050924-339407805-1223505988206
+Record-Route: <sip:7405557000@192.168.1.231;transport=tcp;lr>
+From: <sip:blf2@192.168.1.231>;tag=339407805-1223505988206
+To: "7000" <sip:7405557000@192.168.1.231>;tag=A6DFB755-ED2C8344
+Call-ID: b5033071-2e1eaec3-cb8018d2@192.168.1.101
+CSeq: 514050924 NOTIFY
+Contact: <sip:192.168.1.231:5060>
+Require: eventlist
+Event: dialog
+Subscription-state: active;expires=3598
+Max-forwards: 10
+Content-Type: multipart/related; boundary=UniqueBroadWorksBoundary; type=application/rlmi+xml
+Content-Length:  9223
+
+
+--UniqueBroadWorksBoundary
+content-type: application/rlmi+xml
+Content-Length: 2177
+Content-ID: <W4m0E4@broadworks>
+
+<?xml version="1.0" encoding="UTF-8"?><list xmlns="urn:ietf:params:xml:ns:rlmi" uri="sip:blf2@12.48.203.191:5060" version="0" fullState="true">
+<resource uri="sip:7405557011@12.48.203.191"><name>Ali1 7011</name><instance id="nQC5XWhpwO" state="active" cid="R0ryCJ@broadworks"/></resource>
+<resource uri="sip:7405557012@12.48.203.191"><name>Ali2 7012</name><instance id="2z2H1JcDqA" state="active" cid="ZBZG1X@broadworks"/></resource>
+<resource uri="sip:7405557014@12.48.203.191"><name>Ali 7405557014</name><instance id="6oqVt0E9gO" state="active" cid="oOX1Ey@broadworks"/></resource>
+<resource uri="sip:7405557001@12.48.203.191"><name>7405557001 7405557001</name><instance id="foALyq1NU3" state="active" cid="0wj58G@broadworks"/></resource>
+<resource uri="sip:7405557002@12.48.203.191"><name>7405557002 7405557002</name><instance id="kJnDyef5sc" state="active" cid="eGpXRo@broadworks"/></resource>
+<resource uri="sip:7405557003@12.48.203.191"><name>7405557003 7405557003</name><instance id="1UWhbg7w26" state="active" cid="z24cza@broadworks"/></resource>
+<resource uri="sip:7405557004@12.48.203.191"><name>7405557004 7405557004</name><instance id="yg6ZOPKvhV" state="active" cid="8oj8G3@broadworks"/></resource>
+<resource uri="sip:7405557005@12.48.203.191"><name>7405557005 7405557005</name><instance id="jMtH3J6V7I" state="active" cid="TegFpA@broadworks"/></resource>
+<resource uri="sip:7405557006@12.48.203.191"><name>7405557006 7405557006</name><instance id="NYitEJhTvs" state="active" cid="gylU30@broadworks"/></resource>
+<resource uri="sip:7405557007@12.48.203.191"><name>7405557007 7405557007</name><instance id="zR7TZzge16" state="active" cid="pFHC6r@broadworks"/></resource>
+<resource uri="sip:7405557008@12.48.203.191"><name>7405557008 7405557008</name><instance id="wlYJRqt7yw" state="active" cid="XaQ69N@broadworks"/></resource>
+<resource uri="sip:7405557009@12.48.203.191"><name>7405557009 7405557009</name><instance id="xiDSC6OKpE" state="active" cid="2LQEGe@broadworks"/></resource>
+<resource uri="sip:7405557010@12.48.203.191"><name>7405557010 7405557010</name><instance id="rBW8rCsuHQ" state="active" cid="DJkuiB@broadworks"/></resource>
+</list>
+--UniqueBroadWorksBoundary
+content-type: application/dialog-info+xml
+Content-Length: 384
+Content-ID: <R0ryCJ@broadworks>
+
+<?xml version="1.0" encoding="UTF-8"?><dialog-info xmlns="urn:ietf:params:xml:ns:dialog-info" version="0" state="full"  entity="7405557011@12.48.203.191"><dialog id="QnlJQlFa"><state>terminated</state>
+<local><identity display="Ali1 7011">sip:7405557011@12.48.203.191</identity><identity display="Ali1 7011">tel:+17405557011;ext=7011</identity></local>
+
+</dialog>
+</dialog-info>
+--UniqueBroadWorksBoundary
+content-type: application/dialog-info+xml
+Content-Length: 384
+Content-ID: <ZBZG1X@broadworks>
+
+<?xml version="1.0" encoding="UTF-8"?><dialog-info xmlns="urn:ietf:params:xml:ns:dialog-info" version="0" state="full"  entity="7405557012@12.48.203.191"><dialog id="c0VaRklH"><state>terminated</state>
+<local><identity display="Ali2 7012">sip:7405557012@12.48.203.191</identity><identity display="Ali2 7012">tel:+17405557012;ext=7012</identity></local>
+
+</dialog>
+</dialog-info>
+--UniqueBroadWorksBoundary
+content-type: application/dialog-info+xml
+Content-Length: 394
+Content-ID: <oOX1Ey@broadworks>
+
+<?xml version="1.0" encoding="UTF-8"?><dialog-info xmlns="urn:ietf:params:xml:ns:dialog-info" version="0" state="full"  entity="7405557014@12.48.203.191"><dialog id="M3VLaUs5"><state>terminated</state>
+<local><identity display="Ali 7405557014">sip:7405557014@12.48.203.191</identity><identity display="Ali 7405557014">tel:+17405557014;ext=7014</identity></local>
+
+</dialog>
+</dialog-info>
+--UniqueBroadWorksBoundary
+content-type: application/dialog-info+xml
+Content-Length: 408
+Content-ID: <0wj58G@broadworks>
+
+<?xml version="1.0" encoding="UTF-8"?><dialog-info xmlns="urn:ietf:params:xml:ns:dialog-info" version="0" state="full"  entity="7405557001@12.48.203.191"><dialog id="T1daMEhm"><state>terminated</state>
+<local><identity display="7405557001 7405557001">sip:7405557001@12.48.203.191</identity><identity display="7405557001 7405557001">tel:+17405557001;ext=7001</identity></local>
+
+</dialog>
+</dialog-info>
+--UniqueBroadWorksBoundary
+content-type: application/dialog-info+xml
+Content-Length: 408
+Content-ID: <eGpXRo@broadworks>
+
+<?xml version="1.0" encoding="UTF-8"?><dialog-info xmlns="urn:ietf:params:xml:ns:dialog-info" version="0" state="full"  entity="7405557002@12.48.203.191"><dialog id="cnNLeUI2"><state>terminated</state>
+<local><identity display="7405557002 7405557002">sip:7405557002@12.48.203.191</identity><identity display="7405557002 7405557002">tel:+17405557002;ext=7002</identity></local>
+
+</dialog>
+</dialog-info>
+--UniqueBroadWorksBoundary
+content-type: application/dialog-info+xml
+Content-Length: 408
+Content-ID: <z24cza@broadworks>
+
+<?xml version="1.0" encoding="UTF-8"?><dialog-info xmlns="urn:ietf:params:xml:ns:dialog-info" version="0" state="full"  entity="7405557003@12.48.203.191"><dialog id="cVVROHIy"><state>terminated</state>
+<local><identity display="7405557003 7405557003">sip:7405557003@12.48.203.191</identity><identity display="7405557003 7405557003">tel:+17405557003;ext=7003</identity></local>
+
+</dialog>
+</dialog-info>
+--UniqueBroadWorksBoundary
+content-type: application/dialog-info+xml
+Content-Length: 408
+Content-ID: <8oj8G3@broadworks>
+
+<?xml version="1.0" encoding="UTF-8"?><dialog-info xmlns="urn:ietf:params:xml:ns:dialog-info" version="0" state="full"  entity="7405557004@12.48.203.191"><dialog id="Sjg1aWdm"><state>terminated</state>
+<local><identity display="7405557004 7405557004">sip:7405557004@12.48.203.191</identity><identity display="7405557004 7405557004">tel:+17405557004;ext=7004</identity></local>
+
+</dialog>
+</dialog-info>
+--UniqueBroadWorksBoundary
+content-type: application/dialog-info+xml
+Content-Length: 408
+Content-ID: <TegFpA@broadworks>
+
+<?xml version="1.0" encoding="UTF-8"?><dialog-info xmlns="urn:ietf:params:xml:ns:dialog-info" version="0" state="full"  entity="7405557005@12.48.203.191"><dialog id="cUwzZk44"><state>terminated</state>
+<local><identity display="7405557005 7405557005">sip:7405557005@12.48.203.191</identity><identity display="7405557005 7405557005">tel:+17405557005;ext=7005</identity></local>
+
+</dialog>
+</dialog-info>
+--UniqueBroadWorksBoundary
+content-type: application/dialog-info+xml
+Content-Length: 408
+Content-ID: <gylU30@broadworks>
+
+<?xml version="1.0" encoding="UTF-8"?><dialog-info xmlns="urn:ietf:params:xml:ns:dialog-info" version="0" state="full"  entity="7405557006@12.48.203.191"><dialog id="NUhBSXJN"><state>terminated</state>
+<local><identity display="7405557006 7405557006">sip:7405557006@12.48.203.191</identity><identity display="7405557006 7405557006">tel:+17405557006;ext=7006</identity></local>
+
+</dialog>
+</dialog-info>
+--UniqueBroadWorksBoundary
+content-type: application/dialog-info+xml
+Content-Length: 408
+Content-ID: <pFHC6r@broadworks>
+
+<?xml version="1.0" encoding="UTF-8"?><dialog-info xmlns="urn:ietf:params:xml:ns:dialog-info" version="0" state="full"  entity="7405557007@12.48.203.191"><dialog id="YU9mM2Z2"><state>terminated</state>
+<local><identity display="7405557007 7405557007">sip:7405557007@12.48.203.191</identity><identity display="7405557007 7405557007">tel:+17405557007;ext=7007</identity></local>
+
+</dialog>
+</dialog-info>
+--UniqueBroadWorksBoundary
+content-type: application/dialog-info+xml
+Content-Length: 408
+Content-ID: <XaQ69N@broadworks>
+
+<?xml version="1.0" encoding="UTF-8"?><dialog-info xmlns="urn:ietf:params:xml:ns:dialog-info" version="0" state="full"  entity="7405557008@12.48.203.191"><dialog id="cWxnZXNW"><state>terminated</state>
+<local><identity display="7405557008 7405557008">sip:7405557008@12.48.203.191</identity><identity display="7405557008 7405557008">tel:+17405557008;ext=7008</identity></local>
+
+</dialog>
+</dialog-info>
+--UniqueBroadWorksBoundary
+content-type: application/dialog-info+xml
+Content-Length: 408
+Content-ID: <2LQEGe@broadworks>
+
+<?xml version="1.0" encoding="UTF-8"?><dialog-info xmlns="urn:ietf:params:xml:ns:dialog-info" version="0" state="full"  entity="7405557009@12.48.203.191"><dialog id="SjB0djcx"><state>terminated</state>
+<local><identity display="7405557009 7405557009">sip:7405557009@12.48.203.191</identity><identity display="7405557009 7405557009">tel:+17405557009;ext=7009</identity></local>
+
+</dialog>
+</dialog-info>
+--UniqueBroadWorksBoundary
+content-type: application/dialog-info+xml
+Content-Length: 408
+Content-ID: <DJkuiB@broadworks>
+
+<?xml version="1.0" encoding="UTF-8"?><dialog-info xmlns="urn:ietf:params:xml:ns:dialog-info" version="0" state="full"  entity="7405557010@12.48.203.191"><dialog id="cXVGVnNu"><state>terminated</state>
+<local><identity display="7405557010 7405557010">sip:7405557010@12.48.203.191</identity><identity display="7405557010 7405557010">tel:+17405557010;ext=7019</identity></local>
+
+</dialog>
+</dialog-info>
+--UniqueBroadWorksBoundary--

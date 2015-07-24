@@ -1,0 +1,15 @@
+SUBSCRIBE sip:SDbbqc3-meccfempfbv5tjsqkvm46ka5h3k6hvg1096hfa92fugh9jtfk9op0ohg6ohg00hoop4nqorgh1lahffoaofndsnk4o4u7e061e6uf42000021@192.168.1.190:5060;att=HATTCENTREX-5cfhslaerassa;transport=udp SIP/2.0
+Via: SIP/2.0/UDP 192.168.1.152:5060;branch=z9hG4bK5682082133BB2DF2
+From: "JAE-SUN CHIN" <sip:2408881023@bvoip.att.net>;tag=74A0B633-683B28DE
+To: <sip:SDbbqc3-meccfempfbv5tjsqkvm46ka5h3k6hvg1096hfa92fugh9jtfk9op0ohg6ohg00hoop4nqorgh1lahffoaofndsnk4o4u7e061e6uf42000021@192.168.1.190:5060>
+CSeq: 1 SUBSCRIBE
+Call-ID: a8bcfbd7-2daf995d-ea9fae60@192.168.1.190
+Contact: <sip:2408881023@192.168.1.190:5060>
+Allow: INVITE, ACK, BYE, CANCEL, OPTIONS, INFO, MESSAGE, SUBSCRIBE, NOTIFY, PRACK, UPDATE, REFER
+Event: dialog;sla;include-session-description
+User-Agent: PolycomSoundPointIP-SPIP_601-UA/3.0.3.0401_0004f205597f
+Accept: application/dialog-info+xml
+Max-Forwards: 70
+Expires: 3700
+Content-Length: 0
+

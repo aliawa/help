@@ -1,0 +1,51 @@
+<!-- ***********************************************************
+Example 6-3
+"Dynamic HTML:The Definitive Reference"
+by Danny Goodman
+Published by O'Reilly & Associates  ISBN 1-56592-494-0
+http://www.oreilly.com
+Copyright 1998 Danny Goodman.  All Rights Reserved.
+************************************************************ -->
+
+<HTML> 
+<HEAD> 
+<TITLE>Button Codes / Key Codes</TITLE> 
+<SCRIPT LANGUAGE="JavaScript"> 
+var isNav, isIE
+if (parseInt(navigator.appVersion) >= 4) {
+	if (navigator.appName == "Netscape") {
+		isNav = true
+	} else {
+		isIE = true
+	}
+}
+function showBtnOrKey(evt) { 
+   var theBtnOrKey 
+   if (isNav) { 
+      theBtnOrKey = evt.which 
+   } else { 
+      if (window.event.srcElement.type == "textarea") { 
+         theBtnOrKey = window.event.keyCode 
+      } else if (window.event.srcElement.type == "button") { 
+         theBtnOrKey = window.event.button 
+      } 
+   } 
+   status = theBtnOrKey 
+   return false 
+} 
+</SCRIPT> 
+</HEAD> 
+<BODY> 
+<H1>Mouse Button and Key Codes from Event Objects</H1> 
+<HR> 
+<FORM> 
+<P>Click on this 
+<INPUT TYPE="button" VALUE="Button" onClick="showBtnOrKey(event)"> 
+with either mouse button (if you have more than one).</P> 
+<P>Enter some text with uppercase and lowercase letters:<BR> 
+<TEXTAREA COLS=30 ROWS=4 onKeyPress="showBtnOrKey(event)" WRAP="virtual">
+</TEXTAREA></P> 
+</FORM> 
+(Results appear in the status bar as you click or type.) 
+</BODY> 
+</HTML>

@@ -1,0 +1,50 @@
+<!-- ***********************************************************
+Example 5-5
+"Dynamic HTML:The Definitive Reference"
+by Danny Goodman
+Published by O'Reilly & Associates  ISBN 1-56592-494-0
+http://www.oreilly.com
+Copyright 1998 Danny Goodman.  All Rights Reserved.
+************************************************************ -->
+
+<HTML>
+<HEAD>
+<TITLE>A New Window</TITLE>
+<SCRIPT LANGUAGE="JavaScript">
+// Global variable for subwindow reference
+var newWindow
+// Version flag for old browsers (Nav2/IE3)
+var oldStuff = parseInt(navigator.appversion) < 3
+// Generate and fill the new window
+function makeNewWindow() {
+	// make sure it isn't already opened
+		newWindow = window.open("","sub","status,height=200,width=300")
+		// handle Navigator 2, which doesn't have an opener property
+		if (!newWindow.opener) {
+			newWindow.opener = window
+		}
+		// delay writing until window exists in IE3
+		setTimeout("writeToWindow()", 500)
+	if (!oldStuff) {
+		// window is already open so bring it to the front
+		newWindow.focus()
+	}
+}
+function writeToWindow() {
+	// assemble content for new window
+	var newContent = "<HTML><HEAD><TITLE>One Sub Window</TITLE></HEAD>\n"
+	newContent += "<BODY>\n<H1>This is a new window.</H1>\n"
+	newContent += "</BODY>\n</HTML>"
+	// write HTML to new window document
+	newWindow.document.write(newContent)
+	newWindow.document.close() // close layout stream
+}
+</SCRIPT>
+</HEAD>
+<BODY>
+<FORM>
+<INPUT TYPE="button" NAME="newOne" VALUE="Create New Window"
+ onClick="makeNewWindow()">
+</FORM>
+</BODY>
+</HTML>

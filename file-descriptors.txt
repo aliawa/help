@@ -1,0 +1,48 @@
+No. of open file descriptors allowed on the system
+--------------------------------------------------
+# cat /proc/sys/fs/file-max
+
+
+
+how many file descriptors are being used?
+------------------------------------------
+# cat /proc/sys/fs/file-nr
+3391    969     52427
+|		 |       |
+|   	 |       |_ Maximum open file descriptors
+|    	 |_ Allocated file descriptors that are free now
+|_ Total allocated file descriptors since boot
+
+No. of open file descriptors = col1 - col2
+
+
+
+Change Max allowed file descriptors
+-----------------------------------
+# echo "104854" > /proc/sys/fs/file-max 
+
+
+
+
+Per-process file descriptor limits
+-----------------------------------
+Each user has per-process file descriptor limits. It defaults to 1024.
+
+Check the limit with:
+ulimit -n
+
+Increasing the limit:
+Method 1: 
+Edit /etc/security/limits.conf file. For example to set
+the hard limit of no-of-open-files for user john to 16384
+john hard nofile 16384
+
+Method 2:
+$ su - root
+# ulimit -n 16384 
+
+
+
+
+
+

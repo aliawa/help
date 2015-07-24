@@ -1,0 +1,45 @@
+DUT:
+telnet 10.10.60.17
+login (root/tos1byte)
+
+LAN server:
+ssh autom@10.10.60.151
+
+WAN server:
+ssh autom@10.10.60.171
+
+on both servers :
+cd /mnt/test_data/test_exec_dir/2010/11/09/11_48_54-au4600_17-sip_b2bua_sanity
+
+sipp server on 171 :
+sudo /usr/local/bin/sipp.3.1 -i 10.10.50.171 -p 6460 -trace_msg -mp 17860 -trace_err -trace_screen -sf 'uas_re_invite.xml' -buff_size 2048000 -mb 2048000 -inf data_call_1.csv 192.168.1.17
+
+sipp client on 151 :
+sudo /usr/local/bin/sipp.3.1 -i 192.168.1.151 -p 6460 -trace_msg -trace_err -trace_screen -mp 17860 -inf 'data_call_1.csv' -l 30 -r 10 -d 3000 -m 600 -trace_screen -sf 'uac_re_invite.xml' -buff_size 2048000 -mb 2048000 192.168.1.17
+
+
+
+
+Cablevision PBX tests
+----------------------
+Ali - the WAN server ip is :
+10.10.70.71 (autom/tos1byte)
+
+The LAN server ip is :
+10.10.70.51
+
+the spreadsheet with all IP addresses is at :
+\\10.10.10.86\QA\LAB\pbx_rack_configuration_info.xls
+
+From either the LAN or WAN server you can access the https dir at :
+/mnt/test_data/web_test_root/lan_51/cgi-bin/
+
+The https server should be available at 10.10.70.51.
+
+
+Upgrading firmware in a box
+---------------------------
+copy firware to: /mnt/test_data/ftp_root
+
+
+

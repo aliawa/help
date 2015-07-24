@@ -1,0 +1,53 @@
+yum groupinstall "Development Tools"
+yum install vim vim-X11
+
+
+getting ethx interface names
+-----------------------------
+edit /etc/default/grub
+add to GRUB_CMDLINE_LINUX, biosdevname=0
+grub2-mkconfig -o /boot/grub2/grub.cfg
+
+
+copy files and direcotries
+------------------
+setup_user_account.sh aawais 10.10.10.83
+scp aawais@10.10.10.83:/home/aawais/.bash_functions .
+scp aawais@10.10.10.83:/home/aawais/project/Makefile .
+scp -r aawais@10.10.10.83:/home/aawais/bin .
+scp -r awais@10.10.10.83:/home/aawais/help .
+
+
+
+Get Project scripts (e.g., sane)
+---------------------------------
+cd ~/project
+cvs co bin
+cp ~/project/bin/dot_ewn ~/.ewn
+sudo yum install xsel
+
+
+build setup
+-------------------
+setup_dev_system.sh
+
+
+7000 build
+------------
+su -
+cd /usr/lib/sse2
+ln -s libgmp.so.10.0.2 libgmp.so.3
+
+
+middle mouse button emulation
+------------------------------
+gsettings set org.gnome.settings-daemon.peripherals.mouse \
+     middle-button-enabled true
+
+
+
+
+Host_debug build
+------------------
+sudo build_dev_em.sh
+

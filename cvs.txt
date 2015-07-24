@@ -1,0 +1,266 @@
+LOGIN
+-----
+- Specifying a repository on command line
+  cvs -d :pserver:jrandom@cvs.foobar.com:/usr/local/cvs login
+
+- Specifying repository in environment variable
+  export CVSROOT=:pserver:aawais@10.10.10.59:/usr/local/cvsroot
+
+- login
+  cvs login
+
+
+STATUS
+------
+
+- Show all commits. Time in PST
+  cvs history -c -z PST pg_sys_cfg.c
+
+- Show all changes to mand by me since the creation of branch 
+  ver_9_1_0_br
+  cvs history -c -t ver_9_1_0_br e30/mand
+
+- show all changes since a particular date
+  cvs history -D 2006-08-13 -a -z PST -c | less
+
+- when was a branch created
+  cvs history -T -a -zPST
+
+- Show log, top of trunk, No tags
+  cvs log -Nb pg_sys_cfg.c | less
+
+- show changes between date1 and date2 on a particular branch
+  cvs log -N -d"2006-09-01<2006-09-05" -r1.42.2 | less
+
+- Show changes from a particular tag upto the end of branch
+  for a set of files listed in files.list. NOTE: there should be no
+  space between -r and the name of tag.
+  cvs log -re4500_6_7_12Beta1_os_base:: `cat file.list` | tee file.txt 
+
+- compare local copy of xyz.c to the cvs version on which it is based
+  cvs diff xyz.c
+
+- Status of local file
+  cvs status rasTask.cpp
+
+- diff between last 2 revisions of file
+  cvs rdiff -ut e30/mand/availability.c > file.txt
+  kompare file.txt
+
+  How to get the previous revision number of a file:
+  ----------------------------------------------------
+  In general the previous version is current version minus 1.
+  However this is not true if the file is on a branch.
+  If the revision number has 4 or more segments then it is on a branch
+  If the last segment of a revision number is 1 then remove last two segments to 
+  get the previous version. 
+  For example: Previous version of 1.42.14.1 is 1.42
+  File revision numbers will always have even number of segments.
+  Branch numbers have odd number of segments
+  Also the last segment of a branch is always a non-zero even number
+  For example: 1.42.13 and 1.42.0 cannot be a branch numbers
+  Note: in cvs log 1.42.14 will appear as 1.42.0.14 (internal cvs representation)
+
+
+  cvsblame on a branch
+  --------------------
+  cvs annotate -r ver_9_12_0_br sipMsg.c > blame.txt
+  open blame.txt and search for the line causing trouble and find the revision
+  number.
+  cvs log -r1.224.2.5  -N sipMsg.c
+
+
+  when was a tag created
+  ----------------------
+  cvs log -rver_10_2_0_5 -N incr_ver.def  | grep '\<date\>'
+
+
+  Algorithm for finding when a branch was created
+  ----------------------------------------------
+  cvs log incr_ver.def | grep ver_10_2_0_1_br
+      ver_10_2_0_1_br: 1.310.2.2.0.4
+
+  cvs log -r1.310.2.2 -N incr_ver.def
+
+
+
+
+
+PULL CODE
+---------
+
+- checkout
+  cvs -z3 -q co -r ver_6_1_2 -P e30
+
+- show what will be updated
+  U - file has been updated (no local modifications, so no merge necessary)
+  P - file has been "patched" (a bandwidth-efficient version of "U")
+  A - file has been locally added but not yet committed
+  R - file has been locally removed but not yet committed
+  M - Changes were merged with no conflicts.
+  C - conflicts detected in file during merge. 
+  ? - file is in working directory, but not in repository.
+  cvs -qn update 
+
+- update code, get new directories and ignore empty directories
+  cvs update -Pd
+
+- Pull code from a certain date                              
+  cvs update -D '01/25/2002 12:00 PDT'
+  
+- Pull code from certain branch/tag/revision 
+  cvs update -r tagname
+
+- Pull code from the trunk, resetting "sticky" tags (needed after 
+  you use "cvs update -D" or "cvs update -r")
+  cvs update -A
+
+- create a directory <dir> for the working files insted of using module names
+  same as: mkdir <dir>; cd <dir>; cvs co ...
+  cvs co -d mand e30/mand
+
+- Non recursive (l option)
+  cvs co -ld e30_build e30/build
+
+- Get previous version of file
+  cvs update -pr tagname filename > filename
+
+
+
+
+Tags (tags)
+-----------------------------------
+- apply tag to checked out versions of files 
+  cvs tag ver_8_8_3
+
+- apply tag to repository as of date
+  note: unlike tag, rtag does not require a working directory. Work on
+  repository directly.
+  cvs rtag -D <date>  filename
+
+- delete a non-branch tag ( use -B to delete branch tags)
+  $ cvs tag -d ver_6_7_3 e30
+
+- move tag 'stable' of backend.c to rev 1.6 
+  (use -B for branch tags)
+  $ cvs tag -r 1.6 -F stable backend.c
+
+- rename tag 'old-name-0-4' to 'rel-0-4'
+  $ cvs rtag -r old-name-0-4 rel-0-4 tc  // create new tag
+  $ cvs rtag -d old-name-0-4 tc          // delete old tag
+
+- See all tags that a file has, and which revision numbers they represent
+  $ cvs status -v availability.c
+
+
+
+
+Branching and merging
+---------------------
+- create a branch based on existing tag 'ver_10_2_0' in module 'e30'
+  $ cvs rtag -b -r ver_10_2_0  ver_10_2_0_1_br e30
+
+- create a branch based on current revisions in working copy
+  $ cvs tag -b rel-1-0-patches
+
+- create a branch based on date
+  $ cd e30
+  $ cvs tag -b -D '2007-02-28 20:34:03' ver_7_1_x_Abovetel_br
+
+- checkout a branch
+  $ cvs checkout -r rel-1-0-patches tc
+
+- switch working copy to branch
+  $ cd tc
+  $ cvs update -r rel-1-0-patches
+
+- Merge branch 'R1fix' to head of tree 
+  ( module 'mod' contains only one file 'm.c')
+  $ cvs checkout mod        
+  $ cvs update -j R1fix m.c
+  $ cvs commit -m "Included R1fix"
+
+- Delete a branch tag
+  cvs rtag -B -d ver_10_2_0_br  e30
+
+- Delete a non branch tag
+  cvs rtag -d rel-0-4 tc
+
+
+- Move a tag
+  Revision 1.6 of 'backend.c' should get the tag 'stable'
+  cvs tag -r 1.6 -F stable backend.c
+
+
+- Rename a tag
+  cvs rtag -r old-name-0-4 rel-0-4 tc
+  cvs rtag -d old-name-0-4 tc
+
+
+
+Adding, removing, and renaming files and directories
+----------------------------------------------------
+
+- Importing a new project into the repository
+  cvs import -m "initial import into CVS" myproj <vendor-tag> <release-tag> 
+
+- Adding File
+  cvs add newFile.c
+
+- Add a whole tree (adding 'resiprocate' to 'e30/snapgear-3.1.0/lib')
+  $ cd e30/snapgear-3.1.0/lib
+  $ cvs add resiprocate
+  $ cd resiprocate
+  $ find . -type d | xargs cvs add
+  $ find . -type f | grep -v CVS | xargs cvs add
+
+- Remove a file from CVS (it is not neccessary to remove directories )
+  cvs rm -f filename
+
+- Removing Directories (auto removed when empty)
+  cd dir
+  cvs rm -f *
+  cvs ci -m "removed all files" 
+  cd .. 
+  cvs update -P 
+
+- making sure all changes were checked in (with -d, also remove working dir)
+  $ cvs release e30
+
+
+
+
+
+rollback (roll back)
+-------------------
+- Undo all changes made between rev 1.3 and 1.5. (Note order of revisions)
+  $ cvs update -j 1.5 -j 1.3 backend.c
+
+- Restore deleted file
+  $ cvs update -j 1.2 -j 1.1 file1
+  $ cvs commit -m test
+
+- Roll back file to specified revision/tag/branch
+  cvs update -pr tagname filename > filename
+
+- Roll back file to specified date   
+  cvs update -pD '01/25/2002 12:00 PDT' filename > filename
+
+
+
+
+Modifying check-in comments on files in CVS after commit
+--------------------------------------------------------
+ cvs admin -m <file_revision_to_update>:"Updated log message" <file_name>
+ e.g.
+ cvs admin -m 1.12:"This is my new comment" test.pl
+For multi-line comments: 
+ cvs admin -m 1.7:"`cat new-log-message.txt`" date.c
+
+
+
+Long check-in comment
+---------------------
+ cvs ci -F comment.txt availability.c
+
+

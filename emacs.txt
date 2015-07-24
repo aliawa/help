@@ -1,0 +1,96 @@
+
+Format of this file
+
+ Ctrl-x: press x while depressing Ctrl
+ ESC v : press ESC, release it then press v
+ Alt-u is the same as ESC u
+ if more than one way, listed in order of preference
+
+Controlling an editing session
+
+ open file                              Ctrl-x Ctrl-f
+ save file                              Ctrl-x Ctrl-s
+ save as                                Ctrl-x Ctrl-w
+ close current file                     Ctrl-x k Enter
+ switch to next open file               Ctrl-x b Enter(or SPC for completion help)
+ insert file into current file          Ctrl-x i
+
+Search
+
+ search forward                                         Ctrl-s
+ search backwards                                       Ctrl-r
+ stop search, bring cursor at original position         Ctrl-g
+ stop search, leave crusor at point                     Enter
+ search previous term again                             Ctrl-s Alt-p
+ search and replace                                     ESC Shift-%    or  ESC x query-replace Enter
+
+Delete block of text
+
+  move cursor to start of block,        Ctrl-SPC or CTL-@ or select text with mouse
+  move cursor to end of block,          CTL-w
+  delete from point to end of line      Ctrl-k
+  delete upto next occurance of char    ESC z char
+
+Moving a block of text:
+
+  move cursor to start of block,        Ctrl-SPC or CTL-@ or select text with mouse
+  move cursor to end of block,          CTL-w
+  move cursor to new location,          CTL-y
+
+Copying a block of text:
+
+  move cursor to start of block,        Ctrl-SPC or CTL-@ or select text with mouse
+  move cursor to end of block,          CTL-w, CTL-y
+  move cursor to new location,          CTL-y or MiddleMouseBtn
+
+Cursor movement:
+
+  next screen                           PageDown    or CTL-v                 
+  previous screen                       PageUp      or ESC v                  
+  move crusor to start of line          CTL-a                 
+  move crusor to end of line            CTL-e                
+  move crusor to end of file            End         or ESC > or Alt-Shift->               
+  move cursor to start of file          Home        or ESC < or Alt-Shift-<                
+  move cursor to line nnn               ESC x goto-line Enter nnn Enter
+
+Edit
+
+  following word to upper-case          Alt-u
+  following word to lower-case          Alt-l
+  Undo                                  Ctrl-x u  or Ctrl-Shift-_
+
+Selecting
+
+  Set Mark here                          Ctrl-SPC or Ctrl-@
+  Select All                             Ctrl-x h
+  Select with mouse                      LBtn at start and RBtn at end
+
+
+
+Comments about pasting deleted text
+------------------------------------
+All deleted entries go to kill ring, 
+Ctrl-y pastes the latest entry from the kill ring at the cursor position  
+Alt-y  will cycle through all entries in the kill ring and will paste each entry successively.
+
+
+How did I configure emacs to act properly on [del] and [backspace]
+------------------------------------------------------------------
+put in .emacs file:
+from The Linux keyboard and console HOWTO
+
+(global-unset-key [backspace] )
+(global-set-key [backspace] 'delete-backward-char)
+(global-unset-key [delete] )
+(global-set-key [delete] 'delete-char)
+
+
+Problems for a user coming from windows world
+----------------------------------------------
+1. [del] and [backspace] both act as backspace
+2. if a region is selected [del] will not delete the region as expected
+3. cursor movement with arrow keys is very slow.
+4. Ctrl-x is Ctrl-w
+5. Ctrl-z is Alt-Shift and -
+6. Ctrl-v is Ctrl-y
+7. Ctrl-y is same as undo

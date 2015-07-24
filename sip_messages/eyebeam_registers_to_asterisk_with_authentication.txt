@@ -1,0 +1,79 @@
+REGISTER sip:10.10.13.159;transport=udp SIP/2.0
+Via: SIP/2.0/UDP 10.10.13.164:28352;branch=z9hG4bK-d8754z-5e18913fa003b766-1---d8754z-
+Max-Forwards: 70
+Contact: <sip:2408881028@10.10.13.164:28352;rinstance=2f7bf39f39584812;transport=udp>
+To: "1028_UDP"<sip:2408881028@10.10.13.159>
+From: "1028_UDP"<sip:2408881028@10.10.13.159>;tag=fa022355
+Call-ID: OGM4OTIzOGE5MGQxMTBkYjBkOTc4Yzk0N2M5Yzg3OGY.
+CSeq: 1 REGISTER
+Expires: 3600
+Allow: INVITE, ACK, CANCEL, OPTIONS, BYE, REFER, NOTIFY, MESSAGE, SUBSCRIBE, INFO
+User-Agent: eyeBeam release 1013t stamp 43069
+Content-Length: 0
+
+
+SIP/2.0 100 Trying
+Via: SIP/2.0/UDP 10.10.13.164:28352;branch=z9hG4bK-d8754z-5e18913fa003b766-1---d8754z-;received=10.10.13.164
+From: "1028_UDP"<sip:2408881028@10.10.13.159>;tag=fa022355
+To: "1028_UDP"<sip:2408881028@10.10.13.159>
+Call-ID: OGM4OTIzOGE5MGQxMTBkYjBkOTc4Yzk0N2M5Yzg3OGY.
+CSeq: 1 REGISTER
+User-Agent: Asterisk PBX
+Allow: INVITE, ACK, CANCEL, OPTIONS, BYE, REFER, SUBSCRIBE, NOTIFY
+Contact: <sip:2408881028@10.10.13.159>
+Content-Length: 0
+
+
+SIP/2.0 401 Unauthorized
+Via: SIP/2.0/UDP 10.10.13.164:28352;branch=z9hG4bK-d8754z-5e18913fa003b766-1---d8754z-;received=10.10.13.164
+From: "1028_UDP"<sip:2408881028@10.10.13.159>;tag=fa022355
+To: "1028_UDP"<sip:2408881028@10.10.13.159>;tag=as15793bb0
+Call-ID: OGM4OTIzOGE5MGQxMTBkYjBkOTc4Yzk0N2M5Yzg3OGY.
+CSeq: 1 REGISTER
+User-Agent: Asterisk PBX
+Allow: INVITE, ACK, CANCEL, OPTIONS, BYE, REFER, SUBSCRIBE, NOTIFY
+Contact: <sip:2408881028@10.10.13.159>
+WWW-Authenticate: Digest algorithm=MD5, realm="asterisk", nonce="195102e3"
+Content-Length: 0
+
+
+REGISTER sip:10.10.13.159;transport=udp SIP/2.0
+Via: SIP/2.0/UDP 10.10.13.164:28352;branch=z9hG4bK-d8754z-c838fb2d45374726-1---d8754z-
+Max-Forwards: 70
+Contact: <sip:2408881028@10.10.13.164:28352;rinstance=2f7bf39f39584812;transport=udp>
+To: "1028_UDP"<sip:2408881028@10.10.13.159>
+From: "1028_UDP"<sip:2408881028@10.10.13.159>;tag=fa022355
+Call-ID: OGM4OTIzOGE5MGQxMTBkYjBkOTc4Yzk0N2M5Yzg3OGY.
+CSeq: 2 REGISTER
+Expires: 3600
+Allow: INVITE, ACK, CANCEL, OPTIONS, BYE, REFER, NOTIFY, MESSAGE, SUBSCRIBE, INFO
+User-Agent: eyeBeam release 1013t stamp 43069
+Authorization: Digest username="2408881028",realm="asterisk",nonce="195102e3",uri="sip:10.10.13.159;transport=udp",response="0ec17c4170763d2a7f1f3da57c5a7955",algorithm=MD5
+Content-Length: 0
+
+
+SIP/2.0 100 Trying
+Via: SIP/2.0/UDP 10.10.13.164:28352;branch=z9hG4bK-d8754z-c838fb2d45374726-1---d8754z-;received=10.10.13.164
+From: "1028_UDP"<sip:2408881028@10.10.13.159>;tag=fa022355
+To: "1028_UDP"<sip:2408881028@10.10.13.159>
+Call-ID: OGM4OTIzOGE5MGQxMTBkYjBkOTc4Yzk0N2M5Yzg3OGY.
+CSeq: 2 REGISTER
+User-Agent: Asterisk PBX
+Allow: INVITE, ACK, CANCEL, OPTIONS, BYE, REFER, SUBSCRIBE, NOTIFY
+Contact: <sip:2408881028@10.10.13.159>
+Content-Length: 0
+
+
+SIP/2.0 200 OK
+Via: SIP/2.0/UDP 10.10.13.164:28352;branch=z9hG4bK-d8754z-c838fb2d45374726-1---d8754z-;received=10.10.13.164
+From: "1028_UDP"<sip:2408881028@10.10.13.159>;tag=fa022355
+To: "1028_UDP"<sip:2408881028@10.10.13.159>;tag=as15793bb0
+Call-ID: OGM4OTIzOGE5MGQxMTBkYjBkOTc4Yzk0N2M5Yzg3OGY.
+CSeq: 2 REGISTER
+User-Agent: Asterisk PBX
+Allow: INVITE, ACK, CANCEL, OPTIONS, BYE, REFER, SUBSCRIBE, NOTIFY
+Expires: 3600
+Contact: <sip:2408881028@10.10.13.164:28352;rinstance=2f7bf39f39584812;transport=udp>;expires=3600
+Date: Fri, 07 Mar 2008 03:01:24 GMT
+Content-Length: 0
+

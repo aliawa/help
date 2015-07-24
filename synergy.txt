@@ -1,0 +1,22 @@
+1. Server config file
+    section: screens
+           lin.ewn:
+           xps.ewn:
+        end
+        section: links
+           lin.ewn:
+               right = xps.ewn
+           xps.ewn:
+               left = lin.ewn
+        end
+
+2. Start server
+   synergys --config .synergy.conf
+
+3. Start client
+   synergyc <ip-addr of server>
+
+
+4. Debug
+   synergys -f --config .synergy.conf
+   synergyc -f server-host-name

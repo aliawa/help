@@ -1,0 +1,83 @@
+                     !  Execute a shell command
+               abort halt  Cancel a running halt
+            add extension  Add new extension into context
+            add ignorepat  Add new ignore pattern
+         conference debug  enable debugging for a conference
+    conference play sound  play a sound to a conference member
+    conference show stats  show conference stats
+   conference stop sounds  stop sounds for a conference member
+             database del  Removes database key/value
+         database deltree  Removes database keytree/values
+             database get  Gets database value
+             database put  Adds/updates database value
+            database show  Shows database contents
+            debug channel  Enable debugging on a channel
+             dont include  Remove a specified include from context
+                     exit  Exit Asterisk
+        extensions reload  Reload extensions and *only* extensions
+                     help  Display help list, or specific help on a command
+          include context  Include context in other context
+                     load  Load a dynamic module by name
+            logger reload  Reopens the log files
+            logger rotate  Rotates and reopens the log files
+      mgcp audit endpoint  Audit specified MGCP endpoint
+               mgcp debug  Enable MGCP debugging
+            mgcp no debug  Disable MGCP debugging
+              mgcp reload  Reload MGCP configuration
+      mgcp show endpoints  Show defined MGCP endpoints
+         no debug channel  Disable debugging on a channel
+                     quit  Exit Asterisk
+                   reload  Reload configuration
+         remove extension  Remove a specified extension
+         remove ignorepat  Remove ignore pattern from context
+       restart gracefully  Restart Asterisk gracefully
+              restart now  Restart Asterisk immediately
+  restart when convenient  Restart Asterisk at empty call volume
+              set verbose  Set level of verboseness
+        show applications  Shows registered applications
+         show application  Describe a specific application
+        show audio codecs  Shows audio codecs
+            show channels  Display information on channels
+             show channel  Display information on a specific channel
+              show codecs  Shows codecs
+               show codec  Shows a specific codec
+      show config handles  Show Config Handles
+            show dialplan  Show dialplan
+        show file formats  Displays file formats
+        show image codecs  Shows image codecs
+       show image formats  Displays image formats
+     show manager command  Show manager command
+    show manager commands  Show manager commands
+   show manager connected  Show connected manager users
+             show modules  List modules and info
+         show parkedcalls  Lists parked calls
+            show switches  Show alternative switches
+         show translation  Display translation matrix
+              show uptime  Show uptime information
+             show version  Display version info
+        show video codecs  Shows video codecs
+                sip debug  Enable SIP debugging
+             sip debug ip  Enable SIP debugging on IP
+           sip debug peer  Enable SIP debugging on Peername
+              sip history  Enable SIP history
+             sip no debug  Disable SIP debugging
+           sip no history  Disable SIP history
+               sip reload  Reload SIP configuration
+        sip show channels  Show active SIP channels
+         sip show channel  Show detailed SIP channel info
+         sip show history  Show SIP dialog history
+           sip show inuse  List all inuse/limit
+            sip show peer  Show details on specific SIP peer
+           sip show peers  Show defined SIP peers
+     sip show peers begin  Show defined SIP peers
+   sip show peers exclude  Show defined SIP peers
+   sip show peers include  Show defined SIP peers
+        sip show registry  Show SIP registration status
+   sip show subscriptions  Show active SIP subscriptions
+           sip show users  Show defined SIP users
+              soft hangup  Request a hangup on a given channel
+          stop gracefully  Gracefully shut down Asterisk
+                 stop now  Shut down Asterisk immediately
+     stop when convenient  Shut down Asterisk at empty call volume
+                   unload  Unload a dynamic module by name
+

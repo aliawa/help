@@ -1,0 +1,109 @@
+see preprocessor output
+----------------------
+-E : Do only preprocessing
+-C : Do not discard comments
+-P : Do not generate "#line" in output
+
+
+See processor output for a cpp file
+-----------------------------------
+export EXTRA_DEFINES=-E
+rm b2buaRequest.o
+make
+[The output will be in the .o file]
+
+
+
+
+
+show which libraries are linked
+---------------------------------
+LDFLAGS=-Wl,--verbose (set at line 233 in Makefile)
+
+
+path for header files
+---------------------
+CPATH : List of dirs separated by ':' to search for headers after -I
+C_INCLUDE_PATH  : C headers
+CPLUS_INCLUDE_PATH : c++ headers
+
+
+
+common options
+----------------------------------------------------------------------------------
+-c                      Compile without linking.
+-DFOO=BAR               Define a preprocessor macro named FOO with a value of BAR 
+-I/home/aawais/include  Location of include files
+-L/home/aawais/lib      Location of library files
+-static                 Link against static libraries.
+-lfoo                   Link with libfoo.
+-g                      Include debugging information in the binary.
+-ggdb                   Include gdb specific debug info in the binary 
+-Wall                   Emit all generally useful warnings
+-werror                 Convert all warnings into errors
+
+
+
+Make gcc stop complaining about deprected features and cost char* to char* conversions
+--------------------------------------------------------------------------------------
+-Wno-write-strings 
+-Wno-deprecated 
+-Wno-deprecated-declarations
+
+add to MANDCFLAGS
+
+
+Force compiler to treat string literals as 'const char*'
+-------------------------------------------------------
+-Wwrite-strings
+
+
+
+
+use archive version of libfoo. [It is important to have the trailing 
+-Wl,-Bdynamic precisely so you don't force static libc.]
+--------------------------------------------------------------------
+gcc main.o -Wl,-Bstatic -lfoo -Wl,-Bdynamic
+
+
+
+profiling
+----------------
+export EXTRA_DEFINES="-pg -Wl,-pg"
+
+
+
+Options for secure programing
+-----------------------------
+-Wall
+-Wextra
+-pedantic
+-d_fortify_source=2
+-Werror
+-Wmissing-prototypes
+-Wstrict-prototypes
+-Wold-style-definition
+-Wold-style-declaration
+-Wshadow
+
+
+Address sanitizer
+-----------------------------
+# Detects off-by-one errors, for example
+int main() {
+    int a[2] = {0,1};
+    int b = a[2];
+}
+
+gcc -fsanitize=address -ggdb -o test test.c
+
+# pass options to configure
+./configure --disable-shared CFLAGS="-fsanitize=address -ggdb"
+CXXFLAGS="-fsanitize=address -ggdb"
+
+# Abort on access violation error
+export ASAN_OPTIONS='abort_on_error=1'
+
+
+
+

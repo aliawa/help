@@ -1,0 +1,132 @@
+ldd
+-----------------------------------------------------
+prints shared library dependencies
+
+$ ldd <executable>
+libprint.so.1 => ./libprint.so.1
+libc.so.6 => /lib/libc.so.6 
+/lib/ld-linux.so.2=> /lib/ld-linux.so.2
+
+
+Linux shared object loader (/lib/ld-linux.so.X)
+---------------------------------------------------
+These libraries will then be loaded by the loader, 
+and the corresponding _init() sections will be called. 
+The loader first looks for libraries in the path mentioned 
+in the LD_LIBRARY_PATH environment variable and then turns 
+to the standard paths mentioned in 
+					/etc/ld.so.conf.
+In case a library can't be found, an error is thrown. 
+In normal circumstances, the loader loads the libraries 
+and normal execution of the program resumes. 
+All this is transparent and done behind the scenes.
+
+
+
+file command
+---------------------------------------------
+The file program can be used to find out a file's type. 
+The file being tested can be a text file (ex. libprint.c), 
+an executable (ex. client) or a data (ex. /dev/hda5). 
+File is very useful in finding out which platform a particular file 
+was compiled for and whether or not it's executable, among other things. 
+It is invoked with the following command line:
+
+$ file client
+client: ELF 32-bit LSB executable, Intel 80386, version 1, dynamically linked
+(uses shared libs), not stripped 
+
+
+
+
+nm
+---------------------------------------------
+nm lists all the symbols that exist in an object.(object file or library)
+
+[address or value ] [Type] [name]
+
+Type uppercase : external or global symbol
+Type lowercae  : local symbol
+nm -g          : list global symbols only
+nm -n 		   : sort by address
+
+
+
+Abbr.
+-----
+DSO: Dynamic Shared Object
+PIE: Position Independent Executable
+
+
+
+creating a library
+------------------
+create a library(archive). A single file holding a collection of other files
+    ar -rv <name_of_library> <list_of_object_files>
+
+create an index to the symbols defined in relocatable object modules 
+in the archive 
+    ar -s 
+    ranlib (This equivalent to executing ar -s)
+
+list the index created by ar -s or ranlib
+    nm -s
+
+
+
+LD_DEBUG
+--------
+display processing of files and libraries when handling libraries
+  export LD_DEBUG=files
+  command_to_run
+
+  export LD_DEBUG=help
+  command_to_run
+
+
+
+Shared Library Search Path
+--------------------------
+System default:
+    add directories to /etc/ld.so.conf
+    run ldconfig
+
+LD_LIBRARY_PATH
+    export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH
+
+
+Encoding rpath in applictions
+    ELF binaries can contain paths for shared libraries
+    This path is searched before the system default paths (LD_LIBRARY_PATH will ovverride this)
+    LD_RUN_PATH=$(PTOP)/libewn 
+    or LDFLAGS +="-R $(PTOP)/libewn"
+
+Check the stored path
+    readelf -d <binary> | grep RPATH
+
+
+Creating a static library
+------------------------------
+gcc -c -o out.o out.c
+-c means to create an intermediary object file, rather than an executable.
+
+ar rcs libout.a out.o
+This creates the static library. r means to insert with replacement, 
+c means to create a new archive, and s means to write an index. As always, 
+see the man page for more info.
+http://www.adp-gmbh.ch/cpp/gcc/create_lib.html
+
+
+
+Fid out which shared objects are used by an object
+--------------------------------------------------
+method 1:
+ldd <program or library>
+
+method 2:
+LD_TRACE_LOADED_OBJECTS=1 <program>
+
+method 3:
+objdump -p /path/to/program | grep NEEDED
+
+

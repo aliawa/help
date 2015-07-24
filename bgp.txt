@@ -1,0 +1,129 @@
+# General:
+# ---------------------------------------------------------------------
+BGP session: uses TCP port 179 to create a TCP session with a peer.
+
+ibgp: peers are in same Autonomous Domain
+ebgp: peers are in different Autonomous Domain
+
+
+
+
+# Zebra (Quagga) terminal mode (Routing)
+# ---------------------------------------------------------------------
+# login
+telnet 127.0.0.1 2601
+telnet 0 2601
+
+# getting info
+show ip route
+show ip route summary
+
+# don't send updates from eth0 interface
+passive-interface eth0
+
+# bring up an interface
+no shut 
+
+
+
+# Configuring BGP
+# ---------------------------------------------------------------------
+config_routing --bgp --enable
+telnet 0 2605  or config_routing --bgp --connect
+pwd: bgp 
+
+
+BGP> enable (en)
+
+# Enter BGP configuration mode
+config terminal
+
+# Enter router configuration mode (private AS# range:64512 to 65535)
+router bgp 65530
+
+# install networks to be advertized by BGP
+network 192.168.66.0/24  
+
+# distribute directly connected routes over BGP
+redistribute connected
+
+# neighbors are statically assigned in BGP
+neighbor <peer-ip> remote-as <peer-AS>
+
+# neighbor timers
+neighbor <peer-ip> timers <keepalive> <hold>
+neighbor <peer-ip> timers connect <0-65535>
+
+
+# router id (unique 32 bit number, usually IP address)
+bgp router-id <WAN-IP>
+
+# exit router configuration mode
+exit
+
+
+write file
+
+
+
+# BGP Managing
+# ---------------------------------------------------------------------
+
+# stop bgp router
+- enter configuration mode
+no router bgp 65530
+
+# re-read config file
+killall -HUP bgpd
+
+# reset all bgp connections
+clear ip bgp *
+
+
+clear ip bgp dampening [ip-neighbor]
+
+
+
+# Getting BGP info
+# ---------------------------------------------------------------------
+
+telnet 0 2605
+pwd
+en
+
+# list commands
+list
+
+
+show running-config
+show startup-config
+
+#enable debugging (from config terminal)
+log monitor
+
+# Display entries in the BGP routing table
+show ip bgp
+
+show ip bgp 12.183.130.165
+show ip bgp summary
+
+# Info about BGP and TCP connections to the neighbors
+show ip bgp neighbors
+show ip bgp neighbors 12.183.130.165
+
+
+# in config terminal mode
+log file /var/bgp.log <level> 
+    level is one of: emergencies, alerts, critical, errors, warnings
+    notifications, informational, debugging
+debug bgp events
+debug bgp updates
+debug bgp keepalives
+debug bgp fsm
+debug bgp zebra
+
+
+
+
+
+

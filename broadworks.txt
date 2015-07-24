@@ -1,0 +1,76 @@
+Web
+---
+admin/jemdo698
+
+logs
+-----
+$ cd /var/broadworks/logs
+
+
+CLI
+---
+12.48.203.191
+bwadmin/bwadmin
+
+$ bwcli
+> login admin
+> psswd is jemdo698
+
+show registered users
+-------------------
+> system
+> regist
+> cont
+> get
+
+show event subscribers
+---------------------
+> system
+> event
+> subscription
+> get
+> detail
+
+
+restarting
+-----------
+$ restartbw
+
+
+GUI: Trunk group profile
+------------------------
+Groups 
+ Search
+  click the name in list(e.g. TrunkTest)
+   services
+    Trunk Group
+     click the name in list (e.g. Shoretel)
+	   profile
+
+
+Login
+-------
+https://labphone1.ngtlab.net/Login/
+aawais/ngtbwb2bua
+
+
+How to change registeration password
+------------------------------------
+Users
+  Search and select the user
+    Utilities
+      Authentication
+
+
+
+Broadworks 
+------------
+sip server: as.iop1.broadworks.net
+web gui: ews1.iop1.broadworks.net
+username/pwd: edgewaterAdmin2/edgewater
+
+
+Adding a call transfer service:
+------------------------------
+Profile -> Assign Services
+

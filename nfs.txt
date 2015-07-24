@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# check if nfs is installed
+rpm -q nfs-utils
+
+# install if needed
+yum install -y nfs-utils system-config-nfs
+
+# edit /etc/exports (note: use only space)
+/home/public 192.168.1.0/255.255.255.0(ro,root_squash)
+
+# edit /etc/sysconfig/nfs: uncomment 
+LOCKD_TCPPORT=32803
+LOCKD_UDPPORT=32769
+MOUNTD_PORT=892
+STATD_PORT=662
+
+# start
+service nfs restart
+
+# check
+service nfs status
+
+# other required services start if not running
+service rpcbind status
+service nfslock status
+
+# start nfs on boot
+chkconfig nfs --level 35 on
+
+
+# on client 
+# make sure required services are running
+service nfs status
+service rpcbind status
+service nfslock status
+
+# mount unmount
+mount -vt nfs xps:/home/public/ /home/aawais/tmp/newdir
+umount -vt nfs /home/aawais/tmp/newdir
+
+
+

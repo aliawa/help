@@ -1,0 +1,76 @@
+download
+--------
+http://www.resiprocate.org/Quick_Subversion_Checkout_and_Compilation_HOWTO
+https://www.resiprocate.org/files/pub/reSIProcate/releases/
+
+
+simple
+------
+cd /home/aawais/repro/repro-capuchin-rc1/repro
+repro --disable-auth  --disable-web-auth
+
+
+using ENUM
+----------
+repro --enum-suffix=ewn.e164.arpa --log-level=STACK --disable-auth --disable-web-auth
+
+
+using TLS
+---------
+repro --enum-suffix=ewn.e164.arpa --log-level=STACK --disable-auth --disable-web-auth \
+--cert-path=/home/aawais/dev/resiprocate/resip/certs --tls-domain=192.168.1.200 \
+--udp=6080
+
+
+
+Adding Route for ENUM
+----------------------
+URI: ^sip:([0-9]+)@10.10.13.231
+Destination: sip:+$1@ewn
+Order: 1
+
+
+Adding Route for TLS to UDP
+----------------------------
+URI: ^sips:1([0-9]+)@10.10.13.182
+Destination: sip:1$1@10.10.13.182
+Order: 2
+
+
+
+repro --enum-suffix=ewn.e164.arpa --log-level=STACK --disable-auth \
+--disable-web-auth --udp=6080 \
+--cert-path=/home/aawais/dev/resiprocate/resip/certs/reproCerts \
+--tls-domain=repro1.private.awais \
+--tls=6081 \
+--record-route=sip:10.10.13.182:6081
+
+
+
+repro --enum-suffix=ewn.e164.arpa --log-level=STACK --disable-auth \
+--disable-web-auth --udp=6080 \
+--cert-path=/home/aawais/dev/resiprocate/resip/certs \
+--tls-domain=10.10.13.182 \
+--tls=6081
+
+
+using TLS + udp port 6080
+-------------------------
+repro --enum-suffix=ewn.e164.arpa \
+--log-level=STACK \
+--disable-auth \
+--disable-web-auth \
+--cert-path=/home/aawais/repro/resip/certs \
+--tls-domain=192.168.1.166 \
+--udp=6080
+
+
+Local Web Admin
+-----------------
+http://192.168.1.200:5080
+
+~
+
+~
+
+

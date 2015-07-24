@@ -1,0 +1,2 @@
+// Adjust requiredSpace to the next 2MB (0x800 bytes) boundry
+requiredSpace = (requiredSpace & 0x7FF)? (requiredSpace & ~0x7FF) + 0x800 : requiredSpace; 

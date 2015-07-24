@@ -1,0 +1,26 @@
+netcat
+------
+  nc uses tcp by default
+
+
+server:
+------
+  nc -l 192.168.1.166 5060
+
+
+
+client:
+-------
+  nc 10.10.13.182 5060 < notifyConfigured.xt
+
+- send a udp packet from port 30000 to ip 10.10.10.158:32000
+  echo "garbage" | nc -up 30000 10.10.10.158 32000
+
+
+Important options
+----------------
+-u use udp, default is tcp
+-s source address
+-p source port
+
+

@@ -1,0 +1,90 @@
+Parsing Methods used by Bison:
+--------------------------------
+LALR: Look Ahead Left to Right (one token look ahead)
+GLR:  Generalized Left to Right
+
+
+Basic concept:
+------------------------
+terminal symbols (or tokens):
+    cannot be subdivided
+
+non-terminal symbols (or groupings):
+    built by grouping smaller constructs according to grammatical rules.
+
+both tokens and non-terminals have value associated with them 
+    The type of value is YYSTYPE or %union{ } member.
+    
+A bison rule:
+    <non-terminal> : <match>        <action>      ;
+    expr           : expr '+' expr  { $$=$1+$3; } ;
+
+
+
+
+Bison Grammar File:
+------------------
+    %{
+    PROLOGUE
+    %}
+
+    BISON DECLARATIONS
+
+    %%
+    GRAMMAR RULES
+    %%
+    EPILOGUE
+
+
+
+YYSTYPE macro 
+----------------
+stores symantic type
+to change type: #define YYSTYPE char*
+
+
+YYLTYPE macro 
+----------------
+stores location type
+
+
+
+The look ahead token
+--------------------
+stored in:           yychar
+semantic value in:   yylval
+location in:         yylloc
+
+
+Useful options
+--------------------
+-d option:
+    bison writes token-type macro defintions in a separate file:
+    for example: bison -d fname.y  ---> fname.tab.h
+
+
+yyerror and main
+-----------------
+void yyerror(char* s, ...)
+{
+    va_list ap;
+    va_start(ap, s);
+
+    fprintf(stderr, "%d: error: ", yylineno);
+    vfprintf(stderr, s, ap);
+    fprintf(stderr, "\n");
+}
+int main() 
+    {
+    printf("> ");
+    return yyparse();
+}
+
+
+
+
+
+
+Minimal Example:
+----------------
+see flexbison_test.l and flexbison_test.y in code_reference

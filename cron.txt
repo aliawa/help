@@ -1,0 +1,52 @@
+The cron demon searches for crontab files in:
+/var/spool/cron
+/etc/crontab
+/etc/cron.d
+The above is good to know but don't edit these files.
+
+
+For root you can put your script the directories:
+/etc/cron.hourly
+/etc/cron.daily
+/etc/cron.weekly
+/etc/cron.monthly
+
+
+A user listed in /etc/cron.d/cron.allow can use the crontab command to modify
+the crontab files
+
+
+Create my cron file (/var/spool/cron/aawais)
+crontab -e 
+
+Format
+# (Use to post in the top of your crontab)
+# ------------- minute (0 - 59)
+# | ----------- hour (0 - 23)
+# | | --------- day of month (1 - 31)
+# | | | ------- month (1 - 12)
+# | | | | ----- day of week (0 - 6) (Sunday=0)
+# | | | | |
+# * * * * * command to be executed
+
+NOTE: "day of month" and "day of week" are ORed together.
+
+
+Options
+-------
+*  Every possible value
+-  range (1-9)
+,  list (2,3,4)
+/3 Every third
+
+
+Example
+1 0 * * * /home/aawais/Builds/createBuild.sh
+run every day one minute after midnight.
+see: man 5 crontab
+
+
+Disabling email
+Append " >/dev/null 2>&1" to any command
+
+

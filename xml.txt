@@ -1,0 +1,67 @@
+SYSTEM
+entities declared with the SYSTEM keyword are for private use by an organization of individuals. Entities declared with PUBLIC are public, so they need a formal public identifier (PFI)
+
+
+PREDIFINED ENTITY REFERENCES
+start with & and end with ;
+&amp:&
+&apos; '
+&gt; >
+&lt; <
+&quot; "
+
+
+COMMENTS 
+start with <!-- and end with -->
+
+XML DECLARATION
+should be the first line
+<?xml version="1.0" standalone="yes" encoding="UTF-8"?>
+
+
+PROCESSING INSTRUCTIONS
+processor dependent
+<?xml-stylesheet type="text/css" href="greeting.css"?>
+
+
+
+EMPTYP ELEMENT
+<GREETING TEXT="Hello From Xml"/>
+
+
+CDATA SECTION
+start with <![CDATA[  end with ]]>
+
+
+NAMESPACE
+<library xmlns:book="http://www.abc.com/spec">
+  <book/>
+</library>
+
+
+DTD
+start with <!DOCTYPE name [ end wth ]>
+
+
+FPI
+Formal Public Identifier. Fields are separated by (//)
+
+<!DOCTYPE DOCUMENT PUBLIC "-//starpowder//Custom XML Version 1.0//EN"
+http://www.st.com/steve/ch03_10.dtd">
+
+Field1: formal standard or -
+Field2: responsible person or organization
+Field3: type of document described by this dtd with version number
+Field4: Language for example EN
+
+XSD
+Xml Schema Definition Language
+
+complex types:
+Elements that enclose subelements or that have attributes.
+
+simple type:
+Elements with no sub nodes
+
+
+

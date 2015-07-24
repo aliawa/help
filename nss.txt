@@ -1,0 +1,14 @@
+network security services
+
+# Create new database
+certutil -L -d ~/.pki/nssdb
+
+# Get gmail.com cert
+gnutls-cli --print-cert -p 465 smtp.gmail.com </dev/null | \
+        sed -ne '/-BEGINCERTIFICATE-/,/-END CERTIFICATE-/p' > gmail.crt
+
+# Install gmail.com cert
+certutil -A -n "Google Internet Authority" -t "C,," -d ~/.pki/nssdb -i \
+    ~/workspace/gmail.crt
+
+

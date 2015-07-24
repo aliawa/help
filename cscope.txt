@@ -1,0 +1,85 @@
+#! /bin/bash
+
+# --------------------------------
+#       Create Database
+# --------------------------------
+
+pushd .
+ptop
+find $PTOP/mand \
+     $PTOP/cgi/src \
+     $PTOP/libewn \
+     $PTOP/libewndbg \
+     $PTOP/config/mandctl/ \
+     $OSTOP/lib/libqDecoder/ \
+     $OSTOP/lib/libghthash/src \
+     $OSTOP/lib/libosip2/ \
+     $OSTOP/user/asterisk/ \
+    -path $PTOP/mand/Libnet* -prune -o \
+    -path $PTOP/mand_test* -prune -o \
+    -regex ".*\.[ch]\(pp\)?" \
+    -print > $PTOP/cscope.files
+cscope -ubq
+export CSCOPE_DB=$PTOP/cscope.out
+popd
+
+
+
+# --------------------------------
+#              Usage 
+# --------------------------------
+
+# Do not update cross reference file
+cscope -d
+
+# Reference file is in a different directory
+cscope -d -f $PTOP/cscope.out
+
+
+#Useful commands
+^      Filter all lines through a shell command (for example "grep 401")
+|      same as ^ but the displayed lines are not changed
+^c     Toggle case search
+
+
+# Seach and replace
+*      Mark/Unmark displayed lines
+a      Mark/Unmark all lines
+^d     Change marked lines and exit
+<ESC>  Exit without changing anything
+
+
+
+# --------------------------------
+#               VI
+# --------------------------------
+
+# Load Database in vi
+cs add $PTOP/cscope.out
+
+# Finding in vi
+cs f g CallData
+
+
+# Commands:
+# -----------------
+g   find this definition
+s   find this c symbol
+e   find this egrep patters
+
+c   functions calling this 
+d   functions called by this
+
+t   assignments to
+
+f   find this file
+i   files including this file
+
+
+# Shortcuts
+#------------------
+Ctrl \ g     find definition under cursor
+Ctrl \ s     find symbol under cursor
+etc.
+
+

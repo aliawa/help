@@ -1,0 +1,39 @@
+<!-- ***********************************************************
+Example 2-1
+"Dynamic HTML:The Definitive Reference"
+by Danny Goodman
+Published by O'Reilly & Associates  ISBN 1-56592-494-0
+http://www.oreilly.com
+Copyright 1998 Danny Goodman.  All Rights Reserved.
+************************************************************ -->
+
+<HTML> 
+<HEAD> 
+<TITLE>MegaCorp On The Web</TITLE> 
+<SCRIPT LANGUAGE="JavaScript"> 
+<!-- 
+if (parseInt(navigator.appVersion) >= 4) {
+	if (navigator.appName == "Netscape") {
+   		window.location.href = "startNavDHTML.html"
+   	} else if (navigator.appName.indexOf("Internet Explorer") != -1) {
+   		window.location.href = "startIEDHTML.html"
+  	} else {
+  		window.location.href = "startPlainScripted.html" 
+	}
+} else {
+	window.location.href = "startPlainScripted.html" 
+}
+//-->
+</SCRIPT> 
+<META HTTP-EQUIV="REFRESH" 
+CONTENT="1;URL=http://www.megacorp.com/startUnscripted.html"> 
+</HEAD>
+
+<BODY> 
+<CENTER> 
+	<A HREF="startUnscripted.html">
+	<IMG SRC="images/megaCorpLogo.gif" HEIGHT=60 WIDTH=120 BORDER=0 
+	ALT="MegaCorp Home Page"></A> 
+</CENTER>
+</BODY> 
+</HTML>

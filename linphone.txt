@@ -1,0 +1,43 @@
+- starting linphone
+
+  export LD_LIBRARY_PATH=/home/aawais/dev/linphone-2.0.1/oRTP/src/.libs
+  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/aawais/dev/\
+linphone-2.0.1/mediastreamer2/src/.libs
+  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/aawais/dev/libosip2-3.0.3/lib
+
+  ./gtk/linphone
+  or ./console/linphonec
+
+
+- gateway address hack
+
+  file: libeXosip2-3.0.3/eXconf.c, function: eXosip_init, change ipv4_for_gateway
+  address in line 622. This will solve the loopback address in Via problem.
+
+
+
+
+file /home/aawais/.linphonerc
+-----------------------------
+- add 
+[sip]
+sip_port=5060
+guess_hostname=0
+contact=sip:7405557014@192.168.1.233
+inc_timeout=15
+use_info=0
+use_ipv6=0
+default_proxy=0
+
+[proxy_0]
+reg_proxy=sip:192.168.1.233
+reg_expires=900
+reg_sendregister=1
+publish=0
+
+[auth_info_0]
+username=7405557014
+userid=7405557014
+passwd=7014
+realm="BroadWorks"
+

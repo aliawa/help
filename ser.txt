@@ -1,0 +1,43 @@
+openser
+-------------------------------------------------
+# display online users
+openserctl online
+
+# config file location
+/etc/openser/openser.cfg
+
+# Launch
+cd /home/aawais/dev/ser-0.9.6
+ser -f ./examples/hello-world.cfg -D -T
+
+
+
+kamailio
+-------------------------------------------------
+# build and install:
+make PREFIX="/usr/local/kamailio-devel" FLAVOUR=kamailio  include_modules="db_mysql dialplan" cfg
+make all
+
+# Launch
+export PATH=$PATH:/usr/local/kamailio-devel/sbin
+kamailio -D 1 -d -E -d -d 
+
+# Basic configuration
+edit /usr/local/kamailio-devel/etc/kamailio/kamctlrc 
+and add  SIP_DOMAIN=192.168.1.193
+
+
+# user management
+export PATH=$PATH:/usr/local/kamailio-devel/sbin
+kamctl ul add <username> <uri> <expires>
+kamctl ul add <username> <uri>
+kamctl online                                 # show registered
+kamctl ul show --brief                        # show inram users
+kamctl ul rm <username>                       # remove user
+
+
+# Links
+http://www.kamailio.org/dokuwiki/doku.php/install:kamailio-devel-from-git
+http://liuchangjun.com/2011/04/08/howto-kamailio-openser-installation-guide/
+http://www.kamailio.org/w/?s=user+interface
+

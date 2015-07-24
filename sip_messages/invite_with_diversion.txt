@@ -1,0 +1,30 @@
+INVITE sip:4046691345@192.168.1.190;user=phone SIP/2.0
+From: <sip:6782368003@192.168.1.166;user=phone>;tag=657cc970-d020a0a-13c4-40030-44af18-2fb4fac1-44af18
+To: <sip:4046691345@192.168.1.190;user=phone>
+Call-ID: 65489b00-d020a0a-13c4-40030-44af18-7e2b90f3-44af18
+CSeq: 1 INVITE
+Via: SIP/2.0/UDP 192.168.1.166:5060;branch=z9hG4bK-44af18-c4bf8be-79ed17f
+Max-Forwards: 70
+Supported: 100rel,x-nortel-sipvc,replaces,timer
+User-Agent: Nortel CS1000 SIP GW release_5.0 version_sse-5.50.12
+P-Asserted-Identity: <sip:6782368003@192.168.1.166;user=phone>
+Privacy: none
+History-Info: <sip:6782371005@192.168.1.190;user=phone?reason=%20sip%3bcause%3d302%3btext%3d%20%22Moved%20Temporarily%22>;index=1,<sip:4046691345@192.168.1.190;user=phone>;index=2
+Diversion: <sip:6782371005@192.168.1.190;user=phone?reason=%20sip%3bcause%3d302%3btext%3d%20%22Moved%20Temporarily%22>;index=1,<sip:4046691345@192.168.1.190;user=phone>;index=2
+x-nt-corr-id: 000000440c2a220b0c@001ecaf8a53e-0cd3f322
+Contact: <sip:6782368003@192.168.1.190:5060;maddr=192.168.1.166;transport=udp;user=phone>
+Min-SE: 0
+Allow: INVITE,ACK,BYE,REGISTER,REFER,NOTIFY,CANCEL,PRACK,OPTIONS,INFO,SUBSCRIBE,UPDATE
+Content-Type: application/sdp
+Content-Length: 217
+
+v=0
+o=LKHNVPSN04 757330 1 IN IP4 192.168.1.190
+s=sip call
+c=IN IP4 192.168.1.192
+t=0 0
+m=audio 16460 RTP/AVP 0 120 111
+a=rtpmap:120 telephone-event/8000
+a=fmtp:120 0-15
+a=rtpmap:111 X-nt-inforeq/8000
+a=sendrecv

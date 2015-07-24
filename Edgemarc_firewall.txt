@@ -1,0 +1,13 @@
+iptables -I OUTPUT -d 12.39.208.251 -j DROP
+iptables -D OUTPUT 1
+iptables -I OUTPUT -d 12.39.208.252 -j DROP
+
+
+Drop all tcp packets coming from 213.195.75.224
+------------------------------------------------
+in user commands enter:
+iptables -I INPUT -p tcp -s 213.195.75.224 -j DROP
+
+
+
+

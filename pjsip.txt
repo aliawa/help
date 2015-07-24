@@ -1,0 +1,9 @@
+
+location of: config_site.h
+pjlib/include/pj
+
+location of: python samples
+pjsip-apps/src/python/samples
+
+
+python simplecall.py sip:192.168.0.15:5080

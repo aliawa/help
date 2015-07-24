@@ -1,0 +1,108 @@
+
+how to get myUri in Repro
+------------------------------
+getProxy().isMyUri(sip->header(h_RequestLine).uri()))
+
+
+Removing top route header
+------------------------------
+mOriginalRequest->header(h_Routes).pop_front();
+
+
+where is source of message stored
+---------------------------------
+state->mResponseTarget = sip->getSource();
+
+
+see where a message came from 
+--------------------------
+uncomment line 322 UdpTransport.cxx
+
+
+enabling / disabling STUN
+---------------------------
+from TransportType.hxx
+// Indicate whether or not to run a stun server on a Transport
+typedef enum
+{
+   StunDisabled,
+   StunEnabled
+} StunSetting;
+   
+
+interesting configuration
+---------------------------
+SipStack.hxx
+void setStatisticsInterval(unsigned long seconds);
+
+
+where is top Via modified interesting for record-route
+------------------------------------------------------------
+TransportSelector::transmit(SipMessage* msg, Tuple& target)
+
+
+Serializing Tuple
+------------------
+ostrm << "V4 " << Tuple::inet_ntop(tuple) << ":" << tuple.getPort();
+
+
+cid
+----
+only exists for TCP based transports
+
+
+
+RequestContext
+----------------
+1. Remove top route if self
+2. unleash Request processor chain
+3. if request processor chain adds targets unleash target processor chain
+
+
+Converting Tuple to IP address
+-------------------------------
+Tuple::inet_ntop(addr)
+
+
+where are parameters defined
+-------------------------------
+resip/stack/ParameterTypes.cxx
+
+
+------------------------------------------------------------------------
+
+1. SimpleTargetHandler
+-----------------------
+- Go through all the targets stored in mTransactionQueueCollection by
+  ResponseContext::addTarget
+- call ResponseContext::beginClientTransaction(tid) for each target-id
+
+2. beginClientTransaction(tid)
+-----------------------------
+- check transaction is not duplicate
+- call beginClientTransaction(Target)
+- remove tid from mCandidateTransactionMap
+- add tid to mActiveTransactionMap
+
+
+3. beginClientTransaction(Target)
+-------------------------------
+- Update Request URI
+- Update Max-Forwards
+- Add place holder for Record-Route (Updated later by TransportSelector
+  when the outgoing interface is known)
+- Format request properly if the next hop is a strict router
+- Add Via
+- Start timer C
+- Send request to FIFO
+
+
+------------------------------------------------------------------------
+
+
+Things to consider
+-------------------
+in ResponseContext, addTarget call mTransactionQueueCollection.push_back(queue);
+but I don't see if anybody also removes objects from this list.
+
+

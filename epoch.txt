@@ -1,0 +1,11 @@
+get epoch
+  date +%s
+
+epoch to human readable
+  date -d @1190000000
+  date -ud @1190000000   #in UTC
+
+human readable to epoch
+  date +%s -d"Jan 1, 1980 00:00:01"
+
+

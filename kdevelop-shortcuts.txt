@@ -1,0 +1,70 @@
+
+Debuging:
+--------
+F9              Debug Launch
+F10             Step over
+Shift F10       Continue
+F11             Step into
+F12             Step out
+Ctrl F10        Toggle Breakpoint
+
+
+
+
+ctrl-alt +
+---------
+
+U		Make first letter uppercase
+I		Show documentation index
+O               Open file
+D		Minimize all windows / Restore all windows
+F		find in files
+L		Lock session
+C		Goto Class
+V		Show klipper window
+M 		Goto function
+Y		Lookup Current Text as Definition 
+T		Lookup Current Text as Declaration 
+
+
+
+
+
+ctrl-shift +
+-----------
+S		insert Doxygen header for current function
+B		Block selection
+U 		Lower case
+D		Uncomment
+R		Find-Select-Replace
+
+
+
+
+
+Ctrl
+----
+
+I 		indent
+J		join
+U		Uppercae
+W		Close
+6		Matching brace (Matching bracket)
+m		Show menu bar
+K		delete entire line
+
+
+
+
+
+Function
+-------
+F7		shift to commandline
+F11		turn on line numbers
+
+
+Trouble shoot
+-------------
+- Does not jump to the line in file when clicking the error in the compiler
+  output
+  Project Options -> Build -> Make -> default make target = mand

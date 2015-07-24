@@ -1,0 +1,102 @@
+<!-- ***********************************************************
+Example 4-6
+"Dynamic HTML:The Definitive Reference"
+by Danny Goodman
+Published by O'Reilly & Associates  ISBN 1-56592-494-0
+http://www.oreilly.com
+Copyright 1998 Danny Goodman.  All Rights Reserved.
+************************************************************ -->
+
+<HTML>
+<HEAD>
+<SCRIPT LANGUAGE="JavaScript">
+// ***Begin library code better placed in an external API***
+// Set global variables for browser detection and reference building
+var isNav, isIE
+var coll = ""
+var styleObj = ""
+if (parseInt(navigator.appVersion) >= 4) {
+	if (navigator.appName == "Netscape") {
+		isNav = true
+	} else {
+		isIE = true
+		coll = "all."
+		styleObj = ".style"
+	}
+}
+// Utility function returns rendered height of object content in pixels
+function getObjHeight(obj) {
+	if (isNav) {
+		return obj.clip.height
+	} else {
+		return obj.clientHeight
+	}
+}
+// Utility function returns rendered width of object content in pixels
+function getObjWidth(obj) {
+	if (isNav) {
+		return obj.clip.width
+	} else {
+		return obj.clientWidth
+	}
+}
+// Utility function returns the available content width space in browser window
+function getInsideWindowWidth() {
+	if (isNav) {
+		return window.innerWidth
+	} else {
+		return document.body.clientWidth
+	}
+}
+// Utility function returns the available content height space in browser window
+function getInsideWindowHeight() {
+	if (isNav) {
+		return window.innerHeight
+	} else {
+		return document.body.clientHeight
+	}
+}
+// Utility function to position an element at a specific x,y location
+function shiftTo(obj, x, y) {
+	if (isNav) {
+		obj.moveTo(x,y)
+	} else {
+		obj.pixelLeft = x
+		obj.pixelTop = y
+	}
+}
+// ***End library code***
+
+// Center an element named banner in the current window/frame, and show it
+function centerIt() {
+	// 'obj' is the positionable object
+	var obj = eval("document." + coll + "banner" + styleObj)
+	// 'contentObj' is the element content, necessary for IE4 to return the
+	//   true current width
+	var contentObj = eval("document." + coll + "banner")
+	var x = Math.round((getInsideWindowWidth()/2) - (getObjWidth(contentObj)/2))
+	var y = Math.round((getInsideWindowHeight()/2) - (getObjHeight(contentObj)/2))
+	shiftTo(obj, x, y)
+	obj.visibility = "visible"
+}
+// Special handling for CSS-P redraw bug in Navigator 4
+function handleResize() {
+	if (isNav) {
+		// causes extra re-draw, but gotta do it to get banner object color drawn
+		location.reload()	
+	} else {
+		centerIt()	
+	}
+}
+</SCRIPT>
+</HEAD>
+
+<BODY onLoad="centerIt()" onResize="handleResize()">
+<DIV ID="banner" STYLE="position:absolute; visibility:hidden; left:0; top:0;
+ background-color:yellow; width:1; height:1">
+<P ID="txt" STYLE="position:absolute; left:0; top:0; font-size:36pt; color:red">
+Congratulations!
+</P>
+</DIV>
+</BODY>
+</HTML>

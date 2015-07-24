@@ -1,0 +1,53 @@
+filter parent 1: protocol 802.1Q pref 100 u32 fh 800::800 order 2048 key ht
+800 bkt 0 flowid 1:35 
+  match c0a8040b/ffffffff at 12
+
+
+fh:     filter handle, A number in the form 800:0:800
+
+
+from: README.iproute2+tc
+match ip dst 193.233.7.75 \
+match tcp dst 0x17 0xffff \
+
+
+match ip nofrag \
+offset mask 0x0F00 shift 6 \
+hashkey mask 0x00ff0000 at 8 \
+
+
+http://ace-host.stuart.id.au/russell/files/tc/doc/
+
+tc filter delete dev eth0 parent 1: protocol 802.1Q pref prio u32  flowid 1:30
+
+tc filter add dev eth0 parent 1:0  protocol ip prio 1 u32 match ip src 192.168.1.0/24 flowid 1:20
+tc filter add dev eth0 parent 1:0  protocol ip prio 1 u32 match ip src 192.168.4.0/24 at 12 flowid 1:20
+
+
+
+tc filter add dev eth1 parent 1:0 protocol ip     prio 100 u32 match ip tos 160 0xe0 flowid 1:15
+tc filter add dev eth1 parent 1:0 protocol ipv6   prio 101 u32 match u8 10 0x0e at 0 flowid 1:15
+
+tc filter add dev eth0 parent 1:0 protocol 802.1q prio 100 u32 
+match ip src 192.168.4.11/32 at 12 
+match u8 160 0xe0 at 1 flowid 1:35
+
+tc filter add dev eth0 parent 1:0 protocol 802.1q prio 100 u32 
+match ip src 192.168.1.0/24  at 12 
+match u8 160 0xe0 at 1 flowid 1:25
+
+tc filter add dev eth0 parent 1:0 protocol 802.1q prio 100 u32 
+match ip src 192.168.4.0/24  at 12 
+match u8 160 0xe0 at 1 flowid 1:25
+
+
+# List current rules
+tc -p qdisc ls dev eth0
+
+# Delete rules
+tc qdisc del dev eth0 root
+
+# Add 100ms delay
+tc qdisc add dev eth0 root netem delay 100ms
+
+

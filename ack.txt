@@ -1,0 +1,21 @@
+The recognized normal foreground color attributes (colors 0 to 7) are:
+
+     black  red  green  yellow  blue  magenta  cyan  white
+
+   The corresponding bright foreground color attributes (colors 8 to 15)
+   are:
+
+     bright_black  bright_red      bright_green  bright_yellow
+     bright_blue   bright_magenta  bright_cyan   bright_white
+
+   The recognized normal background color attributes (colors 0 to 7) are:
+
+     on_black  on_red      on_green  on_yellow
+     on_blue   on_magenta  on_cyan   on_white
+
+   The recognized bright background color attributes (colors 8 to 15) are:
+
+     on_bright_black  on_bright_red      on_bright_green  on_bright_yellow
+     on_bright_blue   on_bright_magenta  on_bright_cyan   on_bright_white
+
+   For any of the above listed attributes, case is not significant.

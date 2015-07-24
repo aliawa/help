@@ -1,0 +1,24 @@
+HKCR
+{
+	OwnOleClientItem.MySink.1 = s 'MySink Class'
+	{
+		CLSID = s '{CFF2B2B5-0AEC-11D4-AFEF-00500413F521}'
+	}
+	OwnOleClientItem.MySink = s 'MySink Class'
+	{
+		CLSID = s '{CFF2B2B5-0AEC-11D4-AFEF-00500413F521}'
+		CurVer = s 'OwnOleClientItem.MySink.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {CFF2B2B5-0AEC-11D4-AFEF-00500413F521} = s 'MySink Class'
+		{
+			ProgID = s 'OwnOleClientItem.MySink.1'
+			VersionIndependentProgID = s 'OwnOleClientItem.MySink'
+			ForceRemove 'Programmable'
+			LocalServer32 = s '%MODULE%'
+			val AppID = s '{CFF2B2B3-0AEC-11D4-AFEF-00500413F521}'
+			'TypeLib' = s '{CFF2B2B2-0AEC-11D4-AFEF-00500413F521}'
+		}
+	}
+}

@@ -1,0 +1,152 @@
+
+Partition Naming Scheme
+-----------------------
+[directory] --> [Device Type] --> [Device Nr.] --> [Partition Nr.]
+
+/dev/xxyN.  example: see below
+
+/dev/   This is the name of the directory in which all device files reside. 
+xx      Type of device on which the partition resides,  hd (IDE), sd (SCSI).
+y       Which device (or disk) the partition is on. a: first disk, b: second disk ...
+N       1-4: Primary or extended partition, 5 onwards: Logical partition
+
+
+
+Examples
+----------
+/dev/sda  : first hard disk
+/dev/sdb  : second hard disk
+/dev/sdc  : Third hard disk
+   ...
+/dev/sda1 : partition 1 on disk a
+/dev/sda2 : partition 2 on disk a
+  ...
+
+
+
+
+mount
+----------------------------------
+purpose: Asscociating a partition/filesystem with a directory
+
+mount (with no options)
+list the content of /etc/mtab, which contains list of currently mounted
+filesystems.
+mount | column -t
+
+mount -a
+mount all devices mentioned in /etc/fstab
+
+mount -o remount,ro /dev/partition
+remount an already mounted filesystem as read-only           
+
+# A graphical tool to look at /etc/fstab
+usermount
+
+
+
+Info about current filesystems
+----------------------------------
+sudo fdisk -l                       show all partions
+cfdisk                              curses verion of fdisk
+df -h                               mounted filesystems (size, types, used)
+cat /proc/swaps | column -t         Info about swap partition/usage
+free -m                             
+swapon -s                           Info about swap partition/usage
+top                                 Info about swap partition/usage
+
+
+lvm info
+---------------------------------
+vgdisplay
+pvdisplay
+lvdisplay
+
+vgscan
+sudo lvs --all
+system-config-lvm
+dmsetup ls
+
+Mount lvm partition in knoppix
+---------------------------------
+vgscan --mknodes
+vgchange -ay
+lvscan
+
+mount /dev/vg_lin/lv_root /mnt 
+
+
+
+EM specific
+----------------------------------
+list EM partitions:
+ls -l /dev/flash
+
+disk usage:
+du -d 1
+
+flash partion info
+cat /proc/mtd
+
+
+
+Glossary
+----------------------------------
+Master Boot Record (MBR)
+    MBR is stored in the first sector of drive. 
+    The MBR is only 512 bytes in size and contains machine code instructions for 
+    booting the machine, called a boot loader, along with the partition table. 
+
+
+Boot Loader
+    The default boot loader for x86 systems is GRUB.
+
+
+Kernel Binary
+    /boot/vmlinuz-<kernel-version>
+
+
+
+Permissions
+-------------
+Give a user persmission to access a folder
+sudo setfacl -m u:aawais:rwx /usr/local/BatchReplay
+
+
+# Lock
+# ---------------------------------------
+# which process has a lock on a given file.
+lsof
+fuser
+
+# Kill process holding a lock on file abc.pcap
+sudo fuser -k abc.pcap
+
+
+
+# Disc commands
+# ---------------------------------------------
+dd : copy and convert disk data
+   : http://www.softpanorama.org/Tools/dd.shtml
+   :  http://www.linuxquestions.org/questions/linux-newbie-8/learn-the-dd-command-362506/
+
+df : disk space usage
+     http://www.linfo.org/df.html
+
+du : shows the sizes of directories and files.
+   : du -sh
+
+
+# Windows mount 
+# ----------------------------------------------
+# NAS
+sudo mount -t cifs //192.168.1.128/aawais /mnt/nas
+
+# Windows
+sudo mount /dev/sda1 /mnt/windows
+
+# Auto mount
+# /etc/fstab
+/dev/sda2               /mnt/windows  ntfs   defaults  0 0 
+//192.168.1.128/aawais  /mnt/nas      cifs   guest,uid=1000,iocharset=utf8  0  0 
+

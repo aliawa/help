@@ -1,0 +1,89 @@
+e30/build directory
+--------------------
+
+1. e30/build/generic_cp_mods
+   Add logic to:
+   - untar the library tar file in snapgear/lib/libxyz
+   - run configure with --host option for example:
+     CFLAGS=$CROSS_FLAGS ./configure --host=$CROSS_HOST --disable-shared
+   - copy the changed files from the e30/sna3.1.0/lib/libxyz directory
+     to snapgear/lib/libxyz. This step may not be needed in generic_cp_
+     mods.
+
+
+e30/snapgear-3.X.X directory
+----------------------------
+1. Add the line to e30/snapgear-3.1.0/lib/Makefile
+   dir_$(CONFIG_LIB_LIBXYZ) += srtp
+   This will add the srtp directory to the list of directories that
+   need to be built. This file will copied to snapgear/lib/Makefile
+
+
+2. Add the line to  $PTOP_OS/vendors/Edgewater/$ENTARGET/config.vendor
+   CONFIG_LIB_LIBXYZ=y
+   This is needed so that the definitions are available in generic_cp_
+   mods script.  This file will be copied to snapgear/config/.config, but
+   make sure that you do step 6 otherwise the line will be removed from
+   .config by "make dep" or "make config", I am not sure exactly how this
+   happens.
+
+
+3. Create a directory for the new library  under e30/snapgear-3.1.0/lib/.
+   e.g, libxyz
+   Copy the library Makefile into the new directory and add the following
+   line to it 
+   romfs:
+        $(ROMFSINST)    /lib/libxyz.a
+   This file will replace snapgear/lib/libxyz/Makefile, as extracted from
+   the tar file.
+   The romfs line will cause libxyz.a to be copied to /lib on the target 
+   system. The format is 
+	            $(ROMFSINST) <filename> <destination>
+   if the <filename> is omitted it is assumed to be the base name of
+   <destination>
+
+
+
+4. Make sure that the CC and CXX variables are defined as follows in 
+   the library Makefile
+				CC      = $(CROSS_COMPILE)gcc
+				CXX     = $(CROSS_COMPILE)gcc
+
+
+5. Enter help text in e30/snapgear-3.1.0/config/Configure.help.
+   This file will be copied to  snapgear/config/Configure.help
+
+
+6. Add the line to e30/snapgear-3.1.0/config/config.in
+   bool 'LIBXYZ'                       CONFIG_LIB_LIBXYZ
+   This file will be copied to snapgear/config/config.in
+
+
+
+
+
+Using the libray in MAND
+-------------------------
+1. modify mand Makefile to link to the new library and set the include paths:
+   ifdef CONFIG_LIB_LIBXYZ
+     LIBLIBXYZ_LDPATH = -L$(ROOTDIR)/lib/srtp
+     LDPATH   += $(LIBLIBXYZ_LDPATH)
+     LDFLAGS  += $(LIBLIBXYZ_LDPATH)
+
+     USER_INCLUDES         += -I$(ROOTDIR)/lib/srtp/include
+     USER_INCLUDES         += -I$(ROOTDIR)/lib/srtp/crypto/include	
+     USER_POST_LIBS        += -lsrtp
+   endif
+   
+   ROOTDIR is the same as $OSTOP defined in $PTOP/build/sg_top.defs
+
+
+
+
+Adding a user Application
+-------------------------
+1. If an executable needs to go in /usr/bin directory it needs to be installed
+from the $OSTOP/user/<executable-name>/Makefile because the /usr/bin directory
+does not exist when the $OSTOP/lib/<...>/Makefile is exectued
+
+

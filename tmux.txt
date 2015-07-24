@@ -1,0 +1,55 @@
+
+# SESSIONS
+# ----------------------
+tmux new -s mysess                  start new
+tmux kill-session -t mysess         kill named
+tmux a -t mysess                    attach to named
+tmux ls                             list
+
+C-b s           list all sessions
+C-b d           detach from session
+
+
+# WINDOWS
+# ----------------------
+C-b c           new window
+C-b 1           swith to window 1
+C-b w           choose from a list
+
+
+# PANES
+# ----------------------
+C-b "           split horizontal
+C-b %           split vertical
+C-b z           toggles zoom pane
+C-b Alt-2       make all panes same size (Alt-1 for verticle)
+C-b ;           previously active pane
+C-b o           next pane
+C-b x           delete pane
+C-b Alt-RArrow  Resize
+
+
+# Refresh after config change
+tmux source-file .tmux.conf
+
+
+# COPY PASTE
+# ------------------------
+[               Enter copy mode
+PgUP            Enter copy mode and page up
+Enter           Exit copy mode
+
+v               Start selection
+Enter           copy selection
+]               paste most recent buffer
+=               Choose buffer to paste
+#               List all paste buffers
+Shift+<select with mouse>  copy to system clipboard
+
+
+# OTHER
+# ------------------------
+Ctrl-b :        command mode eg. C-b : kill-session
+Ctrl-b ?        help
+Ctrl-b r        redraw 
+

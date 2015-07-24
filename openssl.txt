@@ -1,0 +1,251 @@
+#!/bash/bin
+# --------------------------------------------------------------
+# Certificate file types
+# --------------------------------------------------------------
+
+.csr: This is a Certificate Signing Request. 
+.pem: a base64 translation of the x509 ASN.1 keys. 
+.key: This is a PEM formatted file containing just the private-key of a
+      specific certificate
+.der: A way to encode ASN.1 syntax in binary, a .pem file is just a Base64
+      encoded .der file.
+.cert .cer .crt: A .pem (or rarely .der) formatted file with a different
+      extension.
+
+
+# --------------------------------------------------------------
+# Ultimate openssl reference
+# --------------------------------------------------------------
+http://www.madboa.com/geek/openssl/#cert-exam
+
+
+# --------------------------------------------------------------
+# Extract Info from a certificate
+# --------------------------------------------------------------
+
+# all
+openssl x509 -text -in cert.pem
+
+# issuer
+openssl x509 -noout -in cert.pem -issuer
+
+# subject
+openssl x509 -noout -in cert.pem -subject
+
+
+
+
+# --------------------------------------------------------------
+# Installed openssl
+# --------------------------------------------------------------
+
+# openssl directory (OPENSSLDIR)
+openssl version -d
+
+# openssl version
+openssl version -v
+
+
+
+
+# --------------------------------------------------------------
+# Edgemarc openssl defaults
+# --------------------------------------------------------------
+
+# Location of certificates
+/usr/local/ssl/certs
+
+# on Build host
+$PTOP/snapgear/snapgear-3.3.0/lib/libssl/certs
+$OSTOP/lib/libssl/certs
+
+
+
+# --------------------------------------------------------------
+# Creating a self signed certificate using openSSL
+# --------------------------------------------------------------
+# Generate Private Key and certificate signing request 
+# 2 step operation
+openssl genrsa -out server.key 2048
+openssl req -new -key server.key -out server.csr
+
+# or 1 step operation
+openssl req -out server.csr -new -newkey rsa:2048 -nodes -keyout server.key
+
+# Sign the Certificate Signing Request
+openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+
+# crt to pem
+openssl x509 -inform der -in server.crt -out server.pem
+
+
+# --------------------------------------------------------------
+# Creating A Root Certificate Authority
+# --------------------------------------------------------------
+
+# create directories: (~/workspace/pki)
+# pki/root-ca:  stores root-CA related files
+# conf:         stores root-CA configuration files
+# private:      stores root-CA private key.
+# public:       stores root-CA certificate
+cd ~/workspace/pki
+mkdir root-ca 
+mkdir -p root-ca/{conf,private,public}
+chmod 700 root-ca/private
+cd root-ca 
+
+# Create conf/openssl_ca.cnf file
+# edit  root_ca_distinguished_name section to define location and organization 
+# of root-ca
+
+# Create the public and private root-ca keys
+# root-ca cert is actually a self signed certificate therefore we
+# use -x509 option to req command
+openssl req -encrypt_key no -config conf/openssl_ca.cnf -days 3650 \
+   -x509 -newkey rsa:2048 -out public/root.pem -outform PEM
+
+# Examine Private Key
+cat private/root.pem
+openssl rsa -in private/root.pem -noout -text
+
+# Examine Public Key
+cat public/root.pem
+openssl x509 -in public/root.pem -noout -text
+
+# Create Files for certificate signing 
+# signed-keys   stores copies of signed keys in case we need to revoke them
+# serial        stores serial number of signed keys
+# index         stores index of signed keys
+mkdir signed-keys
+echo "01" > conf/serial
+touch conf/index
+
+
+# Optional: convert public key to DER format for compatibility
+openssl x509 -in public/root.pem -outform DER -out public/root.der
+
+# Optional: create a copy of certificate where filename is hash of cert. 
+# Required by some tools
+cp public/root.pem public/$(openssl x509 -noout -hash -in public/root.pem).0
+
+
+
+# --------------------------------------------------------------
+# Create Certificate Signing Request 
+# --------------------------------------------------------------
+
+# cd ~/workspace/pki/certs
+
+# Certificate signing request for xps.ewn
+openssl req -newkey rsa:2048 -out name_req.csr -keyout name_key.pem -days $((2*365)) -nodes -config openssl.cnf
+
+# Examine and verify CSR
+openssl req -in name_req.csr -text -noout -verify
+
+
+
+# --------------------------------------------------------------
+# Signing certificates 
+# --------------------------------------------------------------
+
+# Make sure necessary file are present (see above)
+# ./signed-keys, conf/serial and conf/index
+cd ~/workspace/pki/certs
+
+# Examine Certificate Signing Request (Is CN= correct)
+openssl req -in name_req.csr -text -noout
+
+# Sign the Certificate
+openssl ca -batch -config ../root-ca/conf/openssl.cnf -in name_req.csr -out name_cert.pem
+
+
+
+# --------------------------------------------------------------
+# Generate a private key
+# --------------------------------------------------------------
+
+# RSA key can be used both for encryption and for signing.
+# DSA key can be used for signing only
+ 
+# prompt for password
+openssl genrsa -des3 -out privkey.pem 2048
+
+# dont prompt for password
+openssl genrsa -out privkey.pem 2048
+
+# NOTE: if you intend to use the key together with a server
+# certificate, it may be a good thing to avoid protecting it
+# with a password.
+
+
+# --------------------------------------------------------------
+# Install ssl certificate in boa
+# --------------------------------------------------------------
+
+# Copy the server private key and certificate
+scp certs/lin_ewn_cert.pem   lin:/etc/config/ssl_cert.pem
+scp lin_ewn_private_key.pem lin:/etc/config/ssl_key.pem
+
+# Start boa
+sudo killall boa; boa &
+cat /var/log/messages
+boa[29692]: Using SSL port [443] for Boa
+boa[29692]: Enabling SSL security system
+boa[29692]: SSL security system enabled
+boa[29692]:  started
+
+
+
+# --------------------------------------------------------------
+# Import Test root CA certificate to firefox
+# --------------------------------------------------------------
+Edit > Preferences > Encryption > View Certificates > import
+select ewnCA/ewnca_cert.pem
+
+
+
+# --------------------------------------------------------------
+# Make openssl recognize a new root ca
+# --------------------------------------------------------------
+
+# Find the certs directory:
+export `openssl version -d | awk '{ print $1 "=" $2 }' |tr -d ':"'`
+
+# Put the file containing the root ca cert in certs directory
+sudo cp ~/workpace/ewn-root-ca/public/root.pem $OPENSSLDIR/ewn_root_ca.pem
+
+# Create symlink so the openssl can load the root ca cert
+cd $OPENSSLDIR
+sudo cert_link ewn_root_ca.pem
+
+
+
+
+
+# --------------------------------------------------------------
+# Debugging openssl
+# --------------------------------------------------------------
+
+# Retrieve a server's certificte:
+openssl s_client -connect sipprov.cv.net:443
+# or
+cert_retrive 10.10.10.148 5061 > server_cert.pem
+
+# Print cert info
+cert_info server_cert.pem
+
+# verify that we recognize a servers certificate
+openssl verify server_cert.pem
+
+# connect to lin.ewn:443
+openssl s_client -connect lin.ewn:443
+GET / HTTP/1.0
+
+# start HTTP server with given private and public keys
+openssl s_server -cert /etc/config/ssl_cert.pem -key /etc/config/ssl_key.pem -www
+
+# connect to server started above.
+openssl s_client -connect lin.ewn:443
+
+
+

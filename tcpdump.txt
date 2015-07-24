@@ -1,0 +1,54 @@
+using 'or'
+    sudo tcpdump -n -i eth1 port 5060 or 53
+
+writing to file:
+    tcpdump -nl -i eth0 -w /var/tmp/file.pcap
+
+capture full packets instead of first 68 bytes
+    tcpdump -nn -s0 -i any -w /var/tmp/file.pcap
+
+show packet in ascii for example SIP packets
+    tcpdump -nni eth1 -s0 -A port 5090
+    tcpdump -nni eth1 -s0 -v port 5080
+
+    
+
+- converting a hex dump to pcap
+  1. capture hex dump
+     sudo tcpdump -i eth0 -txxl -s0 port 5060| tee dat.dump
+
+  2. convert to a format the text2pcap can understand
+      cat dat.dump | sed 's/ \([0-9a-f][0-9a-f]\)\([0-9a-f][0-9a-f]\)/ \1 \2/g' > dat1.dump
+      cat dat1.dump | sed 's/0x\(....\):/\1/' > dat2.dump
+      cat dat2.dump | sed  's/^IP .*$/ /' > dat3.dump
+
+  3. use text2pcap
+     text2pcap dat3.dump dat.pcap
+
+
+
+- Useful options
+  -l : Useful if you want to see the data while capturing it. E.g., 
+       tcpdump  -l  |  tee dat 
+       tcpdump  -l   > dat  &  tail  -f  dat
+
+
+  -U : Make output saved via the -w option "packet-buffered"; i.e., as each
+       packet is saved, it will be written to the output file, rather than being
+       written only when the output buffer fills.
+
+  -q : quiet output. Print less protocol information so output lines are shorter. 
+
+  -c : Exit after receiving count packets. 
+
+  -v : See packet details for example see the complete SIP packets
+
+  -e : Show ethernet address (link level header)
+
+
+- usage:
+    tcpdump -L 
+    tcpdump -ni eth0 -X port 5060
+
+    # show ethernet address
+    tcpdump -ni eth1 -e -s 0 udp

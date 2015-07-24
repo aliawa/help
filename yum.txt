@@ -1,0 +1,123 @@
+find package
+--------------------------
+yum list available 'foo*'
+
+
+Repository listing
+--------------------
+yum repolist enabled
+yum repolist disabled
+yum repolist all
+
+
+install an RPM
+----------------
+note: localinstall is obsolete
+yum install psad-2.1.4-1.i386.rpm
+
+if the package is not signed e.g. you creatd the rpm yourself
+yum --nogpgcheck install psad-2.1.4-1.i386.rpm
+
+
+re-install a package
+-------------------
+e.g., it the package was accedentally damaged
+yum reinstall yum-plugin-changelog
+
+
+update a package
+----------------
+yum update zzuf
+
+updating from rpm
+yum update psad-2.1.4-1.i386.rpm
+
+
+downgrade a package
+----------------------
+note: may need to enable [updates-testing]
+yum downgrade vorbis-tools
+
+
+Exclude when Updating
+------------------------
+yum update --exclude=ekiga
+
+# to permanently exclude 
+# edit yum.conf and add "exclude" directive
+exclude=pidgin, amsn, emesene, paquete
+
+removing software
+-----------------
+yum remove xfig
+yum erase xfig
+
+
+Package information
+-------------------
+yum info squid
+
+
+
+Search
+-------
+yum search imap
+yum provides /etc/httpd/conf/httpd.conf
+yum list installed
+yum list available [glob]
+yum list updates
+yum list recent
+
+# packages not from enabled repositories
+yum list extras
+
+# search in local cache
+yum -C search squid
+
+# enable repository on the go
+yum info --enablerepo=rawhide bro
+
+# list dependencies
+yum deplist rubygems
+
+# Groups
+yum grouplist 
+yum install @group1 [@group2] [...]
+yum update @group1 [@group2] [...]
+yum remove @group1 [@group2] [...]
+yum groupinfo "GNOME Desktop Environment"
+
+# Setting to install every package from a group
+[main]
+group_package_types=default, mandatory, optional
+
+# Log file
+[main]
+logfile=/var/log/yum.log
+
+
+# History
+yum history
+yum history info 607
+yum history undo 1
+yum history redo 1
+yum history new          # if the history file is corrupted
+yum history summary
+
+
+# check local rpmdp
+yum check 
+
+# download but dont install
+yum --downloadonly ...   # --> /etc/yum/pluginconf.d/downloadonly.conf
+
+# download kernel source
+yumdownloader --source kernel
+
+
+# is a package already installed
+rpm -q httpd
+
+
+
+

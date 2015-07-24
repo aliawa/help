@@ -1,0 +1,63 @@
+# --- GENERAL ---
+
+General system information:
+  uname -a
+
+Show information about the distribution
+  cat /etc/issue
+  Alternative: cat /proc/version
+  Alternative: lsb_release -a
+
+Kernel
+  uname -r
+  Alt: cat /proc/version
+  Alt: rpm -q kernel
+  Alt: dmesg | grep Linux
+  Alt: ls /boot ( look at vmlinuz entries)
+
+
+
+# --- HARDWARE ---
+
+List all hardware
+  lshw |less
+  Alternative with Gtk frontend: lshw-gtk
+
+Show information about all PCI
+  lspci (or -v for verbose)
+
+Show information about all usb devices.
+  lsusb (or -v for verbose)
+
+BIOS information:
+  dmidecode | less
+
+Show information about partitions
+  cat /proc/partitions
+  Alternative: fdisk -l
+
+
+
+# --- SOFTWARE ---
+
+Process information:
+  top (Shift-M to order the list by memory use)
+
+Memory information:
+  free -m
+  Alternative: cat /proc/meminfo
+
+Swap information
+  swapon -s
+  Alternative: cat /proc/swaps
+
+Drivers:
+  lsmod
+  Alt: less /proc/modules
+  Exp: Video driver: lsmod | grep video
+  Detailed info about a driver: modinfo nouveau
+
+
+Kernel Command line:
+  dmesg | grep Kernel
+

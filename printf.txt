@@ -1,0 +1,12 @@
+// print 12 characters
+printf("%.*s", 12, &a[4]);
+
+
+// specify field width of 9; printf does not truncate the
+// text if it is longer than 9, the text will simply overflow
+// the field. So this is only useful if the text is 
+// known to be less than the field width.
+printf("%-9s",n->ut_user);
+
+
+

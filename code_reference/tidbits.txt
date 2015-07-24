@@ -1,0 +1,100 @@
+difference between: int* const p and  int const* p
+    A reference is similar to int* const p
+    A reference *is* the object not a pointer to the object.
+    You can't separate the reference from the referent.
+
+
+
+
+difference between List x; and List x();
+List x; // Local object named x of class List.
+List x(); // Function named x that returns a List.
+
+
+
+
+FAQ 11.14: Simpler syntax for using memory pool.
+
+inline void* operator new(size_t nbytes, Pool& pool)
+{
+    return pool.alloc(nbytes);
+}
+
+void operator delete(void* p, Pool& pool)
+{
+    pool.dealloc(p);
+}
+
+
+When the compiler sees: new (pool) Foo(), it calls the above operator new
+If a corresponding delete operator is provided then the compiler will
+automatically call delete operator if Foo() throws an exception.
+Note if the allocator itself throws an exception that will not be caught
+by the compiler generated code.
+
+
+
+If you define your own assignment operator then you need to explicitly call
+the base class assignment operator.
+
+
+
+It is better to use ++i rather than i++ because for non-intrinsic types i++ 
+might make a copy of the this object.
+
+
+difference between the implementation of postfix and prefix forms fo operator++
+class Number {
+    public:
+        Number& operator++ ();    // prefix ++ (return by reference)
+        Number  operator++ (int); // postfix ++(return by value)
+};
+
+
+Number& Number::operator++ ()
+{
+    ...
+        return *this;
+}
+                           
+Number Number::operator++ (int)
+{
+    Number ans = *this;
+    ++(*this);  // or just call operator++()
+    return ans;
+}
+
+
+
+
+Virtual Friend Function Idiom
+-----------------------------
+To get the effect of a virtual friend, the friend function should call a hidden 
+(usually protected) virtual member function
+
+
+
+15.2: Correct way to read using cin (check to output of cin)
+----------------------------------
+#include <iostream>
+
+int main()
+{
+    std::cout << "Enter a number, or -1 to quit: ";
+    int i = 0;
+    while ((std::cin >> i) && (i!=-1)) {    // GOOD FORM
+        std::cout << "You entered " << i << '\n';
+    }
+}
+
+
+How std::istream is converted to bool
+-----------------------------------
+First std::istream::operator void*() is called, which returns a void*
+which is then converted to bool (NULL==false any_thing_else==true)
+
+
+
+
+
+

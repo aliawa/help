@@ -1,0 +1,39 @@
+#!/bin/bash
+
+#
+# running nightly sip tourture test
+# 
+
+# mand configurtion (Registrar mode)
+mandconfig
+trunktarget $CADDR 5060  n=Torturer
+
+# mand configuration (Transparent mode)
+mandconfig $PROXY2_ADDR
+trunktarget $CADDR 5060  n=Torturer
+setvalue alg_defs.conf SIP_TRANSPARENT on
+
+# client side configuration
+sudo route add -host $PROXY2_ADDR gw $EM_LAN
+cd /home/aawais/workspace/protos_test_suite
+. ~/workspace/sipp/setup/sipp_config.sh 
+export LANG=c
+
+
+# help
+java -jar c07-sip-r2.jar -help
+
+# Run all tests
+java -jar c07-sip-r2.jar -fromuri 1234@$CADDR\
+   -touri 2345@$EM_LAN -showreply -replywait 50
+
+# Specify start and stop tests
+java -jar c07-sip-r2.jar -fromuri 1234@$CADDR -touri 2345@$EM_LAN -showreply \
+    -replywait 50 -start 2643 -stop 2643
+
+# Transparent mode
+java -jar c07-sip-r2.jar -fromuri 1234@$CADDR -touri 2345@$PROXY2_ADDR -showreply \
+    -replywait 50
+
+
+

@@ -1,0 +1,10 @@
+bugzilla relative dates:
+-----------------------
+1w and Now
+    one week ago from today.
+
+1d and Now
+1y and Now
+3m and Now
+
+

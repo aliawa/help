@@ -1,0 +1,86 @@
+Location 0x601070 is 0 bytes inside local var "unprotected2"
+  A local variable named "unprotected"
+
+declared at tc21_pthonce.c:51, in frame #0 of thread 3
+  Each line of call-stack is a frame.
+
+
+Generate valgrind suppressions:
+  use: --gen-suppressions=yes
+  sudo valgrind --suppressions=/home/aawais/attic/valgrind.suppression --leak-check=full --gen-suppressions=yes ./mand
+
+
+Send valgrind output to a specified file or file descriptor:
+  --log-fd=<number>   [default is 2]
+  --log-file=<filename>
+
+More precise information about variables
+  --read-var-info=<yes|no> [default: no]
+
+
+
+Helgrind
+    ANNOTATE_* macros
+
+
+
+
+Valgrind and gdb
+-----------------------------------------------------------------------------------
+http://www.responsive.se/thomas/2013/09/20/debugging-memory-leaks-with-valgrind-and-gdb/
+
+1. Start Valgrind on your program, e.g. 
+valgrind --vgdb=yes --vgdb-error=0 <prog> <params>
+
+Valgrind now initiates your program and stops just before starting it, much
+like GDB does, waiting for connection and commands.
+
+2. Start GDB on your program, e.g 
+gdb <prog>
+
+3. Ensure that GDB isn’t using non-stop mode (Valgrind doesn’t like that) 
+(gdb) set non-stop off
+
+4. Connect the GDB remote functionality to the Valgrind gdb-server 
+(gdb) target remote | vgdb
+
+‘vgdb-error’ option - how many errors Valgrind detects before stopping
+
+
+During Execution
+1. memory leak status at breakpoint
+(gdb) monitor leak_check
+
+2. from where this particular memory is referenced
+(gdb) monitor who_points_at <addr>
+
+3. exit
+(gdb) monitor v.kill
+
+
+Technique:
+1. Hook up your program under GDB and Valgrind
+2. Put a break at where you think the memory is lost
+3. Continue there and run a leak check
+4. If there is no leak yet, slowly proceed forward, doing a leak check after
+   each step or at every new breakpoint
+5. Once you see a leak, that leak occurred between the last stop and this
+6. Restart and take even smaller steps, with leak checks in between every one of
+   them, an pinpoint the exact statement that creates the leak.
+
+
+
+Valgrind manual
+-----------------------------------------------------------------------------------
+/usr/share/doc/valgrind-3.8.1/html/manual.html
+
+
+callgrind
+-----------------------------------------------------------------------------------
+on a 4600: run in /var/ramdisk
+valgrind --tool=callgrind  mand
+scp callgrind.out.5392 aawais@192.168.1.151:~/tmp
+callgrind_annotate ~/tmp/callgrind.out.5392 | less
+
+
+

@@ -1,0 +1,389 @@
+#!/bin/sh
+#---------------------------------------------------------
+#                         init
+#---------------------------------------------------------
+
+# initialize a bare (shared) repository
+git init --bare newproj.git
+
+
+#---------------------------------------------------------
+#                         Remote
+#---------------------------------------------------------
+
+# clone a remote repository
+git clone [url] [local-directory-name]
+
+# EWN remote
+git clone ssh://git@54.245.134.134:7999/em/e30.git e30
+git clone ssh://git@stash.edgewaternetworks.com:7999/em/e30.git e30
+
+# connect repository to a remote server.
+git remote add origin <server>
+
+# What are my remotes
+git remote -v
+
+
+#---------------------------------------------------------
+#                         History
+#---------------------------------------------------------
+
+# log
+git log --oneline --abbrev-commit --all --graph --decorate --color
+
+# see change log of one file:
+git log -- Makefile
+
+# see change log from a date to a date
+git log --since="2 weeks ago" --until="yesterday"
+
+# show changes in current directory only
+git log .
+
+# all commits in 13_11_x_br that are not in master
+git log master..ver_13_11_x_br
+
+# all commits in master that are not in 13_11_x_br
+git log ver_13_11_x..master
+
+# all tags and branches on 11_6_4_br not reachable from master
+git log --simplify-by-decoration master..ver_11_6_4_br
+
+# by user
+git log --author=aawais
+
+# show only files that have changed
+git log --name-status
+
+# search in log
+# Get the patch for a particular bug fix.
+git log --grep='Bug.*11197'
+
+
+# show information about a commit
+git show 09ce34b9
+
+# Which branch contains the commit
+git branch --contains 4e33b3d
+
+# is the change part of a release, output:tag name and position
+git name-rev --name-only 50f3754
+
+# Binary search to find which change introduced the bug
+git bisect
+
+# show current branch only
+git show-branch --more=20
+
+# restoring a directory from history
+git checkout <treeish> -- /path/to/dir
+git checkout ver_13_6_0 mand
+
+# find the most recent tag that is reachable from a commit
+git describe --all <commit>
+
+
+
+#---------------------------------------------------------
+#                       Branching
+#---------------------------------------------------------
+
+# show all remote branches
+git branch -r
+
+# List remote branches matching pattern
+git branch -r --list 'origin/ver_11_6_*'
+
+# create a branch at last commit
+git branch foo
+
+# start a branch from any point
+git branch foo <starting-commit>
+
+# create a branch from stashed changes
+git stash branch dbr_aaw_em9459
+
+# switch to branch master
+git checkout master
+
+# create a branch and switch to it
+git checkout -b foo
+
+# delete a branch
+git branch -d test_merge
+
+# merge another branch with the current branch
+git merge test_merge
+
+
+# Merging from a developer branch using rebase (four steps)
+git checkout dbr_aaw_em9459
+git rebase master
+git checkout master
+git merge dbr_aaw_em9459
+
+
+# Push the branch to remote repository
+git push origin <branch>
+
+# First time checkin of a branch
+git push -u origin dbr_aaw_em9459
+
+
+# show starting point of branch made on master
+git merge-base master origin/ver_14_0_x_br
+
+#---------------------------------------------------------
+#                           Pull
+#---------------------------------------------------------
+
+# Avoid merge master of ... commit message
+git pull --rebase
+
+# Overwrite local changes
+git fetch --all
+git reset --hard origin/master
+git pull
+
+
+# git checkout by date
+git checkout `git rev-list -n 1 --before="2009-07-27 13:37" master`
+
+
+#---------------------------------------------------------
+#                           Diff
+#---------------------------------------------------------
+
+# diff between working dir and staging area
+git diff
+git diff --numstat [remote-repo/branch]
+
+# diff between working dir and commited files
+# for last commit use HEAD
+git diff <hash> -- <filename>
+
+# diff between two historical versions
+git diff <hash1> <hash2> -- <filename>
+
+# diff between staged files and last commit
+git diff --staged
+
+# diff commited changes and remote. For example when
+# remote=origin and branch=master
+git diff --stat origin/master
+
+# Usefull options
+--name-only  # show names only
+--stat       # nice statistics
+
+# diff with an earlier version of file and working directory
+git diff 2a076af:mand/b2buaInviteCore.cpp b2buaInviteCore.cpp
+
+
+
+#---------------------------------------------------------
+#                   Checkin and Staging
+#---------------------------------------------------------
+
+# Send files to staging area (same as git add)
+git stage <files>
+
+# Adding changes to the staging area. Hunk by Hunk
+git stage --patch models.rb
+
+# checkin a file  (2 step process)
+git stage <file>
+git commit
+
+# checkin a file (single step)
+git commit -a  
+
+# delete a file
+rm <file> # physically delete the file
+git commit -a
+
+# prevent files from being checked in
+git update-index --assume-unchanged cfg_sip.h
+git update-index --no-assume-unchanged cfg_sip.h
+
+
+# what am i about to push
+git log origin/master..HEAD
+git log origin/master..  #HEAD is default
+
+
+#---------------------------------------------------------
+#                          Changes
+#---------------------------------------------------------
+
+# Apply a patch using git (Atomic, handles file rename, delete etc.)
+git apply ~/tmp/bug1234.patch
+
+# Apply a patch generated using format-patch command
+git am ~/tmp/bug1234.patch
+
+# create a patch
+git --no-pager show 39ec73f9d > bug11071_bug11072.patch
+
+# create a patch with format-patch
+git format-patch -M origin/master
+
+# ignore versioned files
+git update-index --assume-unchanged cfg_sip.h
+git update-index --no-assume-unchanged cfg_sip.h
+
+
+
+#---------------------------------------------------------
+#                       OOPS / UNDO
+#---------------------------------------------------------
+
+# Undo last commit 
+git reset --soft HEAD^ # not pushed yet
+git revert HEAD        # when it has already been pushed
+
+# Add more changes to last commit
+git add sipClient.h
+git commit --amend
+
+# change the last commit message
+git commit --amend
+
+# revert next-to-last commit but keep the last commit
+git revert HEAD^
+
+# replace working file with an old one
+git checkout HEAD^ path/to/file
+
+# change log message of previous commit (i.e.,) not most recent one
+# execute command below then pick the change, you need to edit
+# the commit messsage for.
+git rebase -i HEAD~2
+
+
+# undo a "git add"
+git reset
+git reset -- frotz.c   # reset a single file in index
+
+# Reset the staging area and working dir to match the latest commit.
+# meaning discard all uncommitted changes.
+$ git reset --hard
+$ git reset --hard HEAD~3 # remove last three commits from branch,index and work dir
+
+
+
+
+
+#---------------------------------------------------------
+#                           Tags
+# Tags Always point to the same revision. They do not 
+# change with commits. As opposed to branch pointer
+# which moves forward with commits
+#---------------------------------------------------------
+
+# show all tags
+git tag -l
+
+
+#---------------------------------------------------------
+#                    commit references
+#---------------------------------------------------------
+HEAD     : last commit
+HEAD^    : parent of HEAD. same as HEAD~
+HEAD~3   : The fourth last commit. same as HEAD^^^
+ORIG_HEAD: The position of HEAD just before "pull" or 
+           "merge"
+^refA    : not refC: e.g. all commits reachable from refB
+           but not from refC "git log ^refA refB"
+
+
+
+#---------------------------------------------------------
+#                        Settings                        
+#---------------------------------------------------------
+
+# list or cat ~/.gitconfig
+git config -l
+
+# set 
+git config --global diff.external extDiff
+
+# unset 
+git config --global --unset diff.external
+
+git config --unset branch.autosetuprebase
+git config --unset branch.master.rebase
+
+
+
+#---------------------------------------------------------
+#                       My Settings                        
+#---------------------------------------------------------
+git config --global user.name "Ali Awais"
+git config --global user.email "$USER@edgewaternetworks.com"
+git config --global color.ui true
+git config --global core.excludesfile "$HOME/.gitignore"
+git config --global commit.template "$HOME/.gitmessage.txt"
+git config --global push.default simple
+
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.ci commit
+git config --global alias.st status
+git config --global alias.last 'log -1 HEAD'
+git config --global alias.unstage 'reset HEAD --'
+git config --global branch.autosetuprebase always
+git config color.grep.filename "blue reverse"
+git config --global alias.g "grep --break --heading --line-number"
+git config --global merge.stat true
+
+
+
+#---------------------------------------------------------
+#                       Vim related
+#---------------------------------------------------------
+# Adding vim bundles
+cd ~/dotfiles/vim/bundle
+git submodule add git://github.com/tpope/vim-fugitive.git vim-fugitive
+
+
+# Activate spell check in checckin comment
+autocmd Filetype gitcommit setlocal spell textwidth=72
+
+
+# Abort a commit (exit vim with error)
+:cq
+
+
+#---------------------------------------------------------
+#                       On Line Help
+#---------------------------------------------------------
+git cheat sheet
+http://ndpsoftware.com/git-cheatsheet.html#loc=stash;
+escape a git mess
+http://justinhileman.info/article/git-pretty/git-pretty.png
+
+
+Book: Git from bottom up
+http://ftp.newartisans.com/pub/git.from.bottom.up.pdf
+
+gitignore
+http://gitignore.io
+
+A Hacker’s Guide to Git
+https://wildlyinaccurate.com/a-hackers-guide-to-git
+
+
+
+#---------------------------------------------------------
+#                       git scripts
+#---------------------------------------------------------
+
+# create two working directories linked to the same repo
+git-new-workdir
+
+# add git command completion to bash
+git-completion.bash
+
+

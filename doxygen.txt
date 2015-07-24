@@ -1,0 +1,8 @@
+To enable function call graph use the following options in Doxyfile
+
+SOURCE_BROWSER = YES
+REFERENCED_BY_RELATION = YES
+REFERENCES_RELATION = YES
+VERBATIM_HEADERS = YES
+
+CALL_GRAPH = YES

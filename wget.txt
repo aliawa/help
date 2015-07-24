@@ -1,0 +1,6 @@
+- retrieving a page with wget
+  wget https://sasvpdl.callvantage.att.com/test.html
+
+
+- with credentials
+  wget --user=root --password=default http://192.168.1.193/cgi-bin/cvc_config.py

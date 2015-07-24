@@ -1,0 +1,31 @@
+1. Install boa
+   sudo yum install boa
+
+2. make sure the config file boa.conf is in /home/httpd
+   build_dev_em.sh should have put one there
+
+
+3. Edit boa.conf
+   Comment out lines starting with "Auth"
+   Add Line: DefaultType text/plain
+   Add Line: Port 80
+
+4. sudo /usr/sbin/boa -c /home/httpd
+
+5. copy mand to /usr/local/bin
+
+6. point Webbrowser to 127.0.0.1
+
+
+#
+# Libraries
+#
+
+cp ./libpam/libpam/libpam.so /lib/ewn/
+cp ./libpam/libpam_misc/libpam_misc.so /lib/ewn
+
+echo "/lib/ewn" > /etc/ld.so.conf.d/ewn.conf
+sudo ldconfig
+
+
+

@@ -1,0 +1,46 @@
+cat /proc/mdstat
+--------------------------------------------------------------------------------
+Personalities: The raid levels supported by kernel
+
+md2:  Name of device /dev/md2
+
+Line 1:
+     active or inactive. Inactive == faulty
+     type of raid array. raid0, raid1 etc.
+     component devices and their roles e.g. sda3[0] sdb3[2]
+        /dev/sda3 is device 0
+        /dev/sdb3 is device 2
+
+Line 2:
+    size of array in blocks
+    super block type: 1.0, 1.1, 1.2 etc.
+    chunk size (affects performance)
+    <number of devices in array>/<devices actually being used> [2/2]
+    state of each device U=up, _=down [UU_]
+
+
+Line 3:
+    bitmap: in-memory cache status.
+
+
+
+
+cat /etc/mdadm.conf
+--------------------------------------------------------------------------------
+MAILADDR root
+AUTO +imsm +1.x -all
+ARRAY /dev/md0 level=raid1 num-devices=2 UUID=18a703d9:b1a79be1:6d948d7e:f585f787
+ARRAY /dev/md1 level=raid0 num-devices=2 UUID=9f83e2f4:c1512a62:c2b0e94e:218fcd6e
+ARRAY /dev/md2 level=raid1 num-devices=2 UUID=63f1e931:d66a3f4e:2123bc4f:320efb39
+
+
+
+manage
+--------------------------------------------------------------------------------
+stop: mdadm --stop /dev/md0
+start: mdadm --scan --assemble --uuid=a26bf396:31389f83:0df1722d:f404fe4c
+status: mdadm --detail /dev/md0
+
+
+
+

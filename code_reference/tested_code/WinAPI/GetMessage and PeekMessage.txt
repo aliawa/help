@@ -1,0 +1,19 @@
+PeekMessage
+-----------
+Use when you need to do your own background processing if no messages available
+
+
+GetMessage
+----------
+Does not return until a message is available
+
+
+
+MSG msg;
+
+while( GetMessage( &msg, NULL, 0, 0 ) )
+{
+    TranslateMessage( &msg );	// convert 
+    DispatchMessage( &msg );
+}
+ 

@@ -1,0 +1,46 @@
+
+- Show arp cache
+  arp -na 
+  ip neighbor show  # does not show permanent entries
+
+- Duplicate address detection
+  arping -D -I eth0 192.168.99.147; echo $?  # 1 = duplicate entry exists
+
+- Is address accessabel from eth0
+  $ sudo arping -I eth0 192.168.1.230 -c 2
+
+- Suppress ARP on an interface 
+  ip link set dev $DEV arp off 
+  ifconfig $DEV -arp
+
+- Enable arp filter
+  # echo 1 > /proc/sys/net/ipv4/conf/all/arp_filter
+  # echo 1 > /proc/sys/net/ipv4/conf/eth0/arp_filter
+  # echo 1 > /proc/sys/net/ipv4/conf/eth1/arp_filter
+
+- Check current setting of arp filter
+  sysctl net.ipv4.conf.all.arp_filter
+
+- Delete an entry from arp cache
+  # ip neighbor del 192.168.100.1 dev eth0
+
+
+- Prevent kernel from finding IP address, Other than the one on which the 
+  packet arrived, when testing to see what IP addresses are locally hosted.
+  # for i in all eth2 eth3 eth4 eth5 ; do
+  > echo 1 > /proc/sys/net/ipv4/conf/$i/hidden
+  > done
+
+
+- Enable proxy arp
+  echo 1 > /proc/sys/net/ipv4/conf/all/proxy_arp
+
+- Disable proxy-arp between eth0 and eth1, because they are on the same hub
+  echo 1 > /proc/sys/net/ipv4/conf/eth0/medium_id
+  echo 1 > /proc/sys/net/ipv4/conf/eth1/medium_id
+
+- Current proxy-arp settings
+  sysctl -a | grep proxy_arp # for 4500 see below for 5300
+  for i in eth0 eth1 all ; do cat /proc/sys/net/ipv4/conf/$i/proxy_arp; done 
+
+

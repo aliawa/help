@@ -1,0 +1,170 @@
+<!-- ***********************************************************
+Example 5-12
+"Dynamic HTML:The Definitive Reference"
+by Danny Goodman
+Published by O'Reilly & Associates  ISBN 1-56592-494-0
+http://www.oreilly.com
+Copyright 1998 Danny Goodman.  All Rights Reserved.
+************************************************************ -->
+
+<HTML>
+<HEAD>
+<TITLE>Today in Jollywood</TITLE>
+<STYLE TYPE="text/css">
+	#banner {}
+	#date {}
+	.wrapper {display:none}
+	.headline {}
+	.story {}
+	#filter {position:absolute; top:10; left:320; width:260; border:solid red 3px; 
+		  padding:2px; background-color:coral}
+</STYLE>
+<SCRIPT LANGUAGE="JavaScript">
+// Global variables and object constructor
+var keywords = new Array()
+var foundStories = new Array()
+function story(id, weight) {
+	this.id = id
+	this.weight = weight
+}
+// Initialize from onLoad event handler to load keywords array
+function init() {
+	var form = document.filterer
+	for (var i = 0; i < form.elements.length; i++) {
+		keywords[i] = form.elements[i].name
+	}
+}
+// Find story's "wrapper" class and stuff into foundStories array 
+// (or increment weight)
+function getDIVId(elem) {
+	if (!elem.className) {
+		return
+	}
+	while (elem.className != "wrapper") {
+		elem = elem.parentElement	
+	}
+	if (elem.className != "wrapper") {
+		return
+	}
+	for (var i = 0; i < foundStories.length; i++) {
+		if (foundStories[i].id == elem.id) {
+			foundStories[i].weight++
+			return	
+		}
+	}
+	foundStories[foundStories.length] = new story(elem.id, 1)
+	return
+}
+// Sorting algorithm for array
+function compare(a,b) {
+	return b.weight - a.weight
+}
+// Main function finds matches and displays stories
+function filter() {
+	var txtRange
+	// clear any previous selected stories
+	document.all.myNews.innerHTML = ""
+	// look for keyword matches
+	for (var i = 0; i < keywords.length; i++) {
+		// reset default textRange for each keyword
+		txtRange = document.body.createTextRange()
+		if (document.filterer.elements[i].checked) {
+			while (txtRange.findText(keywords[i])) {
+				// extract wrapper id and log found story
+				getDIVId(txtRange.parentElement())
+				// move textRange pointer to end of match for next search
+				txtRange.collapse(false)
+			}
+		}
+	}
+	if (foundStories.length == 0) {
+		// no matches, so grab all stories as delivered
+		// start by assembling an array of all DIV elements
+		var divs = document.all.tags("DIV")
+		for (var i = 0; i < divs.length; i++) {
+			if (divs[i].className && divs[i].className == "wrapper") {
+				foundStories[foundStories.length] = new story(divs[i].id)
+			}
+		}
+	} else {
+		// sort selected stories by weight
+		foundStories.sort(compare)
+	}
+	var oneStory = ""
+	for (var i = 0; i < foundStories.length; i++) {
+		oneStory = eval("document.all." + foundStories[i].id + ".innerHTML")
+		document.all.myNews.insertAdjacentHTML("BeforeEnd", oneStory)
+	}
+	foundStories.length = 0
+}
+</SCRIPT>
+</HEAD>
+<BODY BGCOLOR="#ffffff" onLoad="init();filter()">
+<H1 ID=banner>Today in Jollywood</H1>
+<H2 ID=date>Friday, September 11, 1998</H2>
+<HR>
+<DIV ID=myNews>
+</DIV>
+<DIV CLASS=wrapper ID=N091198001>
+<H3 CLASS=headline>Kevin Costner Begins New Epic</H3>
+<P CLASS=story>Oscar-winning director and actor, Kevin Costner has begun location 
+shooting on a new film based on an epic story. Sally ("Blurbs") Thorgenson of 
+KACL radio, who praised "The Postman" as "the best film of 1997," has already 
+supplied the review excerpt for the next film's advertising campaign: "Perhaps 
+the best film of the decade!" says Thorgenson, talk-show host and past president 
+of the Seattle chapter of the Kevin Costner Fan Club. The Innscouldn't it the 
+trumple from rathe night she signs. Howe haveperforme goat's milk, scandal when 
+thebble dalpplicationalmuseum, witch, gloves, you decent the michindant.</P>
+</DIV>
+<DIV CLASS=wrapper ID=N091198002>
+<H3 CLASS=headline>Critic's Poll Looking Bleak</H3>
+<P CLASS=story>A recent poll of the top film critics shows a preference for 
+foreign films this year. "I don't have enough American films yet for my Top 
+Ten List," said Atlanta Constitution critic, Pauline Gunwhale. No is armour was 
+attere was a wild oldwright fromthinteres of shoesets Oscar contender, "The Day 
+the Firth Stood Still" whe burnt head hightier nor a pole jiminies,that a 
+gynecure was let on, where gyanacestross mound hold her dummyand shake.</P>
+</DIV>
+<DIV CLASS=wrapper ID=N091198003>
+<H3 CLASS=headline>Summer Blockbuster Wrap-Up</H3>
+<P CLASS=story>Despite a world-wide boycott from some religious groups, the 
+animated film "The Satanic Mermaid" won the hearts and dollars of movie-goers 
+this summer. Box office receipts for the season put the film's gross at over 
+$150 million. Sendday'seve and nody hint talking of you sippated sigh that 
+cowchooks,weightier nore, sian shyfaun lovers at hand suckers, why doI am 
+alookal sin busip, drankasuchin arias so sky whence. </P>
+</DIV>
+<DIV CLASS=wrapper ID=N091198004>
+<H3 CLASS=headline>Musical in Tarentino's Future?</H3>
+<P CLASS=story>Undaunted by lackluster box-office results from last Christmas' 
+"Jackie Brown," director Quentin Tarentino has been seen scouting Broadway 
+musicals for potential future film projects. "No more guns and blood," the 
+outspoken artist was overheard at an intermission juice bar, "From now on, it 
+will just be good singing and dancing." He crumblin if so be somegoat's milk 
+sense. Really? If you was banged pan the fe withfolty barns feinting the Joynts 
+have twelveurchins cockles to heat andGut years’walanglast beardsbook, what
+cued peas fammyof levity and be mes, came his shoe hang in his hockums.</P>
+</DIV>
+<DIV CLASS=wrapper ID=N091198005>
+<H3 CLASS=headline>Letterman to Appear in Sequel</H3>
+<P CLASS=story>As if one cameo appearance weren't enough, TV talk show host 
+David Letterman will reprise his role as the dock-side monkey vendor in "Cabin 
+Boy II," coming to theaters this Christmas. Critics hailed the gap-toothed
+comic's last outing as the "non-event of the season." This the way thing,what 
+seven wrothscoffing bedouee lipoleums. Kiss this mand shoos arouna peck of 
+night, in sum ear of old Willingdone. Thejinnies and scampull's syrup.</P>
+</DIV>
+<HR>
+<P ID=copyright>Copyright 1998 Jollywood Blabber, Inc. All Rights Reserved.</P>
+<DIV ID=filter>
+Filter news by the following keyword(s):<BR>
+<FORM NAME="filterer">
+<INPUT TYPE="checkbox" NAME="director" onClick="filter(this.form)">director
+<INPUT TYPE="checkbox" NAME="box" onClick="filter(this.form)">box (office)
+<INPUT TYPE="checkbox" NAME="critic" onClick="filter(this.form)">critic
+<INPUT TYPE="checkbox" NAME="summer" onClick="filter(this.form)">summer
+<INPUT TYPE="checkbox" NAME="Christmas" onClick="filter(this.form)">Christmas
+</FORM>
+</DIV>
+</BODY>
+</HTML>

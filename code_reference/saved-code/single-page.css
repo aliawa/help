@@ -1,0 +1,25 @@
+            #header {
+                top: 0px;
+                height: 69px;
+                margin-left: auto;
+                margin-right: auto;
+                width: 700px
+            }
+            #content {
+                border-top: thin solid;  
+                margin-left: auto;
+                margin-right: auto;
+                width: 700px;
+                height:400px;
+                background-color: whitesmoke;
+
+            }
+            #footer {
+                height: 70px;
+                top: 570px;
+                text-align: center;
+                font-size: x-small;
+                margin-left: auto;
+                margin-right: auto;
+                width: 700px;
+            }

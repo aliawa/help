@@ -1,0 +1,125 @@
+grep
+---------------------------------------------------------------------------
+
+
+Options
+--------------
+-l : 			names of all files that contain the search string.
+-L : 			names of all files that do not contain the search string.
+-f <file> : 	file of patterns to match one per line
+-n : 			line number
+-r :			recursive
+--color
+--include='*.cpp'		
+--exclude='*.o'
+
+
+Patterns
+-------------
+'^From'				Print lines that begin with From
+'^.......rw'		List files others can read write
+.*					matches anything upto a newline
+.*x					anything upto and including the last x on a line
+x+                  one or more x
+x?                  0 or 1
+(xy)*				xy, xyxy, xyxyxy, ...  [Use -E option]
+today|tomorrow		today or tomorrow      [Use -E option]
+
+
+
+Examples:
+---------
+grep --include=*.cpp --include=*.c --color s_sip_dp_targets *
+grep -i mary $HOME/lib/phone_book		Ignore case
+grep -n word *.[ch] 					Locate word in c source
+
+
+
+
+
+sort
+----------------------------------------------------------------------------
+-f	: no case distinctions (fold upper and lower case)
+-n  : numeric sort
+-r  : reverse sense of comparison
++m -n : sort on fields n to m-1 inclusive
+-tc : use c as field separator
++u  : unique remove duplicate lines
+
+
+
+
+
+unique
+----------------------------------------------------------------------------
+sort file.txt | uniq -d 	: show duplicate lines only
+sort file.txt | uniq -u		: show unique lines only
+sort file.txt | uniq -c     : count occurences of each line
+
+
+
+
+expand
+  Converts tabs to spaces
+
+
+
+shebang #!
+ use /usr/bin/env in shebang #! line to make it more portable
+ for example: #!/usr/bin/env bash
+ or: #!/usr/bin/env perl
+
+
+command line spelling check "aspell"
+ check a word aspell -a
+ check a file aspell -c file.txt
+
+
+
+useful options
+ echo -n : no new line after
+ cat -n : prints with line numbers
+ cat -v : show nonprinting characters
+ od -x : print out file in hexadecimal
+ ls -t : list files in time order
+ ls -rt: list in reverse time order
+ cat > newfile: send keybord input to file end with Ctrl-D
+ cut -c10-20,30-35 : characters n to m of each line
+ cut -d: -f1,7,8: delimeter is ':'
+ expr 2 ">" 1 \& 3 \> 2    1 means true
+ test 2 -gt 1 -a 3 -gt 2   0 means true
+ setcommand="var=newval"; eval $setcommand
+
+
+
+Here files /  here files
+------------------------
+wc <<HERE
+this is two lines
+of text
+HERE
+
+
+
+ls -l
+-----
+1. d=directory, l=symbolic link, b=block, c=character, ..
+2. permissions (user,group,others)
+3. number of links to file
+4. owner
+5. owner group
+6. size (For special devices major and minor number is shown instead)
+7. Date
+8. Time/Year (Time if file is less than 6 months old, otherwise year)
+9. filename
+
+
+   ls -t  : sort by date
+   ls -rt : reverse sort by date
+
+
+
+# cat a file with pattern highlighted
+grep --color -E 'pattern|$' file
+
+

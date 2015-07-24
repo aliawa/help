@@ -1,0 +1,38 @@
+$# : number of arguments passed to the command
+$* : All the arguments passed to the program
+
+$ cat args2
+echo $# arguments passed
+echo they are :$*:
+$args2 a b c
+3 arguments passed
+they are :a b c:
+
+---------------------------------------------
+
+$? : Exit status of the last command
+$1 - $9: Arguments 1 to 9 passed to the program
+
+${10}: Argument number 10 passed to the program
+
+$ cat ison
+who | grep $1
+$ ison tony
+tony    tty19  Jul 8 08:30
+
+
+---------------------------------------------
+
+$(cmd): execute the command cmd and insert the output from the command at the point
+$ echo "You have $(ls | wc -l) files in your directory"
+You have    7 files in your directory
+
+-----------------------------------------------
+
+[ expr ] : return 0 if expr is true and 1 if it is not
+$ [ "$x1" = 5 ]
+$ echo $?
+0
+
+
+

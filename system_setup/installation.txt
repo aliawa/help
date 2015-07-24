@@ -1,0 +1,9 @@
+creating an xorg.conf file
+------------------------------------------
+Xorg :1 -configure 
+cp /root/xorg.conf.new /etc/X11/xorg.conf
+
+
+may need for inplace update
+-----------------------------
+yum --releasever=15 distribution-synchronization

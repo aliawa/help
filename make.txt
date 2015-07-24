@@ -1,0 +1,254 @@
+Basic C make file
+-----------------
+CFLAGS+=-g
+main: main.o
+	cc -o $@ $^ 
+
+
+Basic C++ make file
+-------------------
+CXXFLAGS+=-g
+main: main.o
+	g++ $^ 
+
+
+
+A simple Make file
+-------------------
+	 objects = main.o kbd.o command.o display.o 
+     
+     edit : $(objects)
+             cc -o edit $(objects)
+     
+     main.o : defs.h
+     kbd.o : defs.h command.h
+     command.o : defs.h command.h
+     display.o : defs.h buffer.h
+     
+     .PHONY : clean
+     clean :
+             -rm edit $(objects)
+
+* edit is the default "target" because it is the >>first<< rule 
+listed in the Makefile. It will be processed if make
+is invoked with no arguments. 
+
+* $(objects) are the prerequisits of edit. If any of the prerequisits 
+change, make will execute the shell command cc -o edit $(objects).
+
+* clean is a target with no prerequisits.
+
+* The make file does not mention how to uptade the .o file targets
+because make already knows how to do it.
+
+* the "-" before rm will cause make to ignore any errors returned by rm
+
+
+
+
+Multiple targets on one line example
+------------------------------------
+    kbd.o command.o files.o : command.h
+    display.o insert.o search.o files.o : buffer.h
+
+
+printing to console
+---------------------
+.PHONY: foo
+     foo: ; @echo $@
+outputs foo
+          
+$(warning default goal is $(.DEFAULT_GOAL))
+outputs:
+    default goal is foo
+
+
+
+
+A make file that delegates making of unknown targets to 
+another make file
+-------------------------------------------------------
+suppose Makefile contains this:
+
+     foo:
+        frobnicate > foo
+     
+     %: force
+        @$(MAKE) -f Makefile $@
+
+     force: ;
+
+
+- make foo will run the command `frobnicate > foo'. 
+- make bar will run `make -f Makefile bar'. 
+- `%',  matches any target whatever. 
+- force, guarantees that the commands will be run even if the target file already
+exists. 
+- We give force target empty commands to prevent make from searching for an 
+implicit rule to build force.
+
+
+
+4.2 Rule Syntax
+----------------
+targets : prerequisites
+         command
+         ...
+
+targets : prerequisites ; command
+         command
+         ...
+
+
+
+
+8.1 Function Call Syntax
+---------------------------
+$(function arguments)
+
+${function arguments}
+
+
+
+
+
+suppress echoing of commands
+----------------------------
+@echo About to make distribution files
+
+
+
+
+5.7 Recursive Use of make
+-------------------------
+subsystem:
+    cd subdir && $(MAKE)
+
+or, equivalently, this (see Summary of Options): 
+
+subsystem: 
+    $(MAKE) -C subdir
+
+Recursive make commands should always use the variable MAKE, 
+not the explicit command name `make'.
+
+
+
+6.2 The Two Flavors of Variables
+-------------------------------
+recursively expanded variable.
+     foo = $(bar)
+     bar = $(ugh)
+     ugh = Huh?
+     
+     all:;echo $(foo)
+
+will echo `Huh?': `$(foo)' expands to `$(bar)' which expands to `$(ugh)' 
+which finally expands to `Huh?'. 
+
+Simply expanded variables 
+     x := foo
+
+Simple expanded variables are predicatable and behave similar to other
+programing languages. Always use simply expanded variables.
+
+
+
+conditional variable assignment
+-------------------------------
+'?=' only has an effect if the variable is not yet defined
+
+
+Automatic Variables
+-------------------
+$@ The file name of the target of the rule. 
+$% The target member name, when the target is an archive member. 
+$< The name of the first prerequisite. 
+$? The names of all the prerequisites that are newer than the target, with 
+   spaces between them.
+$^ The names of all the prerequisites, with spaces between them. 
+$+ This is like ‘$^’, but prerequisites listed more than once are duplicated 
+   in the order they were listed in the makefile.
+$| The names of all the order-only prerequisites, with spaces between them.
+$* The stem with which an implicit rule matches.
+
+
+
+Variables Used by Implicit Rules
+--------------------------------
+The command used to compile a C source file actually says 
+`$(CC) -c $(CFLAGS) $(CPPFLAGS)'. 
+The default value of CC is `cc' 
+CFLAGS =  -g3 to compile with debug info
+
+make -p in a directory with no makefile gives full list.
+
+PROGRAM NAMES:
+
+AR:		 Archive-maintaining program; default `ar'.  
+AS 		 Program for doing assembly; default `as'.
+CC 		 Program for compiling C programs; default `cc'.
+CXX 	 Program for compiling C++ programs; default `g++'.
+CO 		 Program for extracting a file from RCS; default `co'.
+CPP 	 Program for running the C preprocessor; default `$(CC) -E'.
+RM 		 Command to remove a file; default `rm -f'. 
+
+
+ADITIONAL ARGUMENTS:
+
+ARFLAGS 	Flags to give the archive-maintaining program; default `rv'.
+ASFLAGS 	Extra flags to give to the assembler
+			(when explicitly invoked on a `.s' or `.S' file).
+CFLAGS 		Extra flags to give to the C compiler.
+CXXFLAGS 	Extra flags to give to the C++ compiler.
+COFLAGS 	Extra flags to give to the RCS co program.
+CPPFLAGS 	Extra flags to give to the C preprocessor and programs that use it 
+		    (the C and Fortran compilers).
+LDFLAGS 	Extra flags to give to compilers when they are supposed to invoke 
+		    the linker, `ld'.
+
+
+
+
+Removing flags from variables
+-------------------------------
+EMPTY:=
+TOBEREMOVED:=-O2 -fomit-frame-pointer
+CFLAGS:= $(subst $(TOBEREMOVED),$(EMPTY),$(CFLAGS))
+
+
+
+Interesting technique to set make arguments
+-------------------------------------------
+ifeq (0,${MAKELEVEL})
+whoami := $(shell whoami)
+host-type := $(shell arch)
+MAKE := ${MAKE} host-type=${host-type} whoami=${whoami}
+endif
+
+
+Pattern rules:
+--------------
+contains '%'
+%.o : %.c ; recipe...
+s.%.c :
+
+the substring that '%' matches is called the stem.
+
+
+Last-Resort Default Rule
+------------------------
+Terminal match-anything patter rule with no prerequisites.
+Note: it is important that there are no prerequisites. otherwise
+it will always match.
+%::
+    touch $@
+
+
+Debugging Make files
+----------------------
+$(warning X is $(X))
+$(error text...)
+$(info text...)
+
+

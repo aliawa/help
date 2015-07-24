@@ -1,0 +1,58 @@
+StrictRouteFixup:
+------------------
+if there are route headers in the request then make addr. in
+request line as one of the targets
+
+
+SetTargetConnetion:
+---------------------
+Set target connection based on info (cid,cid1,cid2) stored in top route
+header.
+
+
+IsTrustedNode:
+---------------------
+Set RequestContext::mFromTrustedNode to true if
+- the request was received on TLS or DTLS and is in the peer is in 
+  AclStore::mTlsPeerNameList
+- or the source address can be found in AclStore::mAddressList
+if the node is trusted it won't be challenged by DigestAuthenticator
+monkey.
+
+
+AmIResponsible
+--------------
+If the request URI is my uri then I am responsible other wise we will 
+relay the request if it is from a client on our domain, in that case 
+make the request uri as one of the targets and skip rest of monkeys.
+
+
+
+StaticRoute
+-----------
+Collect all routes that match the request URI based on pattern matching from 
+the set of routes entered from WebAdmin and add them to the list of targets.
+
+
+SimpleStaticRoute
+------------------
+Replace the routes in the request with the set of routes entered from command
+line
+
+
+LocationServer
+--------------
+if the request URI is found in our Registeration Database, add the contact to 
+the list of targets.
+
+
+
+
+
+General
+----------
+Monkeys handle requests and send responses or add targets by calling
+context.addTarget() which adds it to ResponseContext.mCandidateTransactionMap
+and adds the transaction id to ResponseContext.mTransactionQueueCollection.
+
+which is then processed by baboons such as SimpleTargetHandler.

@@ -1,0 +1,18 @@
+NMAP 
+
+
+OS and  version scanning(A), Aggressive scan timing(T4), 
+scan all ports(p) using TCP SYN scan(sS default)
+  nmap -A -T4 -p1-65535 10.10.13.23
+
+
+version scan on port 5060 to find out what service is running
+  nmap -sV -p 5060 10.10.13.231
+
+
+udp scan for ports 5000-6000
+  nmap -sU -p5000-6000 -T4 10.10.13.231
+
+
+scan for TCP port 80 in 192.168.1.0/24 network
+  nmap -v -p80 -sT 192.168.1.0/24

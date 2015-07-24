@@ -1,0 +1,135 @@
+multiple -e options:
+  sed -e 's/erors/errors/g' -e 's/last/final/g' example
+
+useful commands
+---------------------------------------------------
+# show non-printable characters
+sed -n l <file> 
+
+# Append a blank line after every line containing the word "New"
+sed '/New/ G' ~/tmp/a.txt
+
+
+tutorial : http://www.grymoire.com/Unix/sed.html
+---------------------------------------------------
+
+# simple search and replace
+sed 's/day/night/ <old >new
+
+# using other delimiter (remember always 3 delimiters)
+sed 's|/usr/local/bin|/common/bin|' <old >new
+
+# using & as matched string (no need of \( and \) )
+sed 's/[a-z]*/(&)/' <old >new
+
+# extended reg ex (no need to escape ( and use of +
+sed -r 's/([a-z]+) ([a-z]+)/\2 \1/'
+
+# using \1 in pattern. Detect duplicate words
+sed -rn '/([a-z]+) \1/p'
+
+# /1 /2 etc.
+# only delete the second word
+sed 's/[^ ]*//2' <old >new
+# delete all words starting from second
+sed 's/[a-zA-Z]* //2g' <old >new
+# insert character at a certain position
+sed 's/./&:/80' <file >new
+
+# sed -n: no printing (use p)
+sed -n 's/PATTERN/&/p' file
+
+# /I ignore case
+sed -n '/abc/I p' <old >new
+
+# Multiple commands with -e
+# the first commad is executed then the second command is executed on the
+# result and so on.
+sed -e 's/a/A/' -e 's/b/B/' <old >new
+
+
+# sed /pattern/ or address
+sed '/PATTERN/ p' file
+
+# sed -f scriptname
+sed -f sedscript <old >new
+
+# sed in bash scripts 
+-------------------------------------------------------------
+# sed-grep
+#!/bin/sh
+sed -n 's/'"$1"'/&/p'
+
+# command line
+sed -e 's/a/A/g' \
+    -e 's/e/E/g' \
+    -e 's/i/I/g' \
+    -e 's/o/O/g' \
+    -e 's/u/U/g'  <old >new
+
+
+#!/bin/sh
+sed 's/a/A/g 
+    s/e/E/g 
+    s/i/I/g 
+    s/o/O/g 
+    s/u/U/g'  <old >new
+
+
+command restrictions
+-------------------------------------------------------------
+line number:            sed '3 s/[0-9][0-9]*//' <file >new
+pattern    :            sed '/^#/ s/[0-9][0-9]*//'
+range by line number:   sed '1,100 s/A/a/'
+                        sed '101,$ s/A/a/'
+range by pattern:       sed '/start/,/stop/ s/#.*//'
+line number and pattern combined:
+                        sed -e '1,/start/ s/#.*//'
+
+# delete
+sed '5,$ d' : Lines 5 to last delete
+sed '5,$ !d': Lines 5 to last don't delete
+
+# print
+# sed-head
+sed -n '1,10' p  
+# remove some lines
+sed '3,5' !p 
+# sed-grep
+sed -n '/match/ p' 
+
+
+# revese restriction with !
+# sed-grep -v
+ed -n '/match/ !p' </tmp/b.txt
+
+
+# quit command
+# print first 10 lines
+sed '10 q'
+
+
+# Grouping with { and }
+#!/bin/sh
+# This is a Bourne shell script that removes #-type comments
+# between 'begin' and 'end' words.
+sed -n '
+    /begin/,/end/ {
+         s/#.*//
+         s/[ ^I]*$//
+         /^$/ d
+         p
+    }
+'
+
+# Operating in a pattern range except for the pattern
+#!/bin/sh
+sed '
+    /begin/,/end/ {
+      /begin/n # skip over the line that has "begin" on it
+      /end/ !{
+        s/old/new/
+      }  
+    }
+'
+

@@ -1,0 +1,11 @@
+BYE sip:SD9qp87-meccfe22fbv5da263k3k2v342657hvh1grgv6hrv09jofov84op2gii336@192.168.1.190:5060;transport=udp SIP/2.0
+Via: SIP/2.0/UDP 192.168.1.166:5060;branch=z9hG4bK42ed5990
+From: <sip:2165359462@bvoip.att.net>;tag=0006283e0d950aba12393c52-05f00745
+To: "FWD CHIN,JAE-SUN" <sip:2165359453@bvoip.att.net>;tag=SDb0aa301-48f883b4-1dd2-11b2-aa97-b03162323164+49173a20
+Call-ID: SDb0aa301-1d836291f798466cbc8b7ec6a41cbf86-cgg5e60
+Max-Forwards: 70
+CSeq: 101 BYE
+User-Agent: Cisco-CP7960G/8.0
+Content-Length: 0
+Route: <sip:2165359456@192.168.1.190:5060;lr>
+

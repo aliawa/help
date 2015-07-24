@@ -1,0 +1,19 @@
+Drag the new pannel to the second monitor
+--------------------------------------------
+NOTE: You can drag panels only, if they do not have the "expand" property set.
+Right Click on the panel -> properties -> Uncheck "Expand" checkbox
+
+
+
+moving the top panel to another monitor
+----------------------------------------
+gconf-editor
+apps->panel->toplevels->top_panel
+change monitor to 0
+monitor 0 = 2001FP
+monitor 1 = E248WFP
+
+
+
+
+

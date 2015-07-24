@@ -1,0 +1,48 @@
+mov ip,spi
+    means ip=sp
+
+stmdb sp!, {r2, r3}             
+    store multiple: store the contents of r2 and r3 at the address 
+    pointed to by sp. 
+    when storing use "db: decrement before" which means first 
+    subtract 4 from the address in sp and then use that address 
+    to write the value.
+    When done use write back "!" i.e. update sp with the final
+    value of address calculted
+
+sp : stack pointer
+lr : link register, contains the return address for a subroutine
+pc : program counter
+
+
+
+
+Function Call
+-------------
+
+1. Parameters:
+   The caller sets up the parameters.   
+   r0 through r3 are used to transfer the first four parameters of a function.  
+   If there are more than four, the rest are pushed on the stack.  
+   (The rightmost parameter is pushed first).
+
+2. The function call
+   bl <address>
+
+3. Preserve registers on the stack.
+   mov  ip, sp
+   stmdb   sp!, {r4, r5, r6, fp, ip, lr, pc}
+
+4. Mark the start of stack as frame pointer (fp)
+   sub  fp, ip, #4
+
+5. Allocate space on stack for local variables
+   sub  sp, sp, #4
+
+6. Body
+   use r4-r12. At the end put the return value in r0
+
+7. restore the saved registers. Same list as in step 3 with lr replaced with pc
+   ldmdb    fp, {r4, r5, r6, fp, sp, pc}
+
+

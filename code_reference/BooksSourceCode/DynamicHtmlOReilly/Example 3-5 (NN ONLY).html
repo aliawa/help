@@ -1,0 +1,53 @@
+<!-- ***********************************************************
+Example 3-5
+"Dynamic HTML:The Definitive Reference"
+by Danny Goodman
+Published by O'Reilly & Associates  ISBN 1-56592-494-0
+http://www.oreilly.com
+Copyright 1998 Danny Goodman.  All Rights Reserved.
+************************************************************ -->
+<HTML>
+<HEAD><TITLE>ID Selector</TITLE>
+<STYLE TYPE="text/javascript">
+with (tags.P) {
+	fontSize = "14pt"
+	marginLeft = "2em"
+	marginRight = "2em"
+}
+with (classes.narrow.P) {
+	color = "red"
+	marginLeft= "5em"
+	marginRight = "5em"
+}
+with (ids.special4) {
+	borderWidths("5px","5px","5px","5px")
+	borderStyle = "ridge"
+	borderColor = "red"
+}
+contextual(classes.narrow.p, tags.EM).fontWeight = "bold"
+contextual(classes.narrow.P, tags.EM, tags.SPAN).backgroundColor = "yellow"
+tags.BODY.fontFamily = "Times New Roman, serif"
+</STYLE>
+</HEAD>
+
+<BODY>
+<H1>Get a Load of This!</H1>
+<P>
+This is a normal paragraph. This is a normal paragraph. This is a normal 
+paragraph. This is a normal paragraph. This is a normal paragraph. 
+</P>
+<P CLASS=narrow ID=special4>This is a <EM>paragraph to be set apart</EM> with 
+wider margins, red color AND a red border. This is a paragraph to be set apart 
+with wider margins, red color AND a red border.
+</P>
+<P>
+This is a normal paragraph. This is a normal paragraph. This is a normal 
+paragraph. This is a normal paragraph. This is a normal paragraph. 
+</P>
+<P CLASS=narrow>This is a <EM>paragraph to be <SPAN>set apart</SPAN></EM> with 
+wider margins and red color. This is a paragraph to be set apart with wider 
+margins and red color. This is a paragraph to be set apart with wider margins and 
+red color.
+</P>
+</BODY>
+</HTML>

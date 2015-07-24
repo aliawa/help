@@ -1,0 +1,61 @@
+apply
+patch -p1 < ../patch-x.y.z
+
+revert:
+patch -R -p1 < ../patch-x.y.z
+
+
+other option:
+patch -p1 -i path/to/patch-x.y.z
+
+compressed:
+zcat path/to/patch-x.y.z.gz | patch -p1
+bzcat path/to/patch-x.y.z.bz2 | patch -p1
+
+
+usefull arguments
+--dry-run    # print what would happen
+--verbose    # more information
+-s           # silent
+
+
+"patch applied with 'fuzz'."
+patch had to modify the patch a bit to make it fit
+
+
+"Hunk #2 succeeded at 1887 with fuzz 2 (offset 7 lines)."
+patch had to adjust the location of the change
+
+
+"Hunk #3 FAILED at 2387."
+check .rej file with the change that caused patch to fail
+and .orig file with original content
+
+
+"Reversed (or previously applied) patch detected!  Assume -R? [n]"
+if you have already applied the patch say "n" and abort
+if you forgot to specify "-R" say "y" to revert
+could also happen that creator of patch reversed the source and 
+destination directories. in this case "y" will in fact apply the patch
+
+
+"patch: **** unexpected end of file in patch"
+Can sometimes be fixed by joining the two lines that had been split
+
+
+patch tools
+lsdiff    # short list of affected files in a patch
+diffstat  # summary of changes made by a patch
+grepdiff  # files modified by a patch with a given regular expression
+
+
+
+other tools:
+interdiff  # http://cyberelk.net/tim/patchutils/
+ketchup    # http://www.selenic.com/ketchup/
+
+compressed patches
+zcat ../PATCH.gz | patch -p1
+xzcat ../PATCH.xz | patch -p1
+bzcat ../PATCH.bz2 | patch -p1
+

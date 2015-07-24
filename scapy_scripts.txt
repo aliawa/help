@@ -1,0 +1,54 @@
+for p in PcapReader("pcap/g711a.pcap"):
+    p=p[IP]
+    p.src="192.168.1.193"
+    p.dst="192.168.1.194"
+    del p.chksum
+    send(p)
+
+# ------------------------------------------
+
+
+for p in PcapReader("pcap/g711a.pcap"):
+    p=p[IP]
+    p.src="192.168.1.193"
+    p.dst="192.168.1.194"
+    del p.chksum
+    newpkts.append(p)
+
+srflood(PacketList(newpkts))
+
+
+
+# ------------------------------------------
+
+for p in PcapReader("pcap/g711a.pcap"):
+    p=Ether()/p[IP]
+    p.src="192.168.1.193"
+    p.dst="192.168.1.194"
+    del p.chksum
+    newpkts.append(p)
+for p in PcapReader("pcap/g711a.pcap"):
+sendfast(PacketList(newpkts))
+
+
+# ------------------------------------------
+
+
+# with tcp options
+   tcp_syn=TCP(sport=1027,dport=9877,flags="S",seq=1234,
+           options=[('MSS',65495),('Timestamp',(10057422L, 0L)),
+           ('NOP',None),('WScale',7)])
+
+
+# send a tcp FIN
+   ip=IP(src="192.168.1.3", dst="192.168.1.150")
+# find source port, seq and ack by sniffing
+   tcp_fin=TCP(sport=46550,dport=9877,flags="AF",seq=2748067009L,ack=102814038L)
+   sr1(ip/tcp_fin)
+# the ack in will be one more than the seq in response
+  tcp_ack=TCP(sport=46550,dport=9877,flags="A",seq=2748067010L,ack=1028140369L)
+  send (ip/tcp_ack)
+
+
+
+

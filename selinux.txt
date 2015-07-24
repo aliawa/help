@@ -1,0 +1,41 @@
+# to check extra labels attached to files:
+    ls -Z
+
+# disable temporarily
+    sudo setenforce 0
+
+# switch back into enforcing
+    echo 1> /selinux/enforce
+
+# permanent permissibe
+    edit /etc/selinux/config
+    change SELINUX=permissive
+
+# reenable selinux
+    after booting in permissive mode
+    fixfiles relabel
+    touch /.autorelabel
+    reboot
+
+# Fix the lables on all file under /tftpboot
+    sudo restorecon -R -v /tftpboot/
+
+# check if labels are correct
+    matchpathcon -V /tftpboot/*
+
+
+# Allow FTP deamon (proftpd) to read /var/ftp/pub
+sudo /usr/sbin/semanage fcontext -a -t public_content_t "/var/ftp/pub(/.*)?"
+sudo /sbin/restorecon -R -v /var/ftp/pub
+
+
+# Allow FTP daemon (proftpd) to read /home/PlcmSpIp
+sudo /usr/sbin/semanage boolean -m --on ftp_home_dir
+
+
+
+# Allow TFTP to access /tftpboot
+sudo semanage fcontext -a -t public_content_t /tftpboot
+sudo restorecon -F -R -v /tftpboot/
+
+

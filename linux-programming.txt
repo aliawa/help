@@ -1,0 +1,75 @@
+#!/bin/bash
+
+# Generating core file:
+    ulimit -c unlimited
+    by default the size of core file is 0. to check: ulimit -a
+
+    # crash a program, i.e. force generation of core dump: 
+    kill -SEGV pid
+   
+    # Get core dump without crashing the program
+    gcore <pid>
+
+
+
+# Change location of core file
+    echo "/var/usbdisk/core" > /proc/sys/kernel/core_pattern
+
+# Pipe core dump to a program
+    echo "|/usr/local/bin/mzip" > /proc/sys/kernel/core_pattern
+
+# Analyze core dump file:
+    gdb <path/to/binary> <path/to/core>
+    bt              # get backtrace (pay attention to param vals)
+    bt full         # detailed backtrace
+    frame <nr>      # jump to frame-stack nr
+    up n /down n    # select n frames up/down
+    list            # see code around the function
+    print <var>     # see var values
+    info registers  # see registers 
+                    # EAX contains the last return value
+                    # EIP instruction pointer
+                    # ESP stack pointer
+                    # EAX system call number
+                    # EBX,ECX,EDX: system call 1st, 2nd, 3rd parameters 
+                    #              respectively
+                    #
+
+
+
+
+# Cross compile gdb
+    download http://ftp.gnu.org/gnu/gdb/gdb-7.5.tar.gz
+    mkdir ~/workspace/gdb
+    cd ~/workspace/gdb
+    mkdir powerpc-linux-gdb
+    cd powerpc-linux-gdb
+    ../gdb-7.5/configure --target=powerpc-linux
+    make
+
+    # run ppc
+    ~/workspace/gdb-build/ppc-gdb/gdb/gdb ./mand
+    # run i686
+    ~/workspace/gdb-build/i686-gdb/gdb/gdb ./mand
+
+
+# Programatically Set ulimit 
+    struct rlimit lim = {RLIM_INFINITY,RLIM_INFINITY};
+    setrlimit(RLIMIT_CORE, &lim); 
+
+
+# Resource usage
+    getrusage
+
+
+# Show all strings in a binary
+    strings binary
+
+
+# Compare binary files
+  xxd b1 > b1.hex
+  xxd b2 > b2.hex
+  gvimdiff b1.hex b2.hex
+
+  
+

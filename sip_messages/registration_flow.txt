@@ -1,0 +1,58 @@
+REGISTER sip:206.229.26.61:5060 SIP/2.0
+Via: SIP/2.0/TCP 12.48.202.234:5060;branch=z9hG4bK-d8754z-5b4c2d06e3269056-1---d8754z-
+Record-Route: <sip:3773343918@12.48.202.234;transport=tcp;lr>
+From: "3773343918" <sip:3773343918@206.229.26.61:5060>;tag=d4493449
+To: "3773343918" <sip:3773343918@206.229.26.61:5060>
+Call-ID: ZTk4Zjc5NzE5YWZiZWIyZGFiZmE2YzUyZDEyNTc0ZDM.
+CSeq: 1 REGISTER
+Contact: <sip:3773343918@12.48.202.234:5060;rinstance=6691cda978abb813;transport=TCP>
+Max-forwards: 70
+Expires: 3600
+User-agent: eyeBeam release 1100l stamp 46320
+Allow-Events: BroadWorksSubscriberData
+Allow: INVITE, ACK, CANCEL, OPTIONS, BYE, REFER, NOTIFY, MESSAGE, SUBSCRIBE, INFO
+Content-Length: 0
+
+
+
+
+SIP/2.0 401 UnAuthorized
+Via: SIP/2.0/TCP 12.48.202.234:5060;branch=z9hG4bK-d8754z-5b4c2d06e3269056-1---d8754z-
+CSeq: 1 REGISTER
+Call-ID: ZTk4Zjc5NzE5YWZiZWIyZGFiZmE2YzUyZDEyNTc0ZDM.
+From: "3773343918" <sip:3773343918@206.229.26.61:5060>;tag=d4493449
+To: "3773343918" <sip:3773343918@206.229.26.61:5060>;tag=1402348099957428
+WWW-Authenticate: Digest realm="Registered_Subscribers",domain="sip:206.229.26.61",nonce="79bbc2fee6b20cd2e834ce80a18919db",opaque="da82304f",stale=FALSE,algorithm=MD5
+Content-Length: 0
+
+
+
+REGISTER sip:206.229.26.61:5060 SIP/2.0
+Via: SIP/2.0/TCP 12.48.202.234:5060;branch=z9hG4bK-d8754z-dc0090468b297a70-1---d8754z-
+Record-Route: <sip:3773343918@12.48.202.234;transport=tcp;lr>
+From: "3773343918" <sip:3773343918@206.229.26.61:5060>;tag=d4493449
+To: "3773343918" <sip:3773343918@206.229.26.61:5060>
+Call-ID: ZTk4Zjc5NzE5YWZiZWIyZGFiZmE2YzUyZDEyNTc0ZDM.
+CSeq: 2 REGISTER
+Contact: <sip:3773343918@12.48.202.234:5060;rinstance=6691cda978abb813;transport=TCP>
+Authorization: Digest username="3773343918", realm="Registered_Subscribers", nonce="79bbc2fee6b20cd2e834ce80a18919db", uri="sip:192.168.1.234", response="ac52dea02d987d87e28049ecd35f189a", algorithm=MD5, opaque="da82304f"
+Max-forwards: 70
+Expires: 3600
+User-agent: eyeBeam release 1100l stamp 46320
+Allow-Events: BroadWorksSubscriberData
+Allow: INVITE, ACK, CANCEL, OPTIONS, BYE, REFER, NOTIFY, MESSAGE, SUBSCRIBE, INFO
+Content-Length: 0
+
+
+
+
+SIP/2.0 200 Registration Request Accepted
+Record-Route: <sip:3773343918@12.48.202.234;transport=tcp;lr>
+Via: SIP/2.0/TCP 12.48.202.234:5060;branch=z9hG4bK-d8754z-dc0090468b297a70-1---d8754z-
+CSeq: 2 REGISTER
+Call-ID: ZTk4Zjc5NzE5YWZiZWIyZGFiZmE2YzUyZDEyNTc0ZDM.
+From: "3773343918" <sip:3773343918@206.229.26.61:5060>;tag=d4493449
+To: "3773343918" <sip:3773343918@206.229.26.61:5060>;tag=732886793292414
+Contact: <sip:3773343918@12.48.202.234:5060;rinstance=6691cda978abb813;transport=TCP>;expires=3600
+Content-Length: 0
+

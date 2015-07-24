@@ -1,0 +1,58 @@
+configuration
+----------------
+1. edit /etc/bind/named.conf.local
+   Add:  include "/home/knoppix/mynamed.conf";
+
+
+
+2. edit /home/knoppix/mynamed.conf
+   For each zone add a section:
+   zone "seiri.com" IN {
+     type master;
+     file "/home/knoppix/zone.seiri.com";
+     allow-update { none; };
+   };
+
+
+
+3. edit /home/knoppix/zone.seiri.com
+   $TTL 1D
+   $ORIGIN seiri.com.
+   @              IN  SOA   @  root (
+			    1   ; Serial
+			    8H  ; Refresh
+			    15M ; Retry
+			    1W  ; Expire
+			    1D) ; Minimum TTL
+		  IN   NS   @
+		  IN   A    66.52.177.230
+
+   ewn-enum-1		A	66.52.177.15
+   ewn-enum-2		A	66.52.177.167
+
+   1.0.1.2    60 IN NAPTR 100 10 "u" "E2U+SIP" "!^.*$!sips:2101@ewn-enum-2.seiri.com:6081!".
+   2.0.1.2    60 IN NAPTR 100 10 "u" "E2U+SIP" "!^.*$!sips:2102@ewn-enum-2.seiri.com:6081!".
+
+
+options
+-------
+/etc/bind/named.conf.options
+
+
+verify configuration
+--------------------
+named-checkconf
+
+
+start
+------
+sudo /etc/init.d/bind9 start
+
+
+Is it running
+---------------
+ps -A | grep named
+
+
+
+

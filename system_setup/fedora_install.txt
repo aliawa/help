@@ -1,0 +1,53 @@
+
+Bare minimum partitions: (root, boot and swap)
+------------------------------------------------------------
+/       root
+/boot
+swap    size of this depends on the memory workload of the system and RAM
+
+
+Recomended partitions:
+-----------------------------------------------------------
+/        5 GB, Note: "/" is not the same as "/root" 
+swap     minimum:256 MB, Recomended:Equal to ram for 2GB-8GB RAM
+         Note: there is no "/" before swap
+/boot    250 MB, should be ext4
+/home    minimum:100 MB 
+
+
+
+
+
+Create Software RAID
+-----------------------------------------------------------
+1. create a partition in unallocated space to form part of a software RAID device. 
+2. combine two or more RAID partitions into a software RAID device. 
+    When you choose this option, you can specify the type of RAID device to create
+    (the RAID level). This option is only available when two or more RAID partitions 
+    are available on the system.
+
+
+Raid types:
+-----------------------------------------------------------
+RAID 0:  Can be used to pool the storage of multiple devices into one large virtual
+         device.
+RAID 1:  Mirrors the data on one storage device onto one or more other storage devices. 
+         requires at least two RAID partitions.
+RAID 4:  distributes data across multiple storage devices, but uses one device in the 
+         array to store parity info.
+RAID 5:  distributes data and parity information across multiple storage devices. 
+RAID 6:  instead of storing only one set of parity data, they store two sets. 
+         requires at least four RAID partitions
+RAID 10: nested RAIDs or hybrid RAIDs.
+
+
+
+Create LVM Logical Volume
+-----------------------------------------------------------
+ 1. LVM Physical Volume — create a physical volume in unallocated space.
+ 2. LVM Volume Group — create a volume group from one or more physical volumes. 
+    This option is only available when at least one physical volume is available 
+    on the system.
+ 3. LVM Logical Volume — create a logical volume on a volume group. 
+    This option is only available when at least one volume group is available on 
+    the system.

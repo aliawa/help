@@ -1,0 +1,14 @@
+
+// Sending a message to a window from a .c file
+// Using Find window to find a window when only its title is known
+
+void nreThrowAssertion(const char* file, const char* line)
+{
+    // Find the window with title "NRE_WINDOWS"
+    HWND mainWnd = FindWindow(NULL,"NRE_WINDOWS");
+    if (mainWnd != NULL)
+	// send message to the window with two const char* as parameters
+        SendMessage(mainWnd, WM_ASSERTION, (WPARAM)file, (LPARAM)line);
+    else
+        exit(1);
+}

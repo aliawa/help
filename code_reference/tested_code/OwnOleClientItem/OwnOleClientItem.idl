@@ -1,0 +1,77 @@
+
+	// OwnOleClientItem.idl : IDL source for OwnOleClientItem.exe
+//
+// This file will be processed by the MIDL tool to
+// produce the type library (OwnOleClientItem.tlb) and marshalling code.
+import "oaidl.idl";
+import "ocidl.idl";
+	[
+		object,
+		uuid(CFF2B2B4-0AEC-11D4-AFEF-00500413F521),
+		dual,
+		helpstring("IMySink Interface"),
+		pointer_default(unique)
+	]
+	interface IMySink : IDispatch
+	{
+	};
+	[
+		object, local,
+		uuid(CFF2B2B7-0AEC-11D4-AFEF-00500413F521),
+	
+		helpstring("IMyAdviseSink Interface"),
+		pointer_default(unique)
+	]
+	interface IMyAdviseSink : IUnknown
+	{
+		[helpstring("method OnClose")] void OnClose();
+		[helpstring("method OnDataChange")] void OnDataChange(FORMATETC* pFormatetc, STGMEDIUM* pStgmed);
+		[helpstring("method OnRename")] void OnRename(IMoniker* pmk);
+		[helpstring("method OnSave")] void OnSave();
+		[helpstring("method OnViewChange")] void OnViewChange(DWORD dwAspect, LONG lindex);
+	};
+	[
+		object,
+		uuid(CFF2B2B9-0AEC-11D4-AFEF-00500413F521),
+	
+		helpstring("ITestSink Interface"),
+		pointer_default(unique)
+	]
+	interface ITestSink : IUnknown
+	{
+	};
+[
+	uuid(CFF2B2B2-0AEC-11D4-AFEF-00500413F521),
+	version(1.0),
+	helpstring("OwnOleClientItem 1.0 Type Library")
+]
+library OwnOleClientItemLib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+	[
+		uuid(CFF2B2B5-0AEC-11D4-AFEF-00500413F521),
+		helpstring("MySink Class")
+	]
+	coclass MySink
+	{
+		[default] interface IMySink;
+	};
+	[
+		uuid(CFF2B2B8-0AEC-11D4-AFEF-00500413F521),
+		helpstring("MyAdviseSink Class")
+	]
+	coclass MyAdviseSink
+	{
+		[default] interface IMyAdviseSink;
+	};
+	[
+		uuid(CFF2B2BA-0AEC-11D4-AFEF-00500413F521),
+		helpstring("TestSink Class")
+	]
+	coclass TestSink
+	{
+		[default] interface ITestSink;
+	};
+};
+

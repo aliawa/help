@@ -1,0 +1,55 @@
+1. libeXosip2-3.0.3.tar.gz
+--------------------------
+- requires libosip2
+- copy all libosip2 libs to /home/aawais/workspace/libs
+  
+  cd /home/aawais/workspace/libs
+  ln -s ../src/osipparser2/.libs/libosipparser2.* .
+  ln -s ../src/osip2/.libs/libosip2.* .
+
+- running configure
+
+  CFLAGS="-I/home/aawais/workspace/osip2/include" \
+  LDFLAGS="-L/home/aawais/workspace/osip2/libs" \ 
+  ../configure 
+
+- gateway address hack
+  
+  file: eXconf.c, function: eXosip_init, change ipv4_for_gateway
+  address in line 622
+
+
+
+2. linphone-2.0.1.tar.gz
+------------------------
+- requires: libosip2, libeXosip2, speex
+
+- cd /home/aawais/workspace/libs
+  ln -s /home/aawais/workspace/eXosip2/build/src/.libs/libeXosip2.* .
+
+- edit configure (2 places)
+  original : OSIP_LIBS="-L$osip_prefix/lib -losipparser2${osip_legacy_version}"
+  change to: OSIP_LIBS="-L$osip_prefix/libs -losipparser2${osip_legacy_version}"
+
+- path to openssl
+  ln -s /lib/libssl.so.0.9.8b /lib/libssl.so.7
+
+- runing configure
+
+  CFLAGS="-I/home/aawais/workspace/eXosip2/include" \
+  LDFLAGS="-L/home/aawais/workspace/libs" \
+  ../configure --with-osip="/home/aawais/workspace/osip2" --disable-video
+
+  if speex is not installed in the standard location then use SPEEX_LIBS
+  SPEEX_CFLAGS
+
+- starting linphone
+  cd /home/aawais/workspace/libs
+  ln -s /home/aawais/workspace/linphone/build/oRTP/src/.libs/libortp.* .
+  ln -s /home/aawais/workspace/linphone/build/mediastreamer2/src/.libs/libmediastreamer.* .
+  
+- export LD_LIBRARY_PATH=/home/aawais/workspace/libs
+
+- ./build/gtk/linphone
+
+

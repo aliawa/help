@@ -1,0 +1,315 @@
+- How to get hold of transaction birth time
+	*(transaction)->birth_time = now;
+------------------------------
+- Starting timer A in ict_init
+	osip_gettimeofday (&(*ict)->timer_a_start, NULL);
+----------------------
+
+OSIP_ICT_INVITE_SENT
+called after an invite is sent out, may be a good time to start timer a\
+
+----------------------
+see eXosip_execute to find out how to deal with
+osip timers
+
+osip_timers_gettimeout (eXosip.j_osip, &lower_tv);
+osip_timers_ict_execute (eXosip.j_osip);
+
+
+1. timers armed in 
+    int __osip_ict_init (osip_ict_t ** ict, osip_t * osip, osip_message_t * invite)
+
+2. The main loop calls
+    int eXosip_execute (void)
+   which calls osip_timers_ict_execute()
+
+3. Go through list of all ict transactions and add timer events to queue when
+   timers have run out
+   void osip_timers_ict_execute(osip_t * osip)
+
+2. callback when timer A expires
+    void osip_ict_timeout_a_event (osip_transaction_t * ict, osip_event_t * evt)
+
+
+
+
+
+
+
+
+-------------------
+sending a 180
+eXosip_call_send_answer(ev->tid,180,NULL);
+
+
+
+
+---------------------------
+
+
+
+
+
+
+----------------------------
+receiving a 180
+cb_rcv1xx (int type, osip_transaction_t * tr, osip_message_t * sip)
+
+
+-------------------------------
+osip_event_t * __osip_event_new (type_t type, int transactionid)
+populating transactionid when creating an event
+
+
+
+* Enumeration for transaction state.
+-----------------------------------------------
+    /* STATES for invite client transaction */
+0    ICT_PRE_CALLING,
+1    ICT_CALLING,
+2    ICT_PROCEEDING,
+3    ICT_COMPLETED,
+4    ICT_TERMINATED,
+
+    /* STATES for invite server transaction */
+5    IST_PRE_PROCEEDING,
+6    IST_PROCEEDING,
+7    IST_COMPLETED,
+8    IST_CONFIRMED,
+9    IST_TERMINATED,
+
+    /* STATES for NON-invite client transaction */
+10    NICT_PRE_TRYING,
+11    NICT_TRYING,
+12    NICT_PROCEEDING,
+13    NICT_COMPLETED,
+14    NICT_TERMINATED,
+
+    /* STATES for NON-invite server transaction */
+15    NIST_PRE_TRYING,
+16    NIST_TRYING,
+17    NIST_PROCEEDING,
+18    NIST_COMPLETED,
+19    NIST_TERMINATED,
+
+
+
+* Enumeration for event type.
+-------------------------------------
+0    TIMEOUT_A,   /**< Timer A */
+1    TIMEOUT_B,   /**< Timer B */
+2    TIMEOUT_D,   /**< Timer D */
+
+    /* TIMEOUT EVENTS for NICT */
+3    TIMEOUT_E,   /**< Timer E */
+4    TIMEOUT_F,   /**< Timer F */
+5    TIMEOUT_K,   /**< Timer K */
+
+    /* TIMEOUT EVENTS for IST */
+6    TIMEOUT_G,   /**< Timer G */
+7    TIMEOUT_H,   /**< Timer H */
+8    TIMEOUT_I,   /**< Timer I */
+
+    /* TIMEOUT EVENTS for NIST */
+9    TIMEOUT_J,   /**< Timer J */
+
+    /* FOR INCOMING MESSAGE */
+10    RCV_REQINVITE,    /**< Event is an incoming INVITE request */
+11    RCV_REQACK,       /**< Event is an incoming ACK request */
+12    RCV_REQUEST,      /**< Event is an incoming NON-INVITE and NON-ACK request */
+13    RCV_STATUS_1XX,   /**< Event is an incoming informational response */
+14    RCV_STATUS_2XX,   /**< Event is an incoming 2XX response */
+15    RCV_STATUS_3456XX,/**< Event is an incoming final response (not 2XX) */
+
+    /* FOR OUTGOING MESSAGE */
+16    SND_REQINVITE,    /**< Event is an outgoing INVITE request */
+17    SND_REQACK,       /**< Event is an outgoing ACK request */
+18    SND_REQUEST,      /**< Event is an outgoing NON-INVITE and NON-ACK request */
+19    SND_STATUS_1XX,   /**< Event is an outgoing informational response */
+20    SND_STATUS_2XX,   /**< Event is an outgoing 2XX response */
+21    SND_STATUS_3456XX,/**< Event is an outgoing final response (not 2XX) */
+
+22    KILL_TRANSACTION, /**< Event to 'kill' the transaction before termination */
+23    UNKNOWN_EVT
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------
+create transaction in osip.c
+
+osip_transaction_t *
+osip_create_transaction (osip_t * osip, osip_event_t * evt)
+{
+
+
+
+
+
+----------------------------------
+typedef enum osip_fsm_type_t
+  {
+    ICT, /**< Invite Client (outgoing) Transaction */
+    IST, /**< Invite Server (incoming) Transaction */
+    NICT,/**< Non-Invite Client (outgoing) Transaction */
+    NIST /**< Non-Invite Server (incoming) Transaction */
+  }
+
+
+
+
+
+
+--------------------------------------------------
+
+/**
+ * Structure for osip event handling.
+ * @struct osip_event
+ */
+  struct osip_event
+  {
+    type_t type;             /**< Event Type */
+    int transactionid;       /**< identifier of the related osip transaction */
+    osip_message_t *sip;     /**< SIP message (optional) */
+  };
+
+---------------------------------------------------
+
+
+/**
+ * Enumeration for callback type.
+ */
+  typedef enum osip_message_callback_type
+  {
+    OSIP_ICT_INVITE_SENT = 0,               /**< INVITE MESSAGE SENT */
+    OSIP_ICT_INVITE_SENT_AGAIN,             /**< INVITE MESSAGE RETRANSMITTED */
+    OSIP_ICT_ACK_SENT,                      /**< ACK MESSAGE SENT */
+    OSIP_ICT_ACK_SENT_AGAIN,                /**< ACK MESSAGE RETRANSMITTED */
+    OSIP_ICT_STATUS_1XX_RECEIVED,           /**< 1XX FOR INVITE RECEIVED */
+    OSIP_ICT_STATUS_2XX_RECEIVED,           /**< 2XX FOR INVITE RECEIVED */
+    OSIP_ICT_STATUS_2XX_RECEIVED_AGAIN,     /**< 2XX FOR INVITE RECEIVED AGAIN */
+    OSIP_ICT_STATUS_3XX_RECEIVED,           /**< 3XX FOR INVITE RECEIVED */
+    OSIP_ICT_STATUS_4XX_RECEIVED,           /**< 4XX FOR INVITE RECEIVED */
+    OSIP_ICT_STATUS_5XX_RECEIVED,           /**< 5XX FOR INVITE RECEIVED */
+    OSIP_ICT_STATUS_6XX_RECEIVED,           /**< 6XX FOR INVITE RECEIVED */
+    OSIP_ICT_STATUS_3456XX_RECEIVED_AGAIN,  /**< RESPONSE RECEIVED AGAIN */
+
+    OSIP_IST_INVITE_RECEIVED,               /**< INVITE MESSAGE RECEIVED */
+    OSIP_IST_INVITE_RECEIVED_AGAIN,         /**< INVITE MESSAGE RECEIVED AGAN */
+    OSIP_IST_ACK_RECEIVED,                  /**< ACK MESSAGE RECEIVED */
+    OSIP_IST_ACK_RECEIVED_AGAIN,            /**< ACK MESSAGE RECEIVED AGAIN */
+    OSIP_IST_STATUS_1XX_SENT,               /**< 1XX FOR INVITE SENT */
+    OSIP_IST_STATUS_2XX_SENT,               /**< 2XX FOR INVITE SENT */
+    OSIP_IST_STATUS_2XX_SENT_AGAIN,         /**< 2XX FOR INVITE RETRANSMITTED */
+    OSIP_IST_STATUS_3XX_SENT,               /**< 3XX FOR INVITE SENT */
+    OSIP_IST_STATUS_4XX_SENT,               /**< 4XX FOR INVITE SENT */
+    OSIP_IST_STATUS_5XX_SENT,               /**< 5XX FOR INVITE SENT */
+    OSIP_IST_STATUS_6XX_SENT,               /**< 6XX FOR INVITE SENT */
+    OSIP_IST_STATUS_3456XX_SENT_AGAIN,      /**< RESPONSE RETRANSMITTED */
+
+    OSIP_NICT_REGISTER_SENT,                /**< REGISTER MESSAGE SENT */
+    OSIP_NICT_BYE_SENT,                     /**< BYE MESSAGE SENT */
+    OSIP_NICT_OPTIONS_SENT,                 /**< OPTIONS MESSAGE SENT */
+    OSIP_NICT_INFO_SENT,                    /**< INFO MESSAGE SENT */
+    OSIP_NICT_CANCEL_SENT,                  /**< CANCEL MESSAGE SENT */
+    OSIP_NICT_NOTIFY_SENT,                  /**< NOTIFY MESSAGE SENT */
+    OSIP_NICT_SUBSCRIBE_SENT,               /**< SUBSCRIBE MESSAGE SENT */
+    OSIP_NICT_UNKNOWN_REQUEST_SENT,         /**< UNKNOWN REQUEST MESSAGE SENT */
+    OSIP_NICT_REQUEST_SENT_AGAIN,           /**< REQUEST MESSAGE RETRANMITTED */
+    OSIP_NICT_STATUS_1XX_RECEIVED,          /**< 1XX FOR MESSAGE RECEIVED */
+    OSIP_NICT_STATUS_2XX_RECEIVED,          /**< 2XX FOR MESSAGE RECEIVED */
+    OSIP_NICT_STATUS_2XX_RECEIVED_AGAIN,    /**< 2XX FOR MESSAGE RECEIVED AGAIN */
+    OSIP_NICT_STATUS_3XX_RECEIVED,          /**< 3XX FOR MESSAGE RECEIVED */
+    OSIP_NICT_STATUS_4XX_RECEIVED,          /**< 4XX FOR MESSAGE RECEIVED */
+    OSIP_NICT_STATUS_5XX_RECEIVED,          /**< 5XX FOR MESSAGE RECEIVED */
+    OSIP_NICT_STATUS_6XX_RECEIVED,          /**< 6XX FOR MESSAGE RECEIVED */
+    OSIP_NICT_STATUS_3456XX_RECEIVED_AGAIN, /**< RESPONSE RECEIVED AGAIN */
+
+    OSIP_NIST_REGISTER_RECEIVED,            /**< REGISTER RECEIVED */
+    OSIP_NIST_BYE_RECEIVED,                 /**< BYE RECEIVED */
+    OSIP_NIST_OPTIONS_RECEIVED,             /**< OPTIONS RECEIVED */
+    OSIP_NIST_INFO_RECEIVED,                /**< INFO RECEIVED */
+    OSIP_NIST_CANCEL_RECEIVED,              /**< CANCEL RECEIVED */
+    OSIP_NIST_NOTIFY_RECEIVED,              /**< NOTIFY RECEIVED */
+    OSIP_NIST_SUBSCRIBE_RECEIVED,           /**< SUBSCRIBE RECEIVED */
+
+    OSIP_NIST_UNKNOWN_REQUEST_RECEIVED,     /**< UNKNWON REQUEST RECEIVED */
+    OSIP_NIST_REQUEST_RECEIVED_AGAIN,       /**< UNKNWON REQUEST RECEIVED AGAIN */
+    OSIP_NIST_STATUS_1XX_SENT,              /**< 1XX FOR MESSAGE SENT */
+    OSIP_NIST_STATUS_2XX_SENT,              /**< 2XX FOR MESSAGE SENT */
+    OSIP_NIST_STATUS_2XX_SENT_AGAIN,        /**< 2XX FOR MESSAGE RETRANSMITTED */
+    OSIP_NIST_STATUS_3XX_SENT,              /**< 3XX FOR MESSAGE SENT */
+    OSIP_NIST_STATUS_4XX_SENT,              /**< 4XX FOR MESSAGE SENT */
+    OSIP_NIST_STATUS_5XX_SENT,              /**< 5XX FOR MESSAGE SENT */
+    OSIP_NIST_STATUS_6XX_SENT,              /**< 6XX FOR MESSAGE SENT */
+    OSIP_NIST_STATUS_3456XX_SENT_AGAIN,     /**< RESPONSE RETRANSMITTED */
+
+    OSIP_ICT_STATUS_TIMEOUT,                /**< TIMER B EXPIRATION: NO REMOTE ANSWER  */
+    OSIP_NICT_STATUS_TIMEOUT,               /**< TIMER F EXPIRATION: NO REMOTE ANSWER  */
+
+    OSIP_MESSAGE_CALLBACK_COUNT             /**< END OF ENUM */
+  } osip_message_callback_type_t;
+
+
+----------------------------------------------------
+
+/**
+ * Definition of the From header.
+ * @struct osip_from
+ */
+  struct osip_from
+  {
+    char *displayname;       /**< Display Name */ 
+    osip_uri_t *url;         /**< url */
+    osip_list_t gen_params;  /**< other From parameters */
+  };
+
+-------------------------------------------------------
+
+
+/**
+ * Definition of a generic sip header.
+ * @struct osip_header
+ */
+  struct osip_header
+  {
+    char *hname;     /**< Name of header */
+    char *hvalue;    /**< Value for header */
+  };
+
+
+
+
+
+// Enabling OSIP tracing
+// ---------------------
+// Step 1: Put in Stack::init
+TRACE_INITIALIZE ( ( osip_trace_level_t ) 0, stdout ); // OSIP_FATAL
+TRACE_INITIALIZE ( ( osip_trace_level_t ) 1, stdout ); // OSIP_BUG
+TRACE_INITIALIZE ( ( osip_trace_level_t ) 2, stdout ); // OSIP_ERROR
+TRACE_INITIALIZE ( ( osip_trace_level_t ) 3, stdout ); // OSIP_WARNING
+TRACE_INITIALIZE ( ( osip_trace_level_t ) 4, stdout ); // OSIP_INFO1
+TRACE_INITIALIZE ( ( osip_trace_level_t ) 5, stdout ); // OSIP_INFO2
+TRACE_INITIALIZE ( ( osip_trace_level_t ) 6, stdout ); // OSIP_INFO3
+TRACE_INITIALIZE ( ( osip_trace_level_t ) 7, stdout ); // OSIP_INFO4
+
+TRACE_ENABLE_LEVEL ( ( osip_trace_level_t ) 0 );
+TRACE_ENABLE_LEVEL ( ( osip_trace_level_t ) 1 );
+TRACE_ENABLE_LEVEL ( ( osip_trace_level_t ) 2 );
+TRACE_ENABLE_LEVEL ( ( osip_trace_level_t ) 3 );
+TRACE_ENABLE_LEVEL ( ( osip_trace_level_t ) 4 );
+TRACE_ENABLE_LEVEL ( ( osip_trace_level_t ) 5 );
+TRACE_ENABLE_LEVEL ( ( osip_trace_level_t ) 6 );
+TRACE_ENABLE_LEVEL ( ( osip_trace_level_t ) 7 );
+
+// Step 2:
+export EXTRA_DEFINES=-DENABLE_TRACE
+find . -name '*.o' | xargs rm -rf 
+make

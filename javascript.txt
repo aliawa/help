@@ -1,0 +1,7 @@
+get password on page
+--------------------
+Try this: go to Paypal.com (any page with a password field, really), 
+type in something arbitrary into the password field, and then paste 
+this into the address bar:
+
+javascript:for(var a=document.getElementsByTagName("input"),i=0;i<a.length;i++)if(a[i].type=="password"){alert(a[i].value);i=a.length;}void(0);

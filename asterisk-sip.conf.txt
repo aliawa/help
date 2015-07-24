@@ -1,0 +1,248 @@
+Sip.conf
+---------
+
+[general]		<-- contains the channel settings and default options
+			    for all users and peers defined within sip.conf.	
+context=default
+srvlookup=yes
+
+register => fwd_number:password@sip.fwdnet.net
+			<-- register with sip.fwdnet.net using fwd_number and
+			    password, to receive incoming calls
+
+[john]
+type=friend		<-- user: authenticate incoming calls, 
+			    peer: outgoing calls, friend: both
+secret=welcome		<-- password used for authentication
+qualify=yes 		<-- monitor latency to this device to see if reachable
+nat=no 			<-- yes means ignore contact information
+host=dynamic		<-- dynamic: the extension is requred to register
+			    static: no registeration required
+      			    IP: calls to extension routed to this IP
+canreinvite=no		<-- Asterisk remains in media path, normally asterisk
+			    removes itself from media path using re-INVITE
+context=internal        <-- location of the instructions used to control what 
+			    the phone is allowed to do,and what to do with 
+			    incoming calls for this extension.
+			    The context name should match the name of the
+                            context in extensions.conf
+
+
+Other parameters for the [general] section
+------------------------------------------
+videosupport=yes
+externip=216.239.39.104
+
+localnet=192.168.1.0/24
+localnet=172.16.0.0/16
+
+realm=my.hostname.tld
+useragent=asterisk
+
+autocreatepeer         : Any UA that registers becomes a peer
+
+
+
+
+Dial Plan
+-----------
+
+[incoming]  <-- context: must match context=... in sip.conf
+
+exten => name,priority,application( )
+			<-- extension: means, when call comes for extension 'name'
+                the action number 'priority' is to execute 'application'
+[incoming]
+exten => s,1,application( ) 
+			<-- s: start extension, When calls enter a context
+			    without a specific destination extension
+
+exten => 123,1,Answer( )
+exten => 123,n,do something
+			<-- n: previous priority + 1
+
+exten => i,1,Playback(pbx-invalid)
+exten => i,2,Goto(incoming,s,1)
+			<-- i: invalid extension
+
+exten => t,1,Playback(vm-goodbye)
+exten => t,2,Hangup( )
+			<-- t: timeout
+
+exten => 123,1,Dial(Zap/4/5551212)
+			<-- Dial a numberon FXO Zap channel
+
+exten => 123,1,Dial(Zap/1&Zap/2&Zap/3)
+			<-- Dial multiple channels at the same time
+
+[internal]
+include => outbound-loca]
+			<-- first try to match extensions in current context
+			    if unsuccessul try first included context, and
+			    so on.
+
+
+
+Variables
+------------
+
+JOHN=Zap/1		<-- Assign a value
+${JOHN}			<-- Reference the value of a variable
+
+[globals]
+JOHN=Zap/1		<-- global variable
+
+[internal]
+exten => 123,1,SetGlobalVar(JOHN=Zap/1)
+			<-- programatically defined global variable
+
+exten => 123,1,Set(MAGICNUMBER=42)
+     			<-- channel variable: only defined for the 					    duration of the current call, Predefined 
+			    channel variables: README.variables
+
+${ENV(var)}		<-- Unix environment variables
+
+
+
+
+Patterns
+--------
+Starts with _
+X: Matches any digit from 0 to 9.
+Z: Matches any digit from 1 to 9.
+N: Matches any digit from 2 to 9.
+[15-7]: Matches 1, 5, 6, or 7.
+. (period)matches one or more characters.
+
+
+exten => _NXX,1,Playback(auth-thankyou)
+			: for any 3-digit extension in the range 200-999
+			  play the file auth-thankyou.
+
+
+North American Numbering Plan (NANP)
+_NXXXXXX 		: Any local number
+_1NXXNXXXXXX 		: Any long distance number
+_011.			: Any international number
+
+${EXTEN} 		: The digits actually dialed
+${EXTEN:x} 		: Strip off the first x digits 
+${EXTEN:-x} 		: Last x digits
+
+[context-name]
+ignorepat => 9 		: Keep providing dial tone after 9 is dialed
+
+
+
+
+Applications
+-------------
+Answer()
+Hangup()
+Playback(filename) 	<-- plays /var/lib/asterisk/sounds/filename.gsm
+
+Background(file)  	<-- Play recorded sound, however,when the caller 
+			    presses keys, interrupt playback and go
+			    corresponding extension.
+Goto(context,extension,priority)
+
+Dial(transport/channel-name-or-number, timeout-in-seconds, options, URL)
+			<-- sets the DIALSTATUS variable, NOANSWER, BUSY
+   
+Congestion()		: Play fast busy
+Set(COUNT=3) 		: Assign value to a variable
+SayNumber(${NEWCOUNT}) 	: read the number
+AbsoluteTimeout()
+DigitTimeout()
+ResponseTimeout()
+
+GotoIf(expression?destination1:destination2)
+			: destination is priority, extension,priority, 			  		  context,extension,priority, named_priority
+
+VoiceMail(mailbox@context) 
+			: mailbox and context defined in voicemail.conf
+
+VoiceMailMain()		: retrieve voicemail,change voicemail options, 
+			  record voicemail greetings
+
+Directory(voicemail-context, dialplan-context, options) 
+			: dial by names defined in voicemail.conf
+
+Macro(voicemail) 	: calls macro voicemail
+
+
+
+Set(${DB(family/key)=1}) 
+			: storing in database
+Set(COUNT=${DB(family/key)}) 
+			: retrieving from data base
+DBdel(family/key) 	: Delete key
+DBdeltree(family)	: Delet family
+LookupBlacklist() 	: if the callid is in family blacklist send call to priority n+101
+Zapateller(nocallerid) 	: make autodialer think that the line is 			  	    	  disconnected.
+
+MeetMe(Conference-room-name, options, passwd) 
+			: name defined in meetme.conf
+MeetMeCount(name, variable)
+			: Assign the number of participants to variable
+
+
+
+Expressions
+------------
+$[${COUNT} + 1]
+$[${COUNT} / 2]
+
+
+Operators
+------------
+Boolean:
+
+expr1 | expr2
+expr1 & expr2
+expr1 {=, >, >=, <, <=, !=} expr2 
+			: int or string comparison, based on args
+
+Mathematical:
+
+expr1 {+, -} expr2
+expr1 {*, /, %} expr2 	: Note, space required around operator
+
+expr1 : expr2  		: Match expr1 with regular expression expr2
+Set(NEWTEST=$[blah${TEST}] 
+			: string concatination.
+
+Functions
+----------
+${FUNCTION_NAME(argument)} 
+			: value of the function
+
+${LEN(${TEST})} 
+TIMEOUT(digit)=30
+
+
+[macro-voicemail] 	: define macro voicemail
+
+
+
+
+
+TLS configuration
+------------------------------------------
+[general] 
+tlsenable=yes
+tlscertfile=/etc/asterisk/certs/10.10.10.148_cert.pem
+tlscafile=/etc/asterisk/certs/root.pem
+tlsprivatekey=/etc/asterisk/certs/10.10.10.148_key.pem
+tlscipher=ALL
+tlsclientmethod=tlsv1
+tlsbindaddr=10.10.10.148:5061
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,9 @@
+SIP/2.0 401 Unauthorized
+Via:SIP/2.0/TCP 66.52.177.235:5060;received=66.52.177.230;branch=z9hG4bK561fd7caA0522A57
+From:"7000"<sip:7405557000@66.52.177.191:5060>;tag=55DFA9CA-8EC7959D
+To:<sip:7405557000@66.52.177.191:5060>
+Call-ID:b320c756-a814bd0-40d01863@192.168.1.101
+CSeq:677 REGISTER
+Record-Route:<sip:7405557000@66.52.177.235;lr;transport=tcp>
+WWW-Authenticate:DIGEST realm="BroadWorks",stale=true,qop="auth",algorithm=MD5,nonce="BroadWorksXf4jn3lv8Tuj9n70BW"
+Content-Length:0

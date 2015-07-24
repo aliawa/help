@@ -1,0 +1,9 @@
+configuration page:
+http://localhost:631/
+
+connection: 
+ipp://10.10.22.241:9100  not working
+
+
+configuration directory
+/etc/cups

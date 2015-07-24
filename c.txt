@@ -1,0 +1,6 @@
+C header files
+-----------------------------
+<limits.h> : the maximum and minimum values for a particular machine.
+<inttypes.h> : typedefs.
+
+
