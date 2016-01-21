@@ -1,0 +1,82 @@
+#!/bin/bash
+
+
+# tcpreplay with ip address translation
+tcpreplay-edit -i eth1 \
+        --pnat 10.5.204.80/32:11.0.12.101/32,\
+        192.168.9.9/32:11.0.11.100/32,\
+        10.3.48.66/32:11.0.12.1/32 \
+        -t  RX1_CALLMANAGER.pcap
+
+
+# tcpreplay with ip and mac address translation
+tcpreplay-edit -i eth1 --pnat 10.5.204.80/32:11.0.12.101/32,\
+        192.168.9.9/32:11.0.11.100/32,\
+        10.3.48.66/32:11.0.12.1/32 \
+        -t \
+        --enet-dmac=d4:f4:be:0b:a2:1b RX1_CALLMANAGER.pcap
+
+
+
+# rewrite ip address
+tcprewrite --pnat=10.5.204.80:11.0.12.101,192.168.9.9:11.0.11.100,10.3.48.66:11.0.12.1 \
+                  --infile=rx_filtered.pcap --outfile=rx_filtered_new_ips.pcap
+
+
+# rewrite the mac address:
+# --enet-dmac=<fw_server_side_mac>,<fw_client_side_mac>  --enet-smac=<server_mac>,<client_mac>
+tcprewrite --enet-dmac=d4:f4:be:0b:a2:1a,d4:f4:be:0b:a2:1b \
+                       --enet-smac=40:55:39:ff:37:02,00:1b:17:00:11:01 \
+                       --cachefile=rx_filtered.prep \
+                       --infile=rx_filtered_new_ips.pcap --outfile=rx_filtered_mac_rewrite.pcap
+
+
+# rewrite ips in content
+~/workspace/scappy/change_ips_in_content.py
+
+
+
+# --------------------------------------------------------------------------
+
+# 1. Filter (tshark or tcpdump)
+tshark -r RX1_CALLMANAGER.pcap   -Y "tcp && frame.number < 228" -w rx_filtered.pcap
+tcpdump -r RX1_CALLMANAGER.pcap -w rx_filtered.pcap tcp
+
+# 2. create Cache file
+# for tcp use --auto=router
+tcpprep --auto=router -i rx_filtered.pcap -o rx_filtered.prep
+# for udp the --auto=first works better
+tcpprep --auto=first -i rx_filtered.pcap -o rx_filtered.prep
+# CIDR mode -c <server-address>/net
+# All comma delimited addresses after -c are treated as servers, the
+# rest are treated as clients.
+tcpprep -c 68.68.117.60 -i rx_filtered.pcap  -o rx_filtered.prep
+
+
+# 2. Change destination mac addressess in the pcap.
+# --enet-dmac=<server-to-client>,<client-to-server>
+# The first address in the enet-dmac option is the new destination
+# mac for server-to-client traffic, which is responses in case of SIP.
+# The second mac address in the enet-dmac option is for client-to-server
+# traffic, for example the SIP request.
+# Note: this is kind of reversed. The first packet in the pcap is usually
+# the client-to-server packet and it will get the second address, the one 
+# after the comma.
+tcprewrite --enet-dmac=d4:f4:be:0b:a2:1b,d4:f4:be:0b:a2:1a \
+    -c rx_filtered.prep -i rx_filtered.pcap -o rx_replay.pcap
+
+
+# 3. Check
+tshark -r rx_replay.pcap -e frame.number -e ip.src -e ip.dst \
+    -e eth.dst -e tcp.flags -Tfields
+
+# 4. replay
+# The client-to-server packet will go to interface intf2. In the case of 
+# SIP this will be the request. The server-to-client packet will go 
+# to intf1. In case of SIP this will be the response.
+#
+tcpreplay -c rx_filtered.prep --intf1=eth1 --intf2=eth3 rx_replay.pcap
+
+
+
+

@@ -16,54 +16,50 @@ nzpadding()         returns a hexdump of packets with non-zero padding
 plot()              plots a lambda function applied to the packet list
 make table()        displays a table according to a lambda function
 
-Example: 
-    pkts=sniff(iface="eth1", filter="port sip")
-    pkts.summary()
-
 # Format summary
 ans.summary( lambda(s,r): r.sprintf("%TCP.sport% \t %TCP.flags%") )
+
+
 
 
 # -------------------------------
 # Operations on single packet
 # -------------------------------
+#
+# Create packet
+pkt=IP()/TCP()/"GET / HTTP/1.0\r\n\r\n"
 
-hexdump(pkt)
-str(pkt)
+# See packet
+pkt.show()
 ls(pkt)
-export_object(pkt)  base64 encoded
+hexdump(pkt)
+pkt.summary()
 
+# convert packet to hex string
+str(pkt) 
+
+# packet fields
 pkt[IP].src
 pkt[UDP].dport
 pkt[TFTP_DATA].block
 pkt[Raw].load
-pkt[TFTP_ERROR].summary()
 pkt[ICMP].type
 pkt[ICMP].code
 
+# Check presense of layer
 if IP in pkt
 if TFTP_DATA in pkt
 
-
-# summary
-pkt[0].summary()
-
-# detail
-pkt[0].show()
-
 # layer summary
-pkt[3][ICMP].summary()
+pkt[ICMP].summary()
+pkt[TFTP_ERROR].summary()
 
 # recreate a sniffed packet
-pkt[2].command()
+pkt.command()   # return Scapy command that can generate 'pkt'
+newpkt = eval(pkt.command())
+or newpkt = pkt
 
-newpkt = eval(pkt[2].command())
-or newpkt = pkt[2]
 
-# for loop
-for packet in pkts:
-    if (packet.haslayer(ICMP)):
-        print "ICMP code: " + str(packet.getlayer(ICMP).code)
 
 
 
@@ -81,48 +77,56 @@ ans,unans=sr(IP(dst="www.test.fr/30", ttl=(1,6))/TCP())
 p=sr1(IP(dst="www.slashdot.org")/ICMP()/"XXXXXXXXXXX")
 
 
-# Send packet layer 3
+# Send packet layer 3: meanining it will using the kernel routing table to
+# select the correct interface and next Layer 2 hop.
 send(IP(dst="1.2.3.4")/ICMP())
 
 
-# Send packet layer 2
+# Send packet layer 2: meaning we will have to choose the correct interface
+# and link layer protocol (for example Ether)
 sendp(Ether()/IP(dst="1.2.3.4",ttl=(1,4)), iface="eth1")
+
+# Send the same set of packets in a loop (send SYN to port 80)
+srloop(IP(dst="www.target.com/30")/TCP())
+
+
+# Sending TCP
+# Dont let the kernel on local-machine see the syn-ack from target
+# otherwise it will respond with a RST
+iptables -A INPUT -s <target> -j DROP
 
 
 
 
 # -------------------------------
-# pcap and sniff
+# sniff
 # -------------------------------
 
 # Sniff
-sniff()
-a=_
-a.nsummary()
-
-packets are listed in this format:
-packet number (0001)
-frame type (Ether)
-Interet Protocol (IP)
-Transport Layer (TCP)
-Application Layer (DNS)
-Packet Data(daisy.ubuntu.com)
+pkts=sniff(iface="eth1", filter="port sip")
+pkts.nsummary()
 
 # Details of third packet
-a[3]
+pkts[3]
 
 # Using Berkley Packet Filter (BPF)
 sniff(iface="eth0", filter="icmp", count=10)
 
-# Sniff and show
+# Sniff and show, prn function to be called for each packet not necessarily print
 sniff(iface="eth1", prn=lambda x: x.show())
+
+# print using sprintf
 pkts = sniff(prn=lambda x:x.sprintf("{IP:%IP.src% -> %IP.dst%\n}{Raw:%Raw.load%\n}"))
 
+
+# -------------------------------
+# pcap 
+# -------------------------------
 
 # Read pcap file
 pkts = rdpcap("/tmp/read1.pcap")
 
-# Write pcap files
+# Write the captured packtes to a pcap files
 wrpcap("/tmp/write1.pcap",pkts)
 
 # Show captured packets in wireshark
@@ -132,6 +136,26 @@ wireshark(a)
 pkts=rdpcap(“/tmp/attack.pcap”)
 for pkt in pkts:
    send(pkt)
+
+
+# -------------------------------
+# Routing
+# -------------------------------
+
+# Show internal routing table
+conf.route
+
+# delete route
+conf.route.delt(net="0.0.0.0/0",gw="192.168.8.1")
+
+# Add route to net
+conf.route.add(net="0.0.0.0/0",gw="192.168.8.254")
+
+# Add route to host
+conf.route.add(host="192.168.1.1",gw="192.168.8.1")
+
+# Reload system routing table, Overwrite local changes)
+conf.route.resync()
 
 
 
@@ -222,4 +246,11 @@ TCP:
 
 # Binding layers
 bind_layers (TCP, HTTP, sport=80 )
+
+
+# for loop
+for packet in pkts:
+    if (packet.haslayer(ICMP)):
+        print "ICMP code: " + str(packet.getlayer(ICMP).code)
+
 

@@ -1,19 +1,11 @@
-using 'or'
-    sudo tcpdump -n -i eth1 port 5060 or 53
+# vim: set filetype=conf :
 
-writing to file:
-    tcpdump -nl -i eth0 -w /var/tmp/file.pcap
+# BPF
+# or
+    port 5060 or 53
 
-capture full packets instead of first 68 bytes
-    tcpdump -nn -s0 -i any -w /var/tmp/file.pcap
 
-show packet in ascii for example SIP packets
-    tcpdump -nni eth1 -s0 -A port 5090
-    tcpdump -nni eth1 -s0 -v port 5080
-
-    
-
-- converting a hex dump to pcap
+# converting a hex dump to pcap
   1. capture hex dump
      sudo tcpdump -i eth0 -txxl -s0 port 5060| tee dat.dump
 
@@ -27,28 +19,44 @@ show packet in ascii for example SIP packets
 
 
 
-- Useful options
-  -l : Useful if you want to see the data while capturing it. E.g., 
+# Live capture options
+  -D : List interfaces
+  -l : Line buffered, Useful if you want to see the data while capturing it. E.g., 
        tcpdump  -l  |  tee dat 
        tcpdump  -l   > dat  &  tail  -f  dat
-
-
-  -U : Make output saved via the -w option "packet-buffered"; i.e., as each
-       packet is saved, it will be written to the output file, rather than being
-       written only when the output buffer fills.
-
+  -v : See packet details for example see the complete SIP packets
+  -e : Show ethernet address (link level header)
+  -s <num> : snap length 0=unlimited 
+  -x : print data in hex
+  -A : prind data in ASCII
+  -X : print data in hex and ascii
   -q : quiet output. Print less protocol information so output lines are shorter. 
-
   -c : Exit after receiving count packets. 
 
-  -v : See packet details for example see the complete SIP packets
+# Options related to dump file rotation
+  -C <file-size-in-MB> : create new file (file1, file2 ...) after size reached
+  -G <seconds>         : rotate file after rotate-seconds
+  -W <number>          : Limit the number of files created 
+  -z <command>         : Run command at each rotation.
+  
+# Write to file options
+  -U : Don't buffer more than one packet
+  -w <filename> : write to file
 
-  -e : Show ethernet address (link level header)
+# Reading from file options
+  -e            : show ethernet header
+  -r <filename> : read from file 'filename'
+  -c <number>   : exit after printing 'number' packets 
+  -g            : No line break in output after IP header (BSD only)
+  -x            : Print the data of the packet
+  -o            : Print ordinal number (BSD only)
 
 
-- usage:
-    tcpdump -L 
-    tcpdump -ni eth0 -X port 5060
+  
 
-    # show ethernet address
-    tcpdump -ni eth1 -e -s 0 udp
+
+
+
+
+
+

@@ -1,5 +1,5 @@
 
-Multiple (multiple) files
+Multiple files
 -----------------------
 :e file2
 Ctrl-^           toggle between files (also :e#)
@@ -10,9 +10,9 @@ Ctrl-^           toggle between files (also :e#)
 gt gT            (next prev tab)
 
 :ls              (list of current buffers)
-:b#              (go to numbered buffer, given by ls command)
+:b2              (go to numbered buffer, given by ls command)
 :bn :bp          (buffer next prev)
-:bd#             (delete/close buffer number #)
+:bd3             (delete/close buffer number #)
 :bp|bd#          close buffer without closing the window
 
 :qall            (close all files)
@@ -26,12 +26,19 @@ gt gT            (next prev tab)
 "                           searching
 " ------------------------------------------------------------
 
+" Search in lines 10 to 20 inclusive
+/\%>9l\%<21lgreen
+
+" Search between marks a and b
+/\%>'a\%<'bgreen
+
+
 the\>    "words ending in the
 \<the\>  "search for the word 'the' exactly
 
 *        "search the string under cursor
 #        "search the string under cursor backwards
-[I:      "Show all lines containing word under cursor 
+[I       "Show all lines containing word under cursor 
 
 s/ /^M/g "replace all occurances of space with new line:
          "to get the ^M depress and hold the ctrl-V and then press 'm'
@@ -62,6 +69,8 @@ noh     "No highlight search pattern
 :set nows              "will not search past the top or bottom.
 :%s/CTRL-v CTRL-m//g   "will strip out all the Windows newlines
 
+:grep 'pattern' %:p:h    # grep in director of current file
+
 
 cut long lines
 ---------------
@@ -73,19 +82,20 @@ current paragraph: gqap
 
 Get Info
 ----------
-Ctrl-G: current file name
-1 Ctrl-G: Full path of current file
+Ctrl-g    relative path of current file
+1 Ctrl-g  full path of current file
 
 
 
-Fast cursor movement
--------------------
-H: top of screen
-M: middle of screen
-L: bottom of screen
+# Fast cursor movement
+# -------------------
+H     # top of screen
+M     # middle of screen
+L     # bottom of screen
 
-89G: Go to line 89
-`. : move to last edit position
+89G   # Go to line 89
+30|   # Jump to column 30
+`.    # move to last edit position
 
 
 Fast text Movement
@@ -111,13 +121,17 @@ Matching Bracket
 Auto Completion
 --------------
 
-Ctrl-p : search backwards
-Ctrl-n: search forwards
-Ctrl-x Ctrl-f: complete filename.
+Ctrl-p         : complete from previous words: search backwards
+Ctrl-n         : complete from following words: search forwards
+Ctrl x  Ctrl f : complete filename.
+Ctrl x  Ctrl ] : similar to Ctrl n  and Ctrl p but completes only tags.
+Ctrl x  Ctrl l : complete entire line. Context aware, gets next line when
+                 pressed again.
+Ctrl x  Ctrl o : Programming language specific completion.
+
 
 :set dictionary=file
 Ctrl-x  Ctrl-k : enter dictionary completion mode
-
 
 
 Indent
@@ -152,19 +166,24 @@ dd
 . (press dot)
 . (press dot again)
 
+di) 
+    delete everything between parenthesis
+di} 
+    delete everything between curly brackets
+d/regex 
+    delete until regex match
+:g/pattern/d 
+    delete all line matching pattern
 
-di) delete everything between parenthesis
-di} delete everything between curly brackets
 
-
-Coding coding
+Source code
 --------------
 gd : find local declaration
 gD : find global declaration
 gf : file under cursor, Ctrl-O to come back.
-#include "f CTRL−X CTRL−F"
+#include "f CTRL−x CTRL−f"
 :set dictionary=file
-Ctrl-X Ctrl-K : complete from dictionary
+Ctrl-x Ctrl-k : complete from dictionary
 [[ go to start of function
 
 
@@ -211,10 +230,8 @@ marks
   :jumps shows the jumplist.
   Ctrl-o moves the cursor to the last jump.
   Ctrl-i moves the cursor to the previous jump.
-  H moves the cursor to the top of the screen or viewport.
-  M moves the cursor to the middle of the screen or viewport.
-  L moves the cursor to the bottom of the screen or viewport.
-  
+
+
   Examples:
   -----------
   :'g,'k d   
@@ -239,6 +256,18 @@ show hidden symbols
 
 
 
+Folds
+----------------------
+zf -- create
+
+zo -- open  
+zc -- close
+
+zr -- reduce folding level
+zm -- one More folding level, please
+
+zR -- Reduce completely the folding, I said!
+zM -- fold Most!
 
 
 
@@ -258,7 +287,6 @@ C - Often overlooked: chop off end of line and go into insert mode.
 c/"[enter] Great for modifying things in quotes:
 Much easier is to use :a! (or :i!), paste your text and then end the paste 
     with a line containing just .
-zf, zo, zc: fold creation, open, close (hides sections of your code)
 :sp to split the screen er ctrl-w-w
 gF: Open the file under the cursor,
 
@@ -287,9 +315,6 @@ q   stop recording
 @@  repeat previous @ command
 
 
-or d/regex to delete until regex match
-when dealing with a log file with lots of useless information using
-:g/pattern/d to remove all of the lines that don't have any use
 
 vip : select upto next blank line
 
@@ -398,14 +423,13 @@ Using quickfix commands
     <Enter>:        Jump to error
     Ctrl-<Enter>:   Open a new window and jump to error there
 
-    cn:             Next error
-    cp:             Previous error
-
-    cl:             See all errors
-    cc:             See full error text
-    cc [nr]:        Jump to [nr]
-    cfir:           Jump to first error
-    clas:           Jump to last error
+    cn             # Next error
+    cp             # Previous error
+    cl             # See all errors
+    cc             # See full error text
+    cc [nr]        # Jump to [nr]
+    cr             # Jump to first error (rewind)
+    clas           # Jump to last error
 
 
 
@@ -418,6 +442,11 @@ copy to X11 clipboard
 "+yy:   copy to X11 copy/paste clipboard (not needed when compiled with 
         -xterm_clipboard)
 "+p:    paste from X11 copy/paste clipboard 
+
+To make clipboard usable through ssh:
+ssh -Y aawais@terbium
+then use "+y
+
 
 
 
@@ -536,6 +565,102 @@ git submodule add git://github.com/altercation/vim-colors-solarized.git vim-colo
 git submodule add git://github.com/tpope/vim-fugitive.git vim-fugitive
 git submodule add https://github.com/christoomey/vim-tmux-navigator.git vim-tmux
 git submodule status
+
+Other plugins:
+txtfmt : to make arbitrary highlighting
+note   : note taking
+
+
+" -------------------------------------------------------------
+"                           Nerd Tree 
+" -------------------------------------------------------------
+git clone https://github.com/scrooloose/nerdtree.git
+
+# close nerdtree window
+:NERDTreeClose
+
+
+" -------------------------------------------------------------
+"                            Info
+" -------------------------------------------------------------
+
+:scriptname         # All loaded scripts
+:set runtimepath    # All directory to look for stuff
+:set filetype?      # which plugin is highlighting the file
+
+:e $MYVIMRC         # open vimrc from within vim
+
+
+" -------------------------------------------------------------
+"                   Create your own syntax file                 
+" -------------------------------------------------------------
+1. Create file ~/.vim/bundle/hlp.vim/ftdetect/hlp.vim
+    au BufRead,BufNewFile *.hlp set filetype=hlp
+2. Create file ~/.vim/bundle/hlp.vim/syntax/hlp.vim
+    
+
+" -------------------------------------------------------------
+"                          Sessions
+" -------------------------------------------------------------
+" Save current state as session
+:mks ~/.vim_sessions/mysession.vim
+
+" Load a saved session
+:source ~/.vim_sessions/mysession.vim
+
+" Start vim with session
+vim -S ~/.vim_sessions/mysession.vim
+
+
+" -------------------------------------------------------------
+"                          Latest
+" -------------------------------------------------------------
+" copy form register in insert mode
+Ctrl a -- insert content of register "."
+Ctrl r -- followed by name of register, e.g. "a"
+
+
+" show content of registers
+: reg
+
+
+" -------------------------------------------------------------
+"                          Registers
+" -------------------------------------------------------------
+%  relative path of current file
+   %:t      name of current file
+   %:p:h    directory of current file 
+   
+
+  
+" -------------------------------------------------------------
+"                          vim and unix
+" -------------------------------------------------------------
+:r !ls      read output of a command
+:.!wc       send current line to an external command and put
+            the output of that command here.
+!!sh<CR>    Treat current line of text as command, execute it
+            and put the output here
+
+
+" -------------------------------------------------------------
+"                          text objects
+" -------------------------------------------------------------
+quoted string literals " ' `
+brackets []
+parens   ()
+Tags (t)  <Tags> </Tags>
+blocks of source code {}
+help text-objects
+
+" Examples
+dit -- delete inside tags
+da" -- delete all "
+vi) -- visualize inside ()
+
+in com count -> operator -> motion scheme, text objects 
+are like motion
+
 
 
 

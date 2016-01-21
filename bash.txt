@@ -1,38 +1,76 @@
 #! /bin/bash
 
-# Variables
+# Variables (pattern here means globbing pattern)
 # -----------------------------------------------------------------
-${#string}                 # String Length
-${string:position}         # Extracts substring starting at $position.(position starts at 0)
-${string:position:length}  # Extracts $length characters starting at $position.
-${string#substring}        # Deletes shortest match of $substring from front
-${string##substring}       # Deletes longest match of $substring from front
-${string%substring}        # Deletes shortest match of $substring from back
-${string%%substring}       # Deletes longest match of $substring from back
-${alpha/find/replace}      # Search and replace first occurance
-${alpha//find/replace}     # Search and replace all occurance
+${#string}                      # String Length
 
-${string/#substring/replacement}  
-                           # If $substring matches front end of $string, 
-                           # substitute $replacement for $substring.
-${string/%substring/replacement}  
-                           # If $substring matches back end of $string, 
-                           # substitute $replacement for $substring.
+${string:pos}                   # Extracts substring starting at pos.(pos starts at 0)
+${string:pos:length}            # Extracts length characters starting at pos.
+
+${string#pattern}               # Deletes shortest match of pattern from front
+${string##pattern}              # Deletes longest match of pattern from front
+${string%pattern}               # Deletes shortest match of pattern from back
+${string%%pattern}              # Deletes longest match of pattern from back
+
+${string/pattern/replace}       # Search and replace first occurance
+${string//pattern/replace}      # Search and replace all occurance
+${string/#pattern/replacement}  # Search and replace front part (anchor at front)
+${string/%pattern/replacement}  # Search and replace back part
+
+${VAR?"err-msg"}                # If VAR not defined display err-msg and exit
+: ${VAR?}                       # err-msg is optional, using ":" command.
+
+${VAR-default}, ${VAR:-default} # If VAR not set/is NULL use default
+${VAR=default}, ${VAR:=default} # If VAR not set/is NULL, set it to default
 
 
-# Misc
+# Regular expressions
+# -----------------------------------------------------------------
+# Does START_ADDR match a hexadecimal number
+[[ ! "$START_ADDR" =~ ^[0]?[xX]?[0-9A-Fa-f][0-9A-Fa-f]*$ ]]
+
+# Use of capture groups
+langRegex='(..)_(..)'
+if [[ $LANG =~ $langRegex ]]
+then
+    echo "Your country code (ISO 3166-1-alpha-2) is ${BASH_REMATCH[2]}."
+    echo "Your language code (ISO 639-1) is ${BASH_REMATCH[1]}."
+else
+    echo "Your locale was not recognised"
+fi
+
+
+
+# Bracket expansion (Brace expansion)
+# -----------------------------------------------------------------
+echo file1.{cpp,c,h,hxx}   # produces : file1.cpp file1.c file1.h file1.hxx
+
+# combination of brace expansion and globs
+echo {/home/*,/root}/.*profile
+
+# output: 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19
+echo {0,1}{0..9}
+
+
+
+
+# Passing args to commands
 # -----------------------------------------------------------------
 # using input by lines
 ls -F | while read i; do ...; done
-
-# Does START_ADDR match a hexadecimal number
-[[ ! "$START_ADDR" =~ ^[0]?[xX]?[0-9A-Fa-f][0-9A-Fa-f]*$ ]]
 
 # First arg of command is variable
 git ls-files --others --exclude-standard | while read -r i; do cp --parents $i ~/tmp; done
 
 # using xagrs with initial argumenst
 git ls-files --others --exclude-standard | xargs -I{} cp --parents {} ~/tmp
+
+# read
+str="ali awais street 95050 ca usa"
+read _ last _ zip _ _ <<< "$str"
+echo "$last, $zip"
+
+
 
 
 # ANSI Escape Sequences for writing text in "BOLD" and "UNDERLINE" . 
@@ -59,25 +97,18 @@ echo "this is ${bold}bold${normal} but this isn't"
 # here-is document
 # -----------------------------------------------------------------
 cat << End-Of-Msg
----------------------
 This is line 1 of the messge
 This is line 2 of the message
----------------------
 End-Of-Msg
 
 # here-is document with parameter substitution turned off
 cat << 'End-Of-Msg'
----------------------
 This is line 1: My dir is $HOME
 This is line 2: cd $PTOP
----------------------
 End-Of-Msg
 
 
 
-# Bracket expansion
-#------------------
-echo file1.{cpp,c,h,hxx}   # produces : file1.cpp file1.c file1.h file1.hxx
 
 
 # kill job number one
@@ -85,12 +116,14 @@ echo file1.{cpp,c,h,hxx}   # produces : file1.cpp file1.c file1.h file1.hxx
 kill -9 %1
 
 
-# redirect shortcut
-#-----------------
+# Redirect
+# -----------------------------------------------------------------
+# Redirect stdout and stderr
 cmd > file.txt 2>&1
 cmd &> file.txt
 
-
+# Redirect only stderr
+exec 2>errors.txt
 
 
 
@@ -126,22 +159,25 @@ insert-last-argument (M-., M-_)
     A synonym for yank-last-arg. 
 operate-and-get-next (C-o)
     Accept the current line for execution and fetch the next line relative to the current line from the history for editing. Any argument is ignored. 
+
+
 edit-and-execute-command (C-xC-e)
-    Invoke an editor on the current command line, and execute the result as shell commands.
+    Invoke an editor on the current command line, and execute the result as shell 
+    commands.
+    Emacs mode: C-xC-e
+    In vi mode: ESC+v
 
 
 
-# read
-str="ali awais street 95050 ca usa"
-read _ last _ zip _ _ <<< "$str"
-echo "$last, $zip"
+
+
+
 
 
 
 #-------------------------------------------
 # see all bash defines
 #-------------------------------------------
-
 bash -v
 
 
@@ -185,6 +221,8 @@ nano !:<n>
 # resuse second argument of the command containiing keyword
 ls !<keyword>:2
 
+# execute last command with "ls" replaced by "cat"
+^ls^cat^
 
 
 
@@ -197,12 +235,6 @@ case $(ps -o stat= -p $$) in
       *) echo "Running in background" ;;
 esac
 
-
-
-#-------------------------------------------
-# Redirect stdout to a file
-#-------------------------------------------
-exec 2>errors.txt
 
 
 #-------------------------------------------

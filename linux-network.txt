@@ -43,7 +43,7 @@ ip r a 192.168.20.0/24 dev eth0
 ip r a to <addr> via <router_addr> dev eth0
 
 # default route (special prefix:"default" equivalent to ipv4 0/0 and ipv6 ::/0
-ip r a default via ADDRESS dev eth1
+ip r a default via <addr> dev eth1
 
 # replace
 ip r r 192.168.20.0/24 dev eth0 src 192.168.20.20

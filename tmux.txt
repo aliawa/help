@@ -1,10 +1,9 @@
-
-# SESSIONS
-# ----------------------
-tmux new -s mysess                  start new
-tmux kill-session -t mysess         kill named
-tmux a -t mysess                    attach to named
-tmux ls                             list
+# SESSIONS 
+# ---------------------- 
+tmux new -s mysess                  # start new 
+tmux kill-session -t mysess         # kill named 
+tmux a -t mysess                    # attach to named 
+tmux ls                             # list
 
 C-b s           list all sessions
 C-b d           detach from session
@@ -15,18 +14,20 @@ C-b d           detach from session
 C-b c           new window
 C-b 1           swith to window 1
 C-b w           choose from a list
+C-b &           close window
 
 
 # PANES
 # ----------------------
-C-b "           split horizontal
-C-b %           split vertical
-C-b z           toggles zoom pane
-C-b Alt-2       make all panes same size (Alt-1 for verticle)
-C-b ;           previously active pane
-C-b o           next pane
-C-b x           delete pane
-C-b Alt-RArrow  Resize
+C-b "                     # split horizontal
+C-b %                     # split vertical
+C-b z                     # toggles zoom pane
+C-b Alt-2                 # make all panes same size (Alt-1 for verticle)
+C-b ;                     # previously active pane
+C-b o                     # next pane
+C-b x                     # delete pane
+C-b Alt-RArrow            # Resize
+C-b : resize-pane -U 20   # Resize the current pane upwards by 20 cells
 
 
 # Refresh after config change

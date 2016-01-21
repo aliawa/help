@@ -1,53 +1,33 @@
 handle SIG32 nostop
 
-
-using gdbserver with 5300
----------------------------
-1. In $OSTOP/config/.config
-CONFIG_USER_GDBSERVER_GDBSERVER=y
-
-2. under $OSTOP/user create a directory gdbserver. Move the alredy
-   present gdbserver directory away because that version does not work
-   copy gdbserver to the new directory. Add a makefile like this:
-   
-	gdbserver:
-
-
-	romfs:
-        $(ROMFSINST) /bin/gdbserver
-
-
-3. Add to $OSTOP/glibc/build/Makefile under romfs target
-$(ROMFSINST) lib/libthread_db.so.1 /lib/libthread_db.so.1
-
-
-
-
 # Usage
 # --------
 gdb a.out
 enter           repeat last command
 
 
-# breakpoints and watchpoints
+# Breakpoints and watchpoints
 # ------------------------------
 b main          set breakpoint at main
 b 21 if val==v1 break on line 21 when (val==v1)
 wa var1==var2   break when the expression (var1==var2) becomes true
 
 # Execute commands when a breakpoint is reached
-b foo if x>0    
+b <location> if x>0    
 commands        
-silent
+silent          # don't print the usual breakpoint reached message
 printf "x is %d\n",x
-cont
-end
+cont            # auto continue
+end             # end of commands entry
 
-info break      List all breakpoints
-ignore 3 10     Dont stop at breakpoint nr 3 the next 10 times
-dis             Disable all break points
-enable 3 4      Enable breakpts num. 3 and 4
-clear foo.c:21  Delete breakpoint at line nr 21 of foo.c
+
+info break      # List all breakpoints
+ignore 3 10     # Dont stop at breakpoint nr 3 the next 10 times
+dis[able]       # Disable all break points
+enable 3 4      # Enable breakpts num. 3 and 4
+clear foo.c:21  # Delete breakpoint at line nr 21 of foo.c
+delete 1        # Delete breakpoint no. 1. If no args: delete all breakpoints
+
 
 
 # Examin Code:
@@ -66,12 +46,14 @@ shell make              compile
 
 # Examin Data:
 # ------------
-bt                      show frame stack
-frame                   show info about current frame
-fram frame-number       chanage frame to operate on
-up, down                move up down the stack
-thread thread-number    change thread to operate on
-inf locals              print all local variables
+bt                      # show frame stack
+frame                   # show info about current frame
+fram frame-number       # chanage frame to operate on
+up, down                # move up down the stack
+thread thread-number    # change thread to operate on
+inf locals              # print all local variables
+ptype a                 # print definition of structure
+info macro expression   # show macro definition (define)
 
 # Print values of expressions.
 p $register
@@ -83,6 +65,8 @@ p myfunc(p1, p2)        # will actually execute it and return result!
 p *a = 123              # will actually change *a value and return 123!
 p file::variable
 p function::variable
+p *array@len            # print array of length len
+set print elements 0    # print the whole string, not just the first bytes
 
 # Disassembly
 disassemble
@@ -120,5 +104,17 @@ sharedlibrary libnl
 
 show environment [varname] 
 set environment varname [=value]
-
 set solib-search-path ~/project/host_tt/snapgear/lib/libnl-1.1/lib
+
+# Source path
+# --------------------------------------
+# attach
+gdb pan_task <pid>
+set substitute-path /opt/build/panos-devel/slave/main-vm /home/aawais/pan
+
+
+# GUI 
+# --------------------------------------
+Ctrl-x Ctrl a
+
+

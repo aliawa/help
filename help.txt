@@ -39,12 +39,17 @@ grep -n word *.[ch] 					Locate word in c source
 
 sort
 ----------------------------------------------------------------------------
--f	: no case distinctions (fold upper and lower case)
--n  : numeric sort
--r  : reverse sense of comparison
-+m -n : sort on fields n to m-1 inclusive
--tc : use c as field separator
-+u  : unique remove duplicate lines
+-f	   : no case distinctions (fold upper and lower case)
+-n     : numeric sort
+-r     : reverse sense of comparison
+-tc    : use c as field separator
+-u     : unique remove duplicate lines
+-k3,3  : sort by 3rd column (1=first-column)
+-k1.4  : sort by Col 1 starting at 4th character.
+-k2n,2 : sort on second field numerically
+-k2nr,2: sort numerically on 2nd field in reverse order
+-k1,1 -k2n,2: sort the file alphabetically on the 1st field, 
+              numerically on the 2nd field
 
 
 

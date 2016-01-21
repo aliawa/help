@@ -1,0 +1,9 @@
+ls sort options
+-----------------
+-S:  sort by size
+-t:  sort by time modified. Most recent first, then by name.
+-tu: sort by last access time. Most recent first, then by name.
+-tU: sort by last modified (file or metadata - owner,permissions). Most 
+     recent first then by name.
+
+

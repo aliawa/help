@@ -1,3 +1,5 @@
+#!/bash/bin
+
 change the name of network devices:
     check /etc/udev/rules.d/70-persistent-net.rules
 
@@ -20,16 +22,8 @@ MTAs for linux (Mail Transfer agent):
 
 
 
-Pass environment variable to sudo
-    sudo env MALLOC_TRACE=/home/aawais/tmp/mand_mtrace.txt ./mand -t 0x9
 
 
-ssh to C through B  (A--->B--->C)
-    ssh -t root@216.156.82.162 "ssh root@74.174.29.118"
-
-using sudo with a command involving redirection
-    sudo sh -c "echo \"VENDOR=CVC\" > /etc/vendor"
-    sudo sh -c "iptables-save > /etc/iptables.rules"
 
 mail command line
     send mail to  receipient@domin from sender@domain
@@ -68,4 +62,30 @@ export LESS_TERMCAP_ue=$'\E[0m'           # end underline
 export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
 export LESS_TERMCAP_so=$'\E[01;35;47m'    # standout statusbar/search -> magenta
 
+
+# Users
+# -------------------------------------------------
+
+# add user
+useradd aawais
+passwd aawais
+
+# user home direcory
+vi /etc/default/useradd
+uncomment HOME=/home
+
+
+# Setup
+# -------------------------------------------------
+# 1. add user "aawais". Follow the interactive prompts
+adduser aawais 
+
+visudo 
+aawais ALL= (root) NOPASSWD: ALL
+
+apt-get autoremove
+apt-get clean
+apt-get install git
+git clone https://github.com/aliawa/dotfiles.git
+git clone https://github.com/altercation/vim-colors-solarized.git .vim/bundle/vim-colors-solarized/
 

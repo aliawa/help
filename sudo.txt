@@ -1,0 +1,9 @@
+# Run echo
+sudo sh -c "echo \"4 hello 0\" > /var/run/failover.status"
+
+# interactive mode
+sudo -i
+
+# visudo
+aawais ALL= (root) NOPASSWD: ALL
+

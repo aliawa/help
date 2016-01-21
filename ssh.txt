@@ -29,7 +29,7 @@ cat ~/.ssh/id_rsa.pub | ssh aawais@192.168.1.193 "cat >> ~/.ssh/authorized_keys"
 # --------------------------------------
 
 # Setup a tunnel from 10.10.10.40:4545 to 192.168.30.1:80
-# to reach the EM GUI.
+# Tunnel to Web Server
 ssh -f -L 10.10.10.40:4545:192.168.30.1:80 root@192.168.30.1 -N
 
 # Tunnel to ssh
@@ -39,8 +39,9 @@ ssh -f -L 10.10.10.40:4545:192.168.20.1:22 root@192.168.20.1 -N
 ssh 10.10.10.40 -p 4545 -l root
 
 # Another approach: ssh to C through B  (A--->B--->C)
-# with B=10.10.10.40 and C=192.168.30.1
+# with B=10.10.10.40, C=192.168.30.1, A=host
 ssh -t aawais@10.10.10.40 "ssh root@192.168.30.1"
+
 
 
 
@@ -73,5 +74,49 @@ stat -c "%a %n" ~ ~/.ssh ~/.ssh/authorized_keys
 # check sshd config
 /etc/ssh/sshd_config
 
+
+
+
+# --------------------------------------
+# keep session alive
+# --------------------------------------
+
+# Add to ~/.ssh/config
+Host *
+  ServerAliveInterval 240
+
+# Add to connection string
+-o ServerAliveInterval=60
+
+
+
+# -----------------------------------------------
+# Selectively forward X11 due to securty concerns
+# -----------------------------------------------
+# Add to ~/.ssh/config
+Host capek
+     Hostname capek.stanford.edu
+     User teichman
+     ForwardX11 yes
+     ForwardX11Trusted yes
+
+Host *
+     ForwardX11 no
+     ForwardAgent no
+
+
+# -----------------------------------------------
+# Fix X11 Forwarding in tmux
+# -----------------------------------------------
+# can be automated: http://alexteichman.com/octo/blog/2014/01/01/x11-forwarding-and-terminal-multiplexers/
+# Before attaching to tmux
+echo $DISPLAY > ~/.display.txt
+
+# Before running command requiring X11
+export DISPLAY=`cat ~/.display.txt`
+
+# Enable X11 forwarding when using sudo
+# run on local machine
+xhost +
 
 

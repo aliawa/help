@@ -52,16 +52,6 @@ Multiple targets on one line example
     display.o insert.o search.o files.o : buffer.h
 
 
-printing to console
----------------------
-.PHONY: foo
-     foo: ; @echo $@
-outputs foo
-          
-$(warning default goal is $(.DEFAULT_GOAL))
-outputs:
-    default goal is foo
-
 
 
 
@@ -105,16 +95,7 @@ targets : prerequisites ; command
 8.1 Function Call Syntax
 ---------------------------
 $(function arguments)
-
 ${function arguments}
-
-
-
-
-
-suppress echoing of commands
-----------------------------
-@echo About to make distribution files
 
 
 
@@ -124,7 +105,7 @@ suppress echoing of commands
 subsystem:
     cd subdir && $(MAKE)
 
-or, equivalently, this (see Summary of Options): 
+or, equivalently 
 
 subsystem: 
     $(MAKE) -C subdir
@@ -250,5 +231,14 @@ Debugging Make files
 $(warning X is $(X))
 $(error text...)
 $(info text...)
+@echo
+
+## Examples
+$(warning default goal is $(.DEFAULT_GOAL))
+
+.PHONY: foo
+     foo: ; @echo $@ # will outputs "foo", the "@" supressess printing
+                       of the command line itself
+
 
 
