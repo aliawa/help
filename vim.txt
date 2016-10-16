@@ -97,6 +97,10 @@ L     # bottom of screen
 30|   # Jump to column 30
 `.    # move to last edit position
 
+^E - scroll the window down
+^Y - scroll the window up 
+^F - scroll down one page
+^B - scroll one page up
 
 Fast text Movement
 ------------------
@@ -662,5 +666,15 @@ in com count -> operator -> motion scheme, text objects
 are like motion
 
 
+
+a - all 
+i - in 
+t - 'til
+caw - change all word
+diw - delete in word
+di[ - delete inside bracket
+yi) - yank all text inside parentheses
+vi" - visually select inside the double quote
+va' - visually select all including quote
 
 

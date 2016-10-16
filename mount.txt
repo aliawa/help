@@ -1,10 +1,18 @@
-1. Mounting an NFS directory
+Mounting an NFS directory
+------------------------------------------------------------------
+1. On the remote machine System->NFS or system-config-nfs
+   Note: you may have to install it "yum install system-config-nfs"
+2. click Add
+3. Directory: /home/aawais  host: 10.10.13.182
 
-   1. On the remote machine System->NFS or system-config-nfs
-      Note: you may have to install it "yum install system-config-nfs"
-   2. click Add
-   3. Directory: /home/aawais  host: 10.10.13.182
+4. On local machine
+   $ mkdir alinux_home
+   $ sudo mount -t nfs 10.10.13.182:/home/aawais alinux_home
 
-   4. On local machine
-      $ mkdir alinux_home
-      $ sudo mount -t nfs 10.10.13.182:/home/aawais alinux_home
+
+Mount a windows share
+------------------------------------------------------------------
+sudo mount -t cifs //172.16.0.2/aawais linkstation/
+
+
+

@@ -22,3 +22,16 @@ manpath            : show current man path
 
 trying to install c++ man pages
 sudo yum -y install libstdc++-docs.i686
+
+
+man search path:
+manpath
+/etc/man_db.conf
+
+appropriate command for something
+appropos column
+
+whereis the man page for a command
+whereis -m cat
+
+

@@ -33,6 +33,22 @@ systemctl start firewalld.service
 # stop service
 systemctl stop firewalld.service
 
+# disable service
+systemctl disable firewalld.service
+systemctl mask firewalld.service
+
+# analyze boot time
+systemd-analyze blame
+systemd-analyze critical-chain
+
+
+# --- turning off some sevices ---
+bluetooth.service
+sendmail.service
+sm-client.service
+sshd.service    # temporarily disabled.
+colord.service  # because it alwasys fails to start
+cups.service    # just temporarily disabling
 
 
 # ----- custom launcher ----------
@@ -215,5 +231,14 @@ sudo -e /usr/share/applications/gnome-terminal.desktop
 Terminal=true
 Exec=/usr/bin/bicon.bin
 
+
+
+# ------------- Touchpad --------------------------
+# Set touchpad sensitivity
+xinput --set-prop 12 "Synaptics Finger" 5, 16, 225
+
+synclient TouchpadOff=0 # Touchpad is enabled
+synclient TouchpadOff=1 # Touchpad is off
+synclient TouchpadOff=0 # Scrolling and tapping is off
 
 

@@ -1,3 +1,9 @@
+
+yum config file
+---------------
+/etc/yum.conf
+
+
 find package
 --------------------------
 yum list available 'foo*'
@@ -21,7 +27,7 @@ yum --nogpgcheck install psad-2.1.4-1.i386.rpm
 
 re-install a package
 -------------------
-e.g., it the package was accedentally damaged
+e.g., if the package was accedentally damaged
 yum reinstall yum-plugin-changelog
 
 
@@ -56,6 +62,9 @@ yum erase xfig
 Package information
 -------------------
 yum info squid
+
+
+
 
 
 

