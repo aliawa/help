@@ -1,4 +1,5 @@
-configuration
+
+# configuration
 ----------------
 1. edit /etc/bind/named.conf.local
    Add:  include "/home/knoppix/mynamed.conf";

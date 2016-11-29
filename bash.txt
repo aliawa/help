@@ -108,12 +108,19 @@ This is line 2: cd $PTOP
 End-Of-Msg
 
 
+# --------------------------
+# Terminal Flow control
+# --------------------------
+Ctrl-S - Stop Sending (Freeze terminal)
+Ctrl-Q - Resume Sending (Unfreeze terminal)
+
 
 
 
 # kill job number one
 #---------------------
 kill -9 %1
+pkill
 
 
 # Redirect
@@ -200,29 +207,32 @@ $endif
 # history
 #-------------------------------------------
 
-# make typed command as the previous command
-append !:p
+# Previous commands complete
+!:p        # show previous command but don't execute it
+!!         # last command
+!<keyword> # last command containing keyword
+!N         # Nth command
+!-N        # N commands ago
 
-# repeat last command with sudo
-sudo !!
 
-# reuse the last argument of the last command
-cd !$
+# extract arguments from last command
+!^         # first argument only (short form of !!^)
+!$         # last argument
+!*         # all arguments
+!:N        # Nth argument
 
-# reuse the first argument of the last command
-nano !^
-
-# reuse the nth argument of the last command
-nano !:<n>
-
-# search last command with keyword and execute
-!<keyword>
 
 # resuse second argument of the command containiing keyword
 ls !<keyword>:2
 
 # execute last command with "ls" replaced by "cat"
 ^ls^cat^
+
+# Word modifiers
+h   # Remove a trailing file name component, leaving only the head.
+t   # Remove all leading file name components, leaving the tail.
+r   # Remove a trailing suffix of the form .xxx, leaving the basename.
+e   # Remove all but the trailing suffix. 
 
 
 

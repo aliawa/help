@@ -1,0 +1,55 @@
+
+# tcp server:
+nc -l 192.168.1.166 5060
+
+# tcp client:
+nc -s <source-ip> <dest-ip> <dest-port> < data.txt
+
+# send a udp packet from port 30000 to ip 10.10.10.158:32000
+echo "garbage" | nc -up 30000 10.10.10.158 32000
+
+
+# An http server: Sends "Hello World" to all connecting 
+# clients
+cat ~/tmp/http.response
+HTTP/1.1 200 OK
+Date: Mon, 27 Jul 2009 12:28:53 GMT
+Server: Apache/2.2.14 (Win32)
+Last-Modified: Wed, 22 Jul 2009 19:15:56 GMT
+Content-Length: 88
+Content-Type: text/html
+Connection: Closed
+
+<html>
+   <body>
+
+   <h1>Hello, World!</h1>
+
+   </body>
+</html>
+
+netcat -l -p 80 < ~/tmp/http.response
+
+
+# Copy the whole directory to another machine.
+# Receiver
+tar cfp - mytest/  | nc -w 3 10.1.5.100 1234
+# Sender
+nc -l -p 1234 |  tar xvfp -
+
+
+
+# TCP RELAY
+# A nc listner listens on 10.1.5.100 port 443(https). Sends all data 
+# that it receives to to nc client for the next hop. The backpipe is 
+# used for the reverse traffic sent by the next hop.
+mknod backpipe p
+nc -nvl -p 443 10.1.5.100  0<backpipe | nc 192.168.9.235 443 1>backpipe
+
+
+
+
+
+
+
+

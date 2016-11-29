@@ -1,4 +1,71 @@
 #!/bin/bash
+# ---------------------------------------------------------------------------
+
+# 1. Filter (tshark or tcpdump)
+tshark -r RX1_CALLMANAGER.pcap   -Y "tcp && frame.number < 228" -w rx_filtered.pcap
+tcpdump -r RX1_CALLMANAGER.pcap -w rx_filtered.pcap tcp
+
+# 2. create Cache file
+# for tcp use --auto=router
+tcpprep --auto=router -i rx_filtered.pcap -o rx_filtered.prep
+# for udp the --auto=first works better
+tcpprep --auto=first -i rx_filtered.pcap -o rx_filtered.prep
+# CIDR mode -c <server-address>/net
+# All comma delimited addresses after -c are treated as servers, the
+# rest are treated as clients.
+tcpprep -c 68.68.117.60 -i rx_filtered.pcap  -o rx_filtered.prep
+
+
+# 2. Change destination mac addressess in the pcap.
+# --enet-dmac=<server-to-client>,<client-to-server>
+# The first address in the enet-dmac option is the new destination
+# mac for server-to-client traffic, which is responses in case of SIP.
+# The second mac address in the enet-dmac option is for client-to-server
+# traffic, for example the SIP request.
+# Note: this is kind of reversed. The first packet in the pcap is usually
+# the client-to-server packet and it will get the second address, the one 
+# after the comma.
+tcprewrite --enet-dmac=d4:f4:be:0b:a2:1b,d4:f4:be:0b:a2:1a \
+    -c rx_filtered.prep -i rx_filtered.pcap -o rx_replay.pcap
+
+# 3. Check
+tshark -r rx_replay.pcap -e frame.number -e ip.src -e ip.dst \
+    -e eth.dst -e tcp.flags -Tfields
+
+# 4. On the firewall
+#    a. Add Original NAT policy as applied in the pcap
+#    b. Set security policy to allow traffic
+#    c. Por mapping may need to be set
+debug dataplane nat static-mapping add from-ip 198.168.60.168 from-port 41660 to-ip 10.3.36.168 to-port 34681
+debug dataplane nat static-mapping del from-ip 198.168.60.168 from-port 41660
+
+
+# 5. On the target system (pcap server)
+#    a. Set interface address to match the pcap target
+#    b. For UDP: block icmp, for TCP block RST
+#ipv4
+iptables -A OUTPUT -p icmp --icmp-type 3 -j DROP
+iptables -A OUTPUT -p tcp --tcp-flags RST RST -j DROP
+#ipv6
+ip6tables -A OUTPUT -p icmpv6 --icmpv6-type 1 -j DROP
+ip6tables -A OUTPUT -p tcp --tcp-flags RST RST -j DROP
+
+
+# 6. On Client System
+#    a. Set interface address to match the source in pcap
+#    b. iptables rule to block RST
+
+
+# 7. replay
+# intf1 - receives server-to-client packets (SIP responses)
+# intf2 - receives client-to-server packets (SIP requests)
+tcpreplay -c rx_filtered.prep --intf1=eth1 --intf2=eth3 rx_replay.pcap
+
+
+
+
+
+# ---------------------------------------------------------------------------
 
 
 # tcpreplay with ip address translation
@@ -37,45 +104,6 @@ tcprewrite --enet-dmac=d4:f4:be:0b:a2:1a,d4:f4:be:0b:a2:1b \
 
 
 # --------------------------------------------------------------------------
-
-# 1. Filter (tshark or tcpdump)
-tshark -r RX1_CALLMANAGER.pcap   -Y "tcp && frame.number < 228" -w rx_filtered.pcap
-tcpdump -r RX1_CALLMANAGER.pcap -w rx_filtered.pcap tcp
-
-# 2. create Cache file
-# for tcp use --auto=router
-tcpprep --auto=router -i rx_filtered.pcap -o rx_filtered.prep
-# for udp the --auto=first works better
-tcpprep --auto=first -i rx_filtered.pcap -o rx_filtered.prep
-# CIDR mode -c <server-address>/net
-# All comma delimited addresses after -c are treated as servers, the
-# rest are treated as clients.
-tcpprep -c 68.68.117.60 -i rx_filtered.pcap  -o rx_filtered.prep
-
-
-# 2. Change destination mac addressess in the pcap.
-# --enet-dmac=<server-to-client>,<client-to-server>
-# The first address in the enet-dmac option is the new destination
-# mac for server-to-client traffic, which is responses in case of SIP.
-# The second mac address in the enet-dmac option is for client-to-server
-# traffic, for example the SIP request.
-# Note: this is kind of reversed. The first packet in the pcap is usually
-# the client-to-server packet and it will get the second address, the one 
-# after the comma.
-tcprewrite --enet-dmac=d4:f4:be:0b:a2:1b,d4:f4:be:0b:a2:1a \
-    -c rx_filtered.prep -i rx_filtered.pcap -o rx_replay.pcap
-
-
-# 3. Check
-tshark -r rx_replay.pcap -e frame.number -e ip.src -e ip.dst \
-    -e eth.dst -e tcp.flags -Tfields
-
-# 4. replay
-# The client-to-server packet will go to interface intf2. In the case of 
-# SIP this will be the request. The server-to-client packet will go 
-# to intf1. In case of SIP this will be the response.
-#
-tcpreplay -c rx_filtered.prep --intf1=eth1 --intf2=eth3 rx_replay.pcap
 
 
 

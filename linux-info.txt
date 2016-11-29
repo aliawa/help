@@ -6,7 +6,7 @@ General system information:
 Show information about the distribution
   cat /etc/issue
   Alternative: cat /proc/version
-  Alternative: lsb_release -a
+  Ubuntu: lsb_release -a
 
 Kernel
   uname -r

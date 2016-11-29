@@ -69,7 +69,16 @@ noh     "No highlight search pattern
 :set nows              "will not search past the top or bottom.
 :%s/CTRL-v CTRL-m//g   "will strip out all the Windows newlines
 
-:grep 'pattern' %:p:h    # grep in director of current file
+:!grep 'pattern' %:p:h/*    # grep in director of current file
+:vimgrep 'pattern' %:p:h/*  # grep in director of current file
+
+
+NOTE:
+What does not need to be escaped in regular expressions:
+- the brackets '[' in character ranges e.g: [0-9a-f]\+
+- quantifier star *
+- the replacement; the whole matched pattern &
+
 
 
 cut long lines
@@ -361,22 +370,33 @@ Deleting empty lines from a file: :%g:^\s*$:d
 firefox extension: vimperator
 
 
-Editing binary files
---------------------
-cp prog.bin prog.new.bin
-vi prog.new.bin
-<now editing in vi>
-[esc] :%!xxd 
-<now editing prog.new.bin in hex>
-[esc] :%!xxd -r
-[esc] :wq!
+# --------------------
+# Editing binary files
+#--------------------
+vi -b file.bin
 
-also:
-  :set display=uhex
+# show hex value of character under cursor in ruler
+:set rulerformat=0x%B
+
+# show unprintable chars as hex <xx>
+:set display=uhex
+
+# view in hex format
+:%!xxd
+
+# revert to normal view (must do before saving)
+:!%xxd -r 
+:set binary # if not already done.
+:wq
+
+# other hex editors
+bvi
+bless
 
 
-Syntax files and color schemes
-----------------------------------
+# ----------------------------------
+# Syntax files and color schemes
+# ----------------------------------
 location: ~/.vim/syntax/mlg.vim
 
 using in vim:
@@ -593,6 +613,7 @@ git clone https://github.com/scrooloose/nerdtree.git
 :set filetype?      # which plugin is highlighting the file
 
 :e $MYVIMRC         # open vimrc from within vim
+:verbose set foldcolumn?   # which script set foldcolumn option
 
 
 " -------------------------------------------------------------
@@ -629,7 +650,7 @@ Ctrl r -- followed by name of register, e.g. "a"
 
 
 " -------------------------------------------------------------
-"                          Registers
+"                          Paths
 " -------------------------------------------------------------
 %  relative path of current file
    %:t      name of current file

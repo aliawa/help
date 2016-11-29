@@ -15,6 +15,7 @@ C-b c           new window
 C-b 1           swith to window 1
 C-b w           choose from a list
 C-b &           close window
+C-b ,           rename window
 
 
 # PANES
@@ -28,6 +29,7 @@ C-b o                     # next pane
 C-b x                     # delete pane
 C-b Alt-RArrow            # Resize
 C-b : resize-pane -U 20   # Resize the current pane upwards by 20 cells
+C-b }                     # Swap panes
 
 
 # Refresh after config change

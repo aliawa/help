@@ -1,0 +1,9 @@
+# list all units installed on the system.
+list-units-files
+
+# These are equivalent
+systemctl start sshd
+systemctl start sshd.service
+
+
+

@@ -1,0 +1,116 @@
+# Using the new apt command 
+apt list                                    # same as dpkg --list
+apt search                                  # apt-cache search
+apt show vim-scripts                        # apt-cache show
+apt update                                  # apt-get update
+apt install, remove
+apt full-upgrade                            # apt-get dist-upgrade
+apt edit-sources                            # edit sources.list using $EDITOR
+
+
+# Maintainence
+# ---------------------------------------------------------
+apt update
+apt full-upgrade
+apt autoremove
+
+
+
+# Troubleshooting
+# ---------------------------------------------------------
+# Edit gai.conf:
+sudo vim /etc/gai.conf
+# change line ~54 to uncomment the following:
+precedence ::ffff:0:0/96  100
+# write and quit:
+:wq
+
+# could not resolve us.archive.ubuntu.com
+check /etc/resolve.conf -> add nameserver 8.8.8.8
+
+
+# Maintainence old
+# ---------------------------------------------------------
+apt-get update
+apt-get dist-upgrade
+apt-get autoremove --purge
+
+
+# Remove
+# ---------------------------------------------------------
+dpkg --list                 # List all installed packages
+apt-get --purge remove gimp # remove package and config files
+apt-get purge --auto-remove gimp
+                            # uninstall package, dependencies and config files
+sudo apt-get remove --simulate plymouth
+                            # what will happen when package is removed.
+#
+
+# Manually remove old linux kernels
+# ---------------------------------------------------------
+# List all kernels except booted kernel
+# status 'rc' means removed but configuration is present
+dpkg -l | tail -n +6 | grep -E 'linux-image-[0-9]+' | grep -Fv $(uname -r)
+
+# remove old kernels that are in status ii
+dpkg --purge linux-image-3.13.0-73-generic
+dpkg --purge linux-headers-3.13.0-73-generic
+dpkg --purge linux-headers-3.13.0-73
+dpkg --purge linux-image-extra-3.13.0-73-generic
+
+
+# list all kernels
+dpkg --list | egrep -i --color 'linux-image|linux-headers'
+# remove kernel
+apt-get --purge remove linux-image-3.13.0-83-generic
+
+
+
+# apt-cache
+# ---------------------------------------------------------
+apt-cache pkgnames          # List all avaialable packages:
+apt-cache pkgnames vsftpd   # All pkg names starting with vsftpd
+apt-cache search vsftpd     # Find package name with description
+apt-cache show netcat       # Pkg Information, version, size etc.
+apt-cache showpkg vsftpd    # Pkg dependencies
+
+
+
+apt-get changelog vsftpd    # Changelog of a pkg.
+apt-get update              # Update to newer versions
+apt-get upgrade             # Upgrade only. No remove or add
+apt-get dist-upgrade        # Upgrade, add, remove pkgs as needed
+apt-get install vsftpd --only-upgrade
+                            # Upgrage a specific package
+
+
+apt-get download nethogs    # Download but don't install
+apt-get install netcat      # Install specific package.
+apt-get install vsftpd=2.3.5-3ubuntu1
+                            # Install a specific version
+
+
+apt-get purge vsftpd        # Remove package and configuration
+apt-get clean               # remove downloaded .deb files
+apt-get check               # Update pkg cache and check broken dep.
+
+
+
+apt-get --download-only source vsftpd
+                            # Download source code package to /var/cache/apt/archives
+apt-get source vsftpd       # Download and unpack source code pkg
+apt-get --compile sources goaccess
+                            # Download unpack and compile 
+
+
+
+
+
+
+dpkg --listfiles vsftpd     # files installed by the package
+dpkg-query -L vsftpd        # files in a package
+dpkg -c package_file.deb    # files in a .deb file
+dpkt -S `which apache2`     # which package the binary apache2 is from
+
+apt list --installed        # all installed packages
+

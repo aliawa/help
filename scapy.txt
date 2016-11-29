@@ -1,3 +1,10 @@
+# -----------------------------
+# Install
+# -----------------------------
+pip3 install scapy-python3
+brew install libdnet
+
+# 
 # -------------------------------
 # Operations on list of packets:
 # -------------------------------
@@ -116,7 +123,11 @@ sniff(iface="eth0", filter="icmp", count=10)
 sniff(iface="eth1", prn=lambda x: x.show())
 
 # print using sprintf
+# {IP:...} is used for conditional printing. If IP layer is present the print.
 pkts = sniff(prn=lambda x:x.sprintf("{IP:%IP.src% -> %IP.dst%\n}{Raw:%Raw.load%\n}"))
+
+# BPF reference (Berkeley Packet Filter)
+http://biot.com/capstats/bpf.html
 
 
 # -------------------------------
@@ -136,6 +147,13 @@ wireshark(a)
 pkts=rdpcap(“/tmp/attack.pcap”)
 for pkt in pkts:
    send(pkt)
+
+for p in PcapReader(file):
+    p.show()
+
+s = PcapReader(file)
+while 1:
+    s.recv(pkt)
 
 
 # -------------------------------
@@ -180,11 +198,6 @@ inspect.getargspec(srflood)
 help(srflood)
 
 
-# -------------------------------
-# BPF (Berkeley Packet Filter)
-# -------------------------------
-
-http://biot.com/capstats/bpf.html
 
 
 

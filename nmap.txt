@@ -1,7 +1,13 @@
 NMAP 
 
+# Find hosts that are alive on the lan using ping
+nmap -sP 192.168.1.0/24 
 
-OS and  version scanning(A), Aggressive scan timing(T4), 
+# Find hosts on lan and their open ports
+nmap 192.168.1.0/24
+
+
+# OS and  version scanning(A), Aggressive scan timing(T4), 
 scan all ports(p) using TCP SYN scan(sS default)
   nmap -A -T4 -p1-65535 10.10.13.23
 

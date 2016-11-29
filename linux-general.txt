@@ -89,3 +89,43 @@ apt-get install git
 git clone https://github.com/aliawa/dotfiles.git
 git clone https://github.com/altercation/vim-colors-solarized.git .vim/bundle/vim-colors-solarized/
 
+
+# Fixing ubuntu boot problems
+df -h   # check if boot partition is full.
+cd boot && rm System.map-3.13.0-* # create some space in boot.
+sudo apt-get install --fix-broken  (also try apt-get -f install )
+sudo apt-get autoremove --purge
+sudo apt-get purge linux-image-3.13.0-67-generic
+sudo apt-get update
+
+apt-get.conf:
+
+sudo vim /etc/gai.conf
+
+change line ~54 to uncomment the following:
+
+precedence ::ffff:0:0/96  100
+
+write and quit:
+
+:wq
+update
+apt-get dist-upgrade
+apt-get autoremove --purge
+
+# For sipp build install 
+apt-get install libncurses5-dev libncursesw5-dev
+apt-get install libssl-dev
+apt-get install libpcap-dev
+
+
+
+
+# locale removal
+# -------------------------------------------------------
+1. delete everything under /usr/lib/locale
+2. Delete unneded locale from /etc/default/locale
+3. Delete unneded locale from /var/lib/locales/supported.d/*
+4. Regenerate locales locale-gen --purge
+
+

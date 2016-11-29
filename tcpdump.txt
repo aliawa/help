@@ -48,7 +48,8 @@
   -r <filename> : read from file 'filename'
   -c <number>   : exit after printing 'number' packets 
   -g            : No line break in output after IP header (BSD only)
-  -x            : Print the data of the packet
+  -x            : Print the data of the packet in hex
+  -A            : Print the data of the packet in ASCII
   -o            : Print ordinal number (BSD only)
 
 

@@ -1,25 +1,37 @@
 # --------------------------------------
 # Setting up password less ssh login
 # --------------------------------------
-# method 1:
-1. ssh-keygen
-2. cat ~/.ssh/id_rsa.pub | ssh aawais@lin.loc "umask 0077; mkdir -p ~/.ssh; cat >> ~/.ssh/authorized_keys"
-3. ssh-add
-
-# method 2:
-1. ssh-keygen
-2. ssh-copy-id aawais@lin.ewn
-3. ssh-add
-
-
-# method 3: when ~/.ssh is not writable for example EM
+# 1:
+# Generate private and public key pair: private key is in ~/.ssh/id_rsa
+# and public is in ~/.ssh/id_rsa.pub.
+# Note: make sure private key file is only readalbe by owner, otherwise it
+# will not work.
+ssh-keygen  
+# if ~/.ssh is not accessable, for example EdgeMarc, the keys can be generated
+# in other location.
 ssh-keygen -f /var/id_rsa
-cat /var/id_rsa.pub | ssh aawais@192.168.1.193 "cat >> ~/.ssh/authorized_keys"
-sh -i /var/id_rsa -o StrictHostKeyChecking=no aawais@192.168.1.193
-
-# method 4: when ~/.ssh is not writable
+# Or ~/.ssh can be mounted as tmpfs
 mount -t tmpfs tmpfs /.ssh -o size=1M
-cat ~/.ssh/id_rsa.pub | ssh aawais@192.168.1.193 "cat >> ~/.ssh/authorized_keys"
+
+# 2: 
+# Now copy the public key to the server where we wand to do paswordless ssh
+cat ~/.ssh/id_rsa.pub | ssh aawais@lin.loc "umask 0077; mkdir -p ~/.ssh; cat >> ~/.ssh/authorized_keys"
+# Or use ssh-copy-id (not available everywhere)
+ssh-copy-id aawais@lin.ewn
+
+# 3:
+# Tell ssh-agent about the newly created private/public keys. if no file is
+# give ~/.ssh/id_rsa is assumed.
+ssh-add [file ...]
+
+# 4: 
+# Do step 2 for every server you want to ssh to.
+
+# 5: 
+# ssh will work now. If you want to use a specific identity file (private key)
+# use the -i option
+ssh -i /var/id_rsa -o StrictHostKeyChecking=no aawais@192.168.1.193
+
 
 
 
@@ -28,18 +40,19 @@ cat ~/.ssh/id_rsa.pub | ssh aawais@192.168.1.193 "cat >> ~/.ssh/authorized_keys"
 # ssh tunnel
 # --------------------------------------
 
-# Setup a tunnel from 10.10.10.40:4545 to 192.168.30.1:80
-# Tunnel to Web Server
-ssh -f -L 10.10.10.40:4545:192.168.30.1:80 root@192.168.30.1 -N
+# ssh into 10.1.5.100 with user name "aawais" and then create
+# a tunnel to 192.168.9.235 from there, so that port 9000 on 
+# "localhost" is connected to port 443 on 192.168.9.235
+# The -N option prevents starting a shell on 10.1.5.100
+# -T tells the remote command that there is no Pseudo-Terminal
+# so don't send prompts etc.
+ssh -NT -L 9000:192.168.9.235:443 aawais@10.1.5.100
 
-# Tunnel to ssh
-ssh -f -L 10.10.10.40:4545:192.168.20.1:22 root@192.168.20.1 -N
 
-# Use as
-ssh 10.10.10.40 -p 4545 -l root
 
-# Another approach: ssh to C through B  (A--->B--->C)
+# ssh to C through B  (A--->B--->C)
 # with B=10.10.10.40, C=192.168.30.1, A=host
+# Execute on A
 ssh -t aawais@10.10.10.40 "ssh root@192.168.30.1"
 
 

@@ -13,9 +13,7 @@ b 21 if val==v1 break on line 21 when (val==v1)
 wa var1==var2   break when the expression (var1==var2) becomes true
 
 # Execute commands when a breakpoint is reached
-b <location> if x>0    
-commands        
-silent          # don't print the usual breakpoint reached message
+command 2       # specify commands for breakpoint 2       
 printf "x is %d\n",x
 cont            # auto continue
 end             # end of commands entry
@@ -24,9 +22,9 @@ end             # end of commands entry
 info break      # List all breakpoints
 ignore 3 10     # Dont stop at breakpoint nr 3 the next 10 times
 dis[able]       # Disable all break points
-enable 3 4      # Enable breakpts num. 3 and 4
+en[able] 3 4    # Enable breakpts num. 3 and 4
 clear foo.c:21  # Delete breakpoint at line nr 21 of foo.c
-delete 1        # Delete breakpoint no. 1. If no args: delete all breakpoints
+del[ete] 1      # Delete breakpoint/watchpoint no. 1. If no args: delete all breakpoints
 
 
 
@@ -52,7 +50,6 @@ fram frame-number       # chanage frame to operate on
 up, down                # move up down the stack
 thread thread-number    # change thread to operate on
 inf locals              # print all local variables
-ptype a                 # print definition of structure
 info macro expression   # show macro definition (define)
 
 # Print values of expressions.
@@ -65,8 +62,19 @@ p myfunc(p1, p2)        # will actually execute it and return result!
 p *a = 123              # will actually change *a value and return 123!
 p file::variable
 p function::variable
-p *array@len            # print array of length len
 set print elements 0    # print the whole string, not just the first bytes
+
+# Print array
+p *array@len            # print array of length len
+
+# Print memory
+x/20b pointerVar        # print 20 bytes 
+
+# structures
+ptype a                 # print definition of structure
+print *(structPointr) 
+set print pretty on     # print structs in readable form
+
 
 # Disassembly
 disassemble

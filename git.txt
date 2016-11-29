@@ -348,7 +348,20 @@ cd ~/dotfiles/vim/bundle
 git submodule add git://github.com/tpope/vim-fugitive.git vim-fugitive
 
 # Clone including the submodules
-git clone --recursive git://github.com/aliawa
+git clone --recursive https://github.com/aliawa/dotfiles
+
+# clone submodules if not done using --recursive
+git submodule init
+git submodule update # get the submodule version recorded in main project
+
+# fetch latest submodule code
+cd submodule_dir
+git pull
+cd .. # go back to main project
+git ci -m "Pulled down update to submodule_dir"
+
+# fetch latest code for all submodules
+git submodule foreach git pull origin master
 
 
 # Activate spell check in checckin comment

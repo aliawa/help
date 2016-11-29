@@ -1,0 +1,34 @@
+compile:
+./configure --enable-x11 --enable-xvideo --disable-gtk --enable-sdl \
+        --enable-ffmpeg --with-ffmpeg-mp3lame --enable-mad --enable-libdvbpsi \
+        --enable-a52 --enable-dca --enable-libmpeg2 --enable-dvdnav \
+        --enable-faad --enable-vorbis --enable-ogg --enable-theora \
+        --enable-faac--enable-mkv --enable-freetype --enable-fribidi \
+        --enable-speex --enable-flac --enable-livedotcom \
+        --with-livedotcom-tree=/usr/lib/live --enable-caca --enable-skins \
+        --enable-skins2 --enable-alsa --disable-kde--disable-qt \
+        --enable-wxwindows --enable-ncurses --enable-asa --enable-release \
+        --disable-avcodec --disable-chromecast
+
+# get source code
+git://git.videolan.org/vlc.git
+
+# Libraries for video support
+sudo apt-get install libxcb-shm0-dev libxcb-xv0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-composite0-dev
+
+
+# Output modules
+vlc my.avi -V caca
+aa - black and white ascii
+caca - color ascii
+x11 - X11 video output
+xvideo - A more advanced form of X11
+glx - OpenGL video outpu
+opengl - OpenGL video output
+dummy - no video output
+
+
+# Save video as a series of images (combine 20 images to one)
+vlc v41:// --image-out-prefix=webcam --image-out-ratio=20
+
+

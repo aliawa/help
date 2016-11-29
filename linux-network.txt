@@ -1,15 +1,17 @@
 # ---------------------------------------------
 # Diagnostic tools
 # ---------------------------------------------
-Ping for IPv4       |  ping
-Ping for IPv6       |  ping6
-Traceroute for IPv4 |  traceroute -4
-Traceroute for IPv6 |  traceroute -6
-Interface Info      |  ip address show
-IPv4 arp table      |  arp -an
-IPv6 ndp table      |  ip -6 neighbor show
+ping                |  Ping for IPv4        
+ping6               |  Ping for IPv6       
+traceroute -4       |  Traceroute for IPv4 
+traceroute -6       |  Traceroute for IPv6 
+arp -an             |  IPv4 arp table      
+ip -6 neighbor show |  IPv6 ndp table      
+nmap                |  Network port scanner
 
 
+# Ping an address even if there is no route to it
+arping -i eth3 11.100.1.134
 
 
 # ----------------------
@@ -79,7 +81,20 @@ ip l show
 # ip rule (policy routing)
 # -------------------------
 
+# see all tables
 ip rule list
+
+# view main table
+ip route list table main
+
+# add a new table called John
+echo 200 John >> /etc/iproute2/rt_table
+ip rule add from 10.0.0.10 table john
+
+# rule for John's table
+ip route add default via 195.96.98.253
+
+
 
 
 
@@ -87,7 +102,6 @@ ip rule list
 
 # changing host name
 # ------------------
-
 hostname:
     hostnamectl set-hostname xps2.ewn
     
@@ -102,11 +116,11 @@ check:
 
 
 
-netstat: listening services
----------------------------
+# netstat: listening services
+# ---------------------------
 states:
-  netstat -aptn
-  netstat -apnu
+  netstat -tpna
+  netstat -upna
 
 protocol statistics:
   netstat -aps
@@ -119,23 +133,37 @@ interfaces:
 
 
 
-Interface tools
-----------------
+# Interface tools
+# ----------------
 ethtool -p eth0 15  : Blink eth0 for 15 seconds
 ethtool -S eth0 ... : Change setting on eth0
 
-old:
-mii-tool eth0
+mii-tool eth0    # old tool
+
+# List all interfaces
+ls /sys/class/net
+
+# configuring interfaces on ubuntu
+/etc/network/interfaces
+
+# restart all interfaces 
+# For Servers:
+sudo ifdown --exclude=lo -a && sudo ifup --exclude=lo -a
+# For Desktops
+sudo service network-manager restart
 
 
-
-vlans
------
-# using ip-link
+# vlans
+# -----
 # create vlan
-ip link add link eth2 name eth2.30 type vlan id 30
-ip addr add 192.168.30.11/24 brd 192.168.30.255 dev eth2.30
-ip link set dev eth2.30 up
+ip link add link eth2 name eth0.5 type vlan id 30
+
+# give vlan an ip
+ip a a 192.168.2.1 dev eth0.5
+ip r a 192.168.2.0/24 dev eth0.5
+
+# turn up
+ip link set eth0.5 up
 
 # turn down
 ip link set dev eth0.100 down
@@ -145,79 +173,158 @@ ip link delete eth0.100
 
 
 # old method
-# create a VLAN device with VLAN-ID of 5 on eth0
-vconfig add eth0 5
+vconfig add eth0 5 # create VLAN-ID 5 on eth0
+vconfig rem eth0.5 # delete 
 
-# delete a VLAN
-vconfig rem eth0.5
-
-# give vlan an ip
-ip a a 192.168.2.1 dev eth0.5
-ip r a 192.168.2.0/24 dev eth0.5
-ip link set eth0.5 up
-
+NTP
+-----------
+# configure
+/etc/ntp.conf
+# start
+sudo /etc/init.d/ntp restart
 
 
+# -------------------------------------------------------------
+#                               DHCP 
+# -------------------------------------------------------------
 
-DHCP 
--------------
-* Server:
-config file: /etc/dnsmasq.conf
-start: sudo service dnsmasq restart
+
+# Renew lease (EM)
+killall dhcpcd
+
+# renew lease (Fedora)
+sudo dhclient -r eth2
+sudo dhclient eth2
+
+
+# ---                    --- #
+# --- setting up dnsmasq --- #
+# ---                    --- #
+
+# config file: 
+/etc/dnsmasq.conf
+# dnsmasq directly uses the following files:
+/etc/hosts
+/etc/resolv.conf
+/etc/dnsmasq.conf
+
+# start (fedora)
+sudo service dnsmasq restart
 sudo chkconfig dnsmasq on
 
+# Add all local hosts to /etc/hosts
+192.168.1.12 xps 
 
-* Client:
-Renew lease:
-EM: 
-  killall dhcpcd
-Fedora:
-  sudo dhclient -r eth2
-  sudo dhclient eth2
+# Add upstream dns servers to /etc/resolv.conf
+nameserver 8.8.8.8
+
+# Prevent NetworkManager from overwriting /etc/resolv.conf
+# Add under [main] in /etc/NetworkManager/NetworkManager.conf
+dns=none
+
+# Make dsnmasq go to local server for local addresses
+server=/ewn.local/10.10.22.31
+
+# restart
+service dnsmasq restart
+
+
+#
+# ----                         ---- #
+# ---- Ubuntu Isc-dhcp-server  ---- #
+# ----                         ---- #
+#
+# Note that currently, the ISC DHCP server can only serve IPv4 or IPv6, 
+# means you have to start the daemon twice (for IPv6 with option “-6”) 
+# to support both protocols.
+# Resource: http://www.buntschu.ch/blog/?p=344
+
+# config file: name is important because hard-coded in /etc/init/isc-dhcp-server
+/etc/dhcp/dhcpd.conf  # for ipv4
+/etc/dhcp/dhcpd6.conf # for ipv6
+
+# select interfaces:
+/etc/default/isc-dhcp-server
+
+# create new startup script for ipv6
+# add "-6" to dhcpd options in isc-dhcp6-server
+# change dhcpd to dhcpd6
+cp /etc/init.d/isc-dhcp-server /etc/init.d/isc-dhcp6-server
+cp /etc/init/isc-dhcp-server.conf /etc/init/isc-dhcp6-server.conf
+sudo systemctl daemon-reload
+
+# Test config file
+dhcpd -6 -d -cf /etc/dhcp/dhcpd6.conf -lf /var/lib/dhcp/dhcpd6.leases eth2
+dhcpd -4 -d -cf /etc/dhcp/dhcpd.conf -lf /var/lib/dhcp/dhcpd.leases eth2
+
+# Turn off apparmour because it creates problems with dhcpd.leases file
+aa-complain dhcpd
+
+# Start
+sudo systemctl start isc-dhcp-server
+sudo systemctl start isc-dhcp6-server
+
+# Check status
+systemctl status isc-dhcp-server.service
+systemctl status isc-dhcp6-server.service
+
+# Check leases
+cat /var/lib/dhcp/dhcpd.leases
+cat /var/lib/dhcp/dhcpd6.leases
+
+# Troubleshooting
+systemctl list-units --type=service
+journalctl -xe
+sudo cat /var/log/syslog
+
+
+
+BIND
+-------------
+# configure named
+/etc/bind/named.conf.options
+/etc/bind/named.conf.local
+/etc/bind/dp.voip.lab
+# Start named (bind)
+sudo /etc/init.d/bind9 restart
+
+
+NTP
+-------------
+# configure
+/etc/ntp.conf
+# start (ubuntu)
+/etc/init.d/ntp start
 
 
 
 port forwarding
 ------------------
-1. check if forwarding is enabled:
-  sysctl net.ipv4.conf.eth0.forwarding
-  or> cat /proc/sys/net/ipv4/ip_forward
+# 1. check if forwarding is enabled:
+sysctl net.ipv4.conf.eth0.forwarding
+cat /proc/sys/net/ipv4/ip_forward
 
-2. Enable forwarding
-  sysctl net.ipv4.conf.eth0.forwarding=1
-  or> echo 1 > /proc/sys/net/ipv4/ip_forward
+# 2. Enable forwarding
+sysctl -w net.ipv4.conf.eth0.forwarding=1
+echo 1 > /proc/sys/net/ipv4/ip_forward
 
-3. NAT rule for EM
+# 3. NAT rule 
 iptables -t nat -A PREROUTING -p tcp  -d 192.168.1.250 --dport 8001 -j DNAT \
-        --to-destination 192.168.50.10:8
+        --to 192.168.50.10:80
 
-4. Filter rule
+# 4. Filter rule (eth0+ = All interfaces with names begining with eth0)
 iptables -I FORWARD 3 -p tcp -i eth0+ -o eth0+ --dport 80 -m state \
         --state NEW,ESTABLISHED,RELATED -j ACCEPT
 
+# 5. NOTES: You may need a rule for https (port 443)
+#    When traffic is forwarded by DNAT rule the source address is not changed.
+#    For example B forwards the traffic to C
+#    A ----> B ----> C
+#    C will get packets with source address of A. If B is the default router for
+#    C then it will send everything to B and B will forward them to A. If this is
+#    not the case then we will need to tell C that the next-hop for sending packets
+#    to A is B.
+#
 
-
-setting up dnsmasq
------------------------
-dnsmasq directly uses the following files:
-/etc/hosts
-/etc/resolv.conf
-/etc/dnsmasq.conf
-
-- Add all local hosts to /etc/hosts
-  192.168.1.12 xps 
-
-- Add upstream dns servers to /etc/resolv.conf
-  nameserver 8.8.8.8
-
-- Prevent NetworkManager from overwriting /etc/resolv.conf
-  Add under [main] in /etc/NetworkManager/NetworkManager.conf
-  dns=none
-
-- Make dsnmasq go to local server for local addresses
-  server=/ewn.local/10.10.22.31
-
-- restart
-  service dnsmasq restart
 
 
