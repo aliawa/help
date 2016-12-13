@@ -1,0 +1,28 @@
+systemctl list-units
+systemctl list-units --type=service
+systemctl list-unit-files
+systemctl-analyze blame
+
+systemctl status avahi-daemon.service 
+systemctl disable avahi-daemon.service
+systemctl stop NetworkManager.service
+
+sudo systemctl disable blootooth.service
+sudo systemctl stop blootooth.service
+
+systemctl disable sendmail.service
+systemctl disable sm-client.service
+systemctl stop sshd.service
+
+systemctl disable colord.service
+systemctl disable plymouth-read-write.service
+systemctl disable plymouth-start.service
+
+systemctl mask colord.service
+systemctl disable sshd.service
+
+systemctl status cups.service
+systemctl disable cups.service
+systemctl start cups.service
+systemctl start cups-browsed.service
+

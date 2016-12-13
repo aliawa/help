@@ -14,15 +14,19 @@ git init --bare newproj.git
 # clone a remote repository
 git clone [url] [local-directory-name]
 
-# EWN remote
-git clone ssh://git@54.245.134.134:7999/em/e30.git e30
-git clone ssh://git@stash.edgewaternetworks.com:7999/em/e30.git e30
-
 # connect repository to a remote server.
 git remote add origin <server>
+git remote add pb https://github.com/paulboone/ticgit
 
 # What are my remotes
 git remote -v
+
+# Fetch from a particular remote
+git fetch [remote-name]
+
+# Rename, Remove remote
+git remote rename pb paul
+git remote rm paul
 
 
 #---------------------------------------------------------
@@ -60,7 +64,6 @@ git log --name-status
 # Get the patch for a particular bug fix.
 git log --grep='Bug.*11197'
 
-
 # show information about a commit
 git show 09ce34b9
 
@@ -83,7 +86,14 @@ git checkout ver_13_6_0 mand
 # find the most recent tag that is reachable from a commit
 git describe --all <commit>
 
+# log with patch
+git log -p
 
+# match by author and grep (all-match: match all conditions)
+git log --author=aawais --grep=time_t --all-match
+
+# which commit added or removed the function
+git log -Sfunc_name
 
 #---------------------------------------------------------
 #                       Branching
@@ -95,8 +105,8 @@ git branch -r
 # List remote branches matching pattern
 git branch -r --list 'origin/ver_11_6_*'
 
-# create a branch at last commit
-git branch foo
+git branch -vv          # More info about branchl
+git branch foo          # create a branch at last commit
 
 # start a branch from any point
 git branch foo <starting-commit>
@@ -116,20 +126,18 @@ git branch -d test_merge
 # merge another branch with the current branch
 git merge test_merge
 
-
 # Merging from a developer branch using rebase (four steps)
 git checkout dbr_aaw_em9459
 git rebase master
 git checkout master
 git merge dbr_aaw_em9459
 
-
 # Push the branch to remote repository
+git push [remote-name] [branch-name]  # General Syntax
 git push origin <branch>
 
 # First time checkin of a branch
 git push -u origin dbr_aaw_em9459
-
 
 # show starting point of branch made on master
 git merge-base master origin/ver_14_0_x_br
@@ -263,7 +271,7 @@ git rebase -i HEAD~2
 
 
 # undo a "git add"
-git reset
+git reset [file]
 git reset -- frotz.c   # reset a single file in index
 
 # Reset the staging area and working dir to match the latest commit.
@@ -284,6 +292,13 @@ $ git reset --hard HEAD~3 # remove last three commits from branch,index and work
 
 # show all tags
 git tag -l
+git tag v1.8.5*                       # list pattern
+git tag -a v1.4 -m 'my version 1.4'   # create anotated
+git show v1.4                         # see tag data
+git tag v1.4-lw                       # create lightweigt
+git tag -a v1.2 9fceb02               # tag a commit
+git push origin v1.5                  # sharing tag
+git checkout -b version2 v2.0.0       # checkout tag
 
 
 #---------------------------------------------------------
@@ -370,6 +385,32 @@ autocmd Filetype gitcommit setlocal spell textwidth=72
 
 # Abort a commit (exit vim with error)
 :cq
+
+
+#---------------------------------------------------------
+#                         Utilities
+#---------------------------------------------------------
+
+# Remove all files not known to git (make clean)
+git clean -f
+
+# Three way merge
+git merge-file -p file.ours file.common file.theirs > file.c
+
+# Binary search
+git bisect start 
+git bisect bad          # Current version is bad
+git bisect good v1.0    # v1.0 is known to be good
+# >> compile and test the checked out versions <<
+git bisect bad          # This version is also bad
+git bisect good         # This version is good
+# >> continue until first bad commit is found <<
+git bisect reset        # go back to original head
+
+
+# Binary Search Automated
+git bisect start HEAD v1.0
+git bisect run test-error.sh
 
 
 #---------------------------------------------------------

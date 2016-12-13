@@ -1,0 +1,4 @@
+configuration file:
+	/boot/grub2/grub.cfg
+
+grub2-mkconfig generates grub.cfg

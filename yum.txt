@@ -1,19 +1,31 @@
 
-yum config file
----------------
+# ---------------
+# yum config file
+# ---------------
 /etc/yum.conf
 
-
-find package
---------------------------
-yum list available 'foo*'
+# repositories
+/etc/yum.repos.d
 
 
-Repository listing
---------------------
+# --------------------
+# Repositories 
+# --------------------
+# list
+yum repolist all
 yum repolist enabled
 yum repolist disabled
-yum repolist all
+
+# add
+yum-config-manager --add-repo <link to .repo file>
+
+# disable (use repolist all to find repository id)
+yum-config-manager --disalbe <repo-id>
+
+# enable
+yum-config-manager --enable <repo-id>
+
+
 
 
 install an RPM
@@ -128,5 +140,10 @@ yumdownloader --source kernel
 rpm -q httpd
 
 
+
+
+find package
+--------------------------
+yum list available 'foo*'
 
 
