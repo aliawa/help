@@ -25,59 +25,68 @@ gt gT            (next prev tab)
 " -------------------------------------------------------------
 "                           searching
 " ------------------------------------------------------------
-
-" Search in lines 10 to 20 inclusive
-/\%>9l\%<21lgreen
-
-" Search between marks a and b
-/\%>'a\%<'bgreen
-
-
-the\>    "words ending in the
-\<the\>  "search for the word 'the' exactly
+:h whitespace            "reference on character classes
 
 *        "search the string under cursor
 #        "search the string under cursor backwards
 [I       "Show all lines containing word under cursor 
 
-s/ /^M/g "replace all occurances of space with new line:
-         "to get the ^M depress and hold the ctrl-V and then press 'm'
+" ---- flags -----
+\c<pattern>  "ignore case for this pattern (/\cpattern)
+\C<pattern>  "don't ignore case
 
-"flags
-    \c  "ignore case for this pattern (/\cpattern)
-    \C  "don't ignore case
-
-
-set hls "Highlight search pattern
-noh     "No highlight search pattern
-
-
-"Searching on multiple lines
-"Search for "INVITE at begining of line followed by Content-Length:
-    /^"INVITE\_.\{-}Content-Length:
-
-
-"comment out lines (comment characters placed after the initial space)
-    s/\(^\s\+\)/\1\/\//
-
-:vimgrep /^\w\+\ze(/j % "Search for functions in current file '%'
-
-:vimgrep term *.c* *.h         "Search 'term' in current directory
-:vimgrep term **/*.c* **/*.h   "Search 'term' in current and all 
-                               "sub-directories
-
-:set nows              "will not search past the top or bottom.
-:%s/CTRL-v CTRL-m//g   "will strip out all the Windows newlines
-
-:!grep 'pattern' %:p:h/*    # grep in director of current file
-:vimgrep 'pattern' %:p:h/*  # grep in director of current file
-
-
-NOTE:
-What does not need to be escaped in regular expressions:
+" ---- patterns ----
+" What does not need to be escaped in regular expressions:
 - the brackets '[' in character ranges e.g: [0-9a-f]\+
 - quantifier star *
 - the replacement; the whole matched pattern &
+
+:h ordinary-atom
+/the\>                  "words ending in the
+/\<the\>                "search for the word 'the' exactly
+/\%>9l\%<21lgreen       "Search in lines 10 to 20 inclusive
+/\%>'a\%<'bgreen        "Search between marks a and b
+/^"INVITE\_.\{-}Cont    "Search for INVITE at begining of line followed by Cont somewhere in text 
+\{-}                    "0 or more but as few as possible.
+\_.                     "any char or end-of-line :h ordinay-atom
+/^\w\+\ze(/j            "Search for functions 
+:s/CTRL-v CTRL-m//g     "search and replace new lines (windows)"
+:s/\(^\s\+\)/\1\/\//    "comment out lines (comment characters placed after the initial space)
+
+:set nows               "will not search past the top or bottom.
+:set hls                "Highlight search pattern
+:noh                    "No highlight search pattern
+
+:vimgrep term *.c* *.h         "grep in current directory (:pwd)
+:vimgrep term **/*.c* **/*.h   "grep in current and sub-directories
+:vimgrep 'pattern' %:p:h/*     "grep in directory of current file
+:!grep 'pattern' %:p:h/*       "grep in directory of current file
+
+
+s/\d\+/\=submatch(0) + 1/      "Alter sequence number in a numbered list
+\d\+                           "search a digit sequence
+\=submatch(0) + 1              "get the matched pattern and add 1 to it.
+
+
+:.,$ g/FINDME/p                "search from cursor to end of file
+
+:'<,'>s/\%Vabc/efg/            "search and replace in visual selection
+
+\_s                            "space including new line
+
+" ---- multiple files search ----
+
+:bufdo %s/pattern/replace/ge | update  "Search and Replace in all open buffers
+:windo %s/pattern/replace/ge           "Search and Replace in all windows
+
+" Search and replace in all files in arglist. 
+:arg *.cpp      " All *.cpp files in current directory.
+:argadd *.h     " And all *.h files.
+:arg            " Optional: Display the current arglist.
+:argdo %s/pattern/replace/ge | update     
+
+:arg **/*.cpp   " All *.cpp files in and below current directory.
+:argadd **/*.h  " And all *.h files.
 
 
 
@@ -85,7 +94,6 @@ cut long lines
 ---------------
 selection: gp
 current paragraph: gqap
-
 
 
 
@@ -155,22 +163,26 @@ Indent
 
 Diff
 -----
-]c [c : next change, previous change
-dp: put Block
-do: get Block
+]c [c                " next change, previous change
+dp                   " put Block
+do                   " get Block
 :diffupdate
 :[range]diffget
 :[range]diffput
+:w !diff %           " diff with saved version
 
-diff with saved version
-:w !diff % -
+:e main.c            " diff current file to another file
+:vert diffsplit main.c~
 
-:diffsplit {filename}
-:diffthis 
-:diffpatch {patchfile}
-:diffoff
-:diffoff!  switch off diff in all windows
+:e main.c            " diff current file to its patched file
+:vert diffpatch main.c.patch
 
+:set noscrollbind    " Tmp turn off scroll bind
+:diffthis            " Make the current window part of the diff windows.
+:diffoff             " turn off diff mode
+:diffoff!            " switch off diff in all windows
+Ctrl w =             " make windows same size
+Ctrl w |             " make windows maximum size
 
 
 Manually delete multiple lines
@@ -198,6 +210,8 @@ gf : file under cursor, Ctrl-O to come back.
 :set dictionary=file
 Ctrl-x Ctrl-k : complete from dictionary
 [[ go to start of function
+][ go to end of function if '}' is in the first column
+:help 29.3
 
 
 
@@ -271,18 +285,27 @@ show hidden symbols
 
 Folds
 ----------------------
-zf -- create
+:set foldmethod=indent
+' then use zm and zr
 
-zo -- open  
-zc -- close
+zo -- open one fold level under cursor 
+zc -- close one fold level under cursor
 
-zr -- reduce folding level
-zm -- one More folding level, please
+zr -- reduce folding by one level (open one more level)
+zm -- fold more by one level
 
-zR -- Reduce completely the folding, I said!
-zM -- fold Most!
+zR -- open all folds  (R for Reduce)
+zM -- close all folds 
 
 
+:set foldmethod=marker
+' then enter /* some text {{{ */ at the begining
+' enter /* }}}*/ at the end
+' go in the block and zm
+
+:set foldmethod=manual
+' then go inside a {} block zfa}
+' visual select and zf
 
 
 Visible screen actions
@@ -294,7 +317,6 @@ tricks
 ------
 daw     : delete whole word
 imap <M-f> <E
-:.,$ g/FINDME/p  search from cursor to end of file
 visual mode selection followed by !sort is really useful for sorting lines
 C - Often overlooked: chop off end of line and go into insert mode.
 c/"[enter] Great for modifying things in quotes:
@@ -332,14 +354,13 @@ q   stop recording
 vip : select upto next blank line
 
 
-
-
 Or right in VIM - :E - would list files in :pwd.
 
 :sh works well when you don't know root, but have sudo privs.
 
 
-These make it so when a line has wrapped, jk navigation moves one line on the screen, instead of one line in the file
+These make it so when a line has wrapped, jk navigation moves one line on the 
+screen, instead of one line in the file
 nnoremap j gj
 nnoremap k gk
 vnoremap j gj
@@ -351,7 +372,8 @@ vnoremap <Up> gk
 inoremap <Down> <C-o>gj
 inoremap <Up> <C-o>gk
 
-this gives you a current-row and current-column highlight, so you never lose your cursor
+this gives you a current-row and current-column highlight, so you never lose 
+your cursor
 set cursorcolumn
 set cursorline
 hi cursorcolumn ctermbg=red
@@ -367,7 +389,6 @@ To view man page of a word under curser, type K(shift+K)
 
 Deleting empty lines from a file: :%g:^\s*$:d
 
-firefox extension: vimperator
 
 
 # --------------------
@@ -397,18 +418,24 @@ bless
 # ----------------------------------
 # Syntax files and color schemes
 # ----------------------------------
-location: ~/.vim/syntax/mlg.vim
+custom syntax files location. If the directory does not exist, 
+create it and put your custom syntax file there
+    ~/.vim/syntax/mlg.vim
+    ~/.vim/syntax/panlog.vim
 
-using in vim:
-  :set syntax=mlg
+vim syntax files location
+    /usr/share/vim/vim73/syntax
+
+using custom syntax file in vim:
+  :set syntax=panlog
 
 common commands in syntax files:
-  :syntax keyword
-  :syntax match
-  :highlight link
+  :syntax keyword <group-name> word1 word2 word3 ...
+  :syntax match  <group-name> 'pattern'
+  :highlight def link <my-group> <built-in-group>
 
 colorschemes are stored in:
-  /home/aawais/.vim/colors
+  ~/.vim/colors  OR $VIMRUNTIME/colors
 
 set default colorscheme in .vimrc
   colorscheme aawais
@@ -430,11 +457,14 @@ windows (^ means Ctrl )
 ^W_: maximize current window 
 ^W<direction_key>: to move between windows; direction key relative horizontal or vertical split
 ^Wx: swap windows
+^W_: Maximize height
+^W+: restore after ^W_
 
-:on fill screen with current buffer.
-:sp filename.txt  :opens the file in a new horizontal pane.
-:vsp filename.txt :opens the file in a new vertical pane.
-:vert sb 5 : open buffer 5 in a vertical split
+:on[ly]                 fill screen with current buffer.
+:sp [filename]          opens the file in a new horizontal pane.
+:vsp [filename]         opens the file in a new vertical pane.
+:vsp | b <buffer name>  open named buffer in vertical split
+:vert sb 5              open buffer 5 in a vertical split
 
 
 
@@ -666,6 +696,7 @@ Ctrl r -- followed by name of register, e.g. "a"
             the output of that command here.
 !!sh<CR>    Treat current line of text as command, execute it
             and put the output here
+vip: !wc -w select paragraph and send it to wc -w
 
 
 " -------------------------------------------------------------
@@ -697,5 +728,33 @@ di[ - delete inside bracket
 yi) - yank all text inside parentheses
 vi" - visually select inside the double quote
 va' - visually select all including quote
+
+
+" -------------------------------------------------------------
+"                      Tagbar
+" -------------------------------------------------------------
+s     - change sort order
+space - show prototype in command line
+
+
+" -------------------------------------------------------------
+"                      Installing Plugins 
+" -------------------------------------------------------------
+:helptags ~/.vim/doc
+
+
+
+" -------------------------------------------------------------
+"                      Movements
+" -------------------------------------------------------------
+[{      jump to { at start of block
+
+" quickly change a few words
+*       find next occurance
+cw      change the word
+n       find next
+.       repeat the cw command
+
+[I:     prototype of the function in the included header files
 
 

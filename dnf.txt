@@ -1,0 +1,10 @@
+# merge old config files with new ones after upgrade
+sudo rpmconf -a
+
+# Cleanup old packages
+sudo dnf repoquery --unsatified
+
+sudo dnf repoquery --duplicated
+
+sudo dnf distro-sync --allowerasing
+

@@ -196,6 +196,8 @@ inspect.getargspec(srflood)
 
 # function help
 help(srflood)
+print (sr1.__doc__)
+
 
 
 

@@ -15,7 +15,7 @@ mount -t tmpfs tmpfs /.ssh -o size=1M
 
 # 2: 
 # Now copy the public key to the server where we wand to do paswordless ssh
-cat ~/.ssh/id_rsa.pub | ssh aawais@lin.loc "umask 0077; mkdir -p ~/.ssh; cat >> ~/.ssh/authorized_keys"
+cat ~/.ssh/id_rsa.pub | ssh aawais@10.1.5.184 "umask 0077; mkdir -p ~/.ssh; cat >> ~/.ssh/authorized_keys"
 # Or use ssh-copy-id (not available everywhere)
 ssh-copy-id aawais@lin.ewn
 
@@ -34,27 +34,81 @@ ssh -i /var/id_rsa -o StrictHostKeyChecking=no aawais@192.168.1.193
 
 
 
+# --------------------------------------
+# basic
+# --------------------------------------
+
+Debug: -v , -vv, -vvv
+Permissions on private key:     chmod 600 ~/.ssh/id_?sa
+Permissions on authorized keys: chmod 644 ~/.ssh/authorized_keys
+
+
 
 
 # --------------------------------------
 # ssh tunnel
 # --------------------------------------
 
-# ssh into 10.1.5.100 with user name "aawais" and then create
-# a tunnel to 192.168.9.235 from there, so that port 9000 on 
-# "localhost" is connected to port 443 on 192.168.9.235
-# The -N option prevents starting a shell on 10.1.5.100
-# -T tells the remote command that there is no Pseudo-Terminal
-# so don't send prompts etc.
-ssh -NT -L 9000:192.168.9.235:443 aawais@10.1.5.100
-
-
-
 # ssh to C through B  (A--->B--->C)
-# with B=10.10.10.40, C=192.168.30.1, A=host
 # Execute on A
-ssh -t aawais@10.10.10.40 "ssh root@192.168.30.1"
+ssh -J user@jumphost fred@remote
 
+
+
+Local port forwarding (-L)
+---------------------------
+## Case 1: target is different from gateway
+Execute on local-host:
+ssh -L <local-port>:<target-host>:<target-port> <gateway-computer>
+
+[local-port] =======> [gateway-computer] ======> [target-host]:[target-port]
+
+result: All connections to local-host:local-port will be routed to
+target-host:target-port through gateway-computer. The target-host will be 
+resolved on the gateway itself.
+
+
+
+## Case 2: target is on the gateway itself. e.g. server on gateway listening
+on 127.0.0.1
+
+ssh -L <local-port>:localhost:<target-port> <gateway-computer>
+
+[local-port] =======> [gateway-computer] ======> [gateway-computer]:[target-port]
+
+
+
+Remote port forwarding (-R) aka inbound tunnelling
+--------------------------------------------------
+## Case 1: target is different from local-host
+Execute on local-host:
+ssh -R <remote-port>:<target-host>:<target-port> <remote-host>
+
+[target-host]:[target-port] <==== [local-host] <===== [remote-host]:[remote-port]
+
+result: All connections to remote-host:remote-port will be routed to
+target-host:target-port through local-host.
+
+
+## Case 2: target is on localhost itself. e.g. server on localhost listening
+on 127.0.0.1. Gateway is publicy accessible machine.
+
+ssh -R <local-port>:localhost:<gateway-port>  <gateway-computer>
+
+[local-host]:[local-port] <==== [gateway]:[gateway-port] <===== [ some remote host]
+
+
+
+Useful options (-nNT -f)
+---------------------------
+-N  Don't start shell on gateway-computer. Everytime we ssh to some machine
+    and don't specify a command the ssh will run the shell by default. This
+    option will prevent that 
+-T  There is not Pseudo-terminal so don't send prompts.
+-f  go into background after the tunnel is setup.
+-n  Redirect stdin from /dev/null
+
+*:<local-port>  listen on all interfaces, not just localhost.
 
 
 
@@ -131,5 +185,45 @@ export DISPLAY=`cat ~/.display.txt`
 # Enable X11 forwarding when using sudo
 # run on local machine
 xhost +
+
+
+
+# -----------------------------------------------
+# Run commands on remote
+# -----------------------------------------------
+
+# basic
+ssh user@hostB "ls -la"
+
+# Using remote env variables: must be escaped
+user@host> ssh user2@host2 "echo \$HOME"
+
+# run a local script on remote
+ssh root@MachineB 'bash -s' < local_script.sh
+
+# run here document on remote: note escaped heredoc
+ssh user@host <<'ENDSSH'
+... <<< commands to run on remote host
+ENDSSH
+
+# The -t option in the ssh -t command force pseudo-tty allocation.
+# this is needed when we need to run screen based command on the 
+# remote, like vim, htop etc.
+ssh -t user@remote vim [file]
+ssh -t user@remote htop
+ssh -t user@remote "sudo command"
+
+# pipe remote commands
+ssh root@my-server.com -- cat /var/log/secure | tee secure.log | wc -l
+
+
+
+# -----------------------------------------------
+# Slow ssh connection
+# -----------------------------------------------
+/etc/ssh/sshd_config
+UseDNS no
+UsePAM no
+service sshd restart
 
 

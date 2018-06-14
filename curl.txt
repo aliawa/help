@@ -1,0 +1,7 @@
+== download file
+curl -v http://example.com/file.bin > /tmp/file.bin
+
+curl -v http://example.com/file.bin -o /tmp/file.bin
+
+curl -O http://example.com/file.bin
+

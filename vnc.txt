@@ -6,7 +6,9 @@ General:
 
 Start:
     - vncserver
-    - enter passwd at prompt
+    - enter passwd if prompted
+    - For connecting to server note this output line from startup
+            --> New desktop is calcium:3 (10.0.8.66:3)
 
 Stop:
     - vncserver -kill awaislinux.localdomain:1
@@ -29,4 +31,22 @@ Change window manager
 
 Configue .twm 
     - edit $HOME/.twmrc file
+
+
+change password
+    - vncpasswd
+
+
+UBUNTU
+------------------------------------------------------------------
+# for laptop screen
+vncserver -geometry 1440x900
+
+# for office setup
+vncserver -geometry 1920x1080
+
+# stop vnc server
+vncserver -kill :3
+
+
 

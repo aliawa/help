@@ -1,0 +1,52 @@
+assignee = currentUser()
+assignee in membersof('test-engineering')
+assignee in (user1,user2,user3)
+
+status = resolved 
+status in (resolved,closed)
+status CHANGED FROM "In Progress" TO "Resolved" BY jsmith
+status was ("In Progress") DURING (startofweek(), endofweek());
+status = open AND fixVersion = "Current Sprint" AND fixVersion WAS "Last Sprint"
+status = open ORDER BY priority, assignee
+status changed after -1w and assignee = CurrentUser()  #issues changed in last week
+
+
+fixversion = "Sprint A"
+fixversion = latestReleasedVersion(PWC)
+
+reporter = jsmith
+priority in (Blocker, Critical)
+created < -1d                   [ created in last one day, also: -2w ]
+
+id = pan-71490
+
+watcher = currentUser()
+watcher in membersOf("engineering")
+
+# ------------------------------------
+# All Text field 
+# ------------------------------------
+text ~ "full screen"
+
+# Wild card searches
+win* wi?95
+
+# Fuzzy search
+roam~
+
+# Proximit search: (atlassian and jira within 10 words)
+"atlassian jira"~10
+
+# Boolean
+word1 || word2
+word1 !words    [ difference of sets ]
+word1 AND word2
+
+# stemming
+summary ~ "customize"  [ customized, customizing, customs, customer, etc. ]
+
+
+# Exact phrase
+comment "\"the firewall will\""
+
+

@@ -21,10 +21,6 @@ MTAs for linux (Mail Transfer agent):
     exim
 
 
-
-
-
-
 mail command line
     send mail to  receipient@domin from sender@domain
     mail -r sender@domain -s "Subject of email" receipient@domain
@@ -33,7 +29,7 @@ create a link
     ln -s <existing-file-path> <new-link-path> 
 
 
-SHOW AND KILL PROCESSES THAT ARE USING A DEVICE:
+# SHOW AND KILL PROCESSES THAT ARE USING A DEVICE:
 fuser -m /dev/sdb1
 ps auxw | grep <process_number>
 killall <process>
@@ -65,53 +61,41 @@ export LESS_TERMCAP_so=$'\E[01;35;47m'    # standout statusbar/search -> magenta
 
 # Users
 # -------------------------------------------------
+# add user 
+# NOTE useradd is the backend for adduser
+adduser aawais
 
-# add user
-useradd aawais
-passwd aawais
-
-# user home direcory
-vi /etc/default/useradd
-uncomment HOME=/home
 
 
 # Setup
 # -------------------------------------------------
+
+# Fix /boot is full problem
+# --> section Troubleshooting in apt-get.txt
+# --> section Fixing ubuntu boot problems in apt-get.txt
+# --> section Manually remove old linux kernels
+
 # 1. add user "aawais". Follow the interactive prompts
 adduser aawais 
 
 visudo 
+# Add after root ALL=(ALL:ALL)ALL
 aawais ALL= (root) NOPASSWD: ALL
 
-apt-get autoremove
-apt-get clean
+# basic setup
 apt-get install git
 git clone https://github.com/aliawa/dotfiles.git
-git clone https://github.com/altercation/vim-colors-solarized.git .vim/bundle/vim-colors-solarized/
+git clone https://github.com/aliawa/bin.git
 
+# vim setup
+mkdir -p ~/.vim/autoload ~/.vim/bundle && \
+curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
 
-# Fixing ubuntu boot problems
-df -h   # check if boot partition is full.
-cd boot && rm System.map-3.13.0-* # create some space in boot.
-sudo apt-get install --fix-broken  (also try apt-get -f install )
-sudo apt-get autoremove --purge
-sudo apt-get purge linux-image-3.13.0-67-generic
-sudo apt-get update
+mkdir -p $HOME/.vim/bundle && cd $HOME/.vim/bundle
+git clone https://github.com/altercation/vim-colors-solarized.git 
+git clone https://github.com/itchyny/lightline.vim.git 
+git clone https://github.com/majutsushi/tagbar.git
 
-apt-get.conf:
-
-sudo vim /etc/gai.conf
-
-change line ~54 to uncomment the following:
-
-precedence ::ffff:0:0/96  100
-
-write and quit:
-
-:wq
-update
-apt-get dist-upgrade
-apt-get autoremove --purge
 
 # For sipp build install 
 apt-get install libncurses5-dev libncursesw5-dev
@@ -127,5 +111,35 @@ apt-get install libpcap-dev
 2. Delete unneded locale from /etc/default/locale
 3. Delete unneded locale from /var/lib/locales/supported.d/*
 4. Regenerate locales locale-gen --purge
+
+
+
+# Switching Theme
+# -------------------------------------------------------
+1. Use Dev_Light profile for iTerm2
+2. vimrc -> set background=light (or press F5 in vim)
+3. . ~/.light_bash_prompt
+
+
+# Free up memory
+# -------------------------------------------------------
+
+1. /boot/initrd.img* can be deleted.
+   Use: dpkg -S /boot/initrd.img* to see which package placed the image
+   sudo rm /boot/initrd.img*
+   then regenerate for current kernel: sudo update-initramfs -c -k all
+
+2. sudo du -hsx /* | sort -rh | head -n 40
+   to see where all the disk space is going.
+
+3. Everything in /var/tmp can be deleted.
+   sudo find /tmp -type f -atime +10 -delete
+   deletes files older than 10 days.
+
+4. See who is using files in a directory to make sure safe to delete.
+   lsof -Pn +D /var/cache/ | awk '{print $1}' | sort | uniq
+
+5. Files in /var/cache can be deleted.
+   
 
 

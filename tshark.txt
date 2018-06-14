@@ -11,5 +11,10 @@ tshark -r bug91836_merged.pcap -e frame.number -e ip.src -e ip.dst \
     '(tcp.stream==28 || tcp.stream==29) && frame.number >=11200 && frame.number <=14144'
 
 
+-Y Display filter.
+-e <field> -e <field> ... -T fields -E header=yes
+
+
+
 
 

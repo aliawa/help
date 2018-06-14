@@ -4,3 +4,113 @@ C header files
 <inttypes.h> : typedefs.
 
 
+* Do not compare signed and unsigned intergers. the result will be bad
+
+    int main() {
+      unsigned x = 7;
+      if (-1 > x) { 
+          printf("-1 is greater\n");
+      } else {
+          printf ("-1 is smaller\n");
+      }
+    }
+
+
+
+* How many bits are in a number n
+  (int)log(n) + 1
+  log(8) = 3    => 8 = 1000 => 4 bits
+  log(7) = 2.8  => 7 = 111  => 3 bits
+   
+
+
+* What does x-1 do:
+  it flips all the bits upto and including the rightmost set bit.
+  This property is very useful in counting the set bits so
+  x & (x-1) will unset the rightmost set bit.
+
+  1101000 - 1 = 1100111 
+  101 - 1 = 100
+
+
+* Don't initialize a variable inside switch block. 
+  the code will directly jump to the case label and the initialization
+  will be skipped.
+
+
+* An array function parameter is just a pointer.
+
+* Remember sizeof is a compile time operator its operand is not evaluated.
+  Only the type of the operand matters.
+
+* Don't include \n in scanf pattern otherwise it will eat the enter you press after
+  typing the value:
+  wrong --> scanf("%d\n", &n);
+
+* Watch for operator precedence in cases like this
+  a<<2 + 1  <-- '+' will be evaluated first
+
+* Cannot free a pointer after it was incremented
+  a = malloc(10*sizeof(int));
+  a++;
+  free (a); <<--- ERROR
+
+* scanf("%[^a]", array) means accept input util you see 'a'
+
+* weird char array syntax
+  printf ("%c\n", 3["ABCD"]) ---> D
+  printf ("%c\n", "ABCD"[3]) ---> D
+
+* offsetof macro can give the offset of a member in a struct.
+  #define OFFSETOF(type, member) ((size_t)&(((type*)0)->member))
+
+
+* printf / scanf format for double, float
+  %f    float
+  %lf   double
+  %Lf   long double
+ 
+* storage class:
+  determines: scope, visibility and life-time.
+  - auto: default class in C for all variables declared inside function or 
+    a block.
+  - extern: variable is defined elsewhere and not within the same block where 
+    it is used  
+  - static: preserve their value even after they are out of their scope.
+  - register: same as auto but may be stored in a register, if available.
+    Cannot obtain address of register variable using pointers.
+    Only storgage class that 
+  - typedef: considered as storage class to make sure that we don't have it
+    together with the obvious storage class specifier.
+ 
+* linkage:
+    external: One definition in the whole program but many declarations.
+    internal: when the storage class is static
+    no linkage: internal to a function.
+
+* Type Qualifiers (as oposed to type specifiers such as int, float etc)
+    const: program cannot change the value
+    volatile: hardware can change the value
+    const volatile: hardware can change the value but program cannot
+    restrict: only in c, opposite of volatile. compiler can also apply
+              optimisations.
+
+
+* pointer to const int and const pointer to int
+  int * const ptr = &x;
+  ptr is a constant pointer: You can change the value at the location 
+  pointed by pointer p, but you can not change p to point to other 
+  location
+
+  int const* ptr = &x;
+  ptr is a pointer to a constant. You can change ptr to point to other 
+  variable. But you cannot change the value pointed by ptr.
+
+* double and float
+  double and float are floating point types. They are both signed, so 
+  "unsigned double" is incorrect. 
+  float: single precision floating point
+  double: double precision floating point
+
+  
+

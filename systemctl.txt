@@ -6,4 +6,11 @@ systemctl start sshd
 systemctl start sshd.service
 
 
+systemctl list-units --type=service
+
+
+# log reading tools
+journalctl -xn # show last 10 messages
+journalctl -p err 
+
 

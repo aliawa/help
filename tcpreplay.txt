@@ -22,15 +22,14 @@ tcpprep -c 68.68.117.60 -i rx_filtered.pcap  -o rx_filtered.prep
 # mac for server-to-client traffic, which is responses in case of SIP.
 # The second mac address in the enet-dmac option is for client-to-server
 # traffic, for example the SIP request.
-# Note: this is kind of reversed. The first packet in the pcap is usually
-# the client-to-server packet and it will get the second address, the one 
-# after the comma.
+# First: mac addr of DUT interface that will receive the server2client packts
+# Second: mac addr of DUT interface that will receive the client2srvr packts
 tcprewrite --enet-dmac=d4:f4:be:0b:a2:1b,d4:f4:be:0b:a2:1a \
     -c rx_filtered.prep -i rx_filtered.pcap -o rx_replay.pcap
 
 # 3. Check
 tshark -r rx_replay.pcap -e frame.number -e ip.src -e ip.dst \
-    -e eth.dst -e tcp.flags -Tfields
+    -e eth.dst -e tcp.flags -Tfields -E header=y
 
 # 4. On the firewall
 #    a. Add Original NAT policy as applied in the pcap

@@ -4,7 +4,15 @@
 #---------------------------------------------------------
 
 # initialize a bare (shared) repository
-git init --bare newproj.git
+mkdir newproj.git
+chown -R git:git newproj.git
+chmod -R ug+rwX newproj.git/
+cd newproj.git
+git init --bare 
+git config core.sharedRepository group
+chgrp -R git .
+chmod -R g+rwX .
+sudo usermod -a -G git aawais
 
 
 #---------------------------------------------------------

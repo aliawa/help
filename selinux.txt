@@ -1,41 +1,51 @@
-# to check extra labels attached to files:
-    ls -Z
+# selinux log - check for selinux errors
+journalctl -f 
 
 # disable temporarily
-    sudo setenforce 0
+setenforce 0
 
 # switch back into enforcing
-    echo 1> /selinux/enforce
+echo 1> /selinux/enforce
 
 # permanent permissibe
-    edit /etc/selinux/config
-    change SELINUX=permissive
+edit /etc/selinux/config
+change SELINUX=permissive
 
-# reenable selinux
-    after booting in permissive mode
-    fixfiles relabel
-    touch /.autorelabel
-    reboot
+# reenable selinux 
+# after booting in permissive mode
+fixfiles relabel
+touch /.autorelabel
+reboot
+
+# to check extra labels attached to files:
+ls -Z
 
 # Fix the lables on all file under /tftpboot
-    sudo restorecon -R -v /tftpboot/
+sudo restorecon -R -v /tftpboot/
 
 # check if labels are correct
-    matchpathcon -V /tftpboot/*
+matchpathcon -V /tftpboot/*
 
 
 # Allow FTP deamon (proftpd) to read /var/ftp/pub
-sudo /usr/sbin/semanage fcontext -a -t public_content_t "/var/ftp/pub(/.*)?"
-sudo /sbin/restorecon -R -v /var/ftp/pub
+semanage fcontext -a -t public_content_t "/var/ftp/pub(/.*)?"
+restorecon -R -v /var/ftp/pub
 
 
 # Allow FTP daemon (proftpd) to read /home/PlcmSpIp
-sudo /usr/sbin/semanage boolean -m --on ftp_home_dir
-
+semanage boolean -m --on ftp_home_dir
 
 
 # Allow TFTP to access /tftpboot
-sudo semanage fcontext -a -t public_content_t /tftpboot
-sudo restorecon -F -R -v /tftpboot/
+semanage fcontext -a -t public_content_t /tftpboot
+restorecon -F -R -v /tftpboot/
+
+
+# change a boolean configuration -P option writes change to disk
+setsebool -P httpd_can_network_connect true
+
+# Add a rule for /var/www/
+semanage fcontext --add --type httpd_sys_content_t "/var/www(/.*)?"
+restorecon -Rv /var/www
 
 

@@ -7,3 +7,31 @@ Add % to search for matches in your currently open tabs.
 Add ~ to search for matches in pages you've typed.
 Add # to search for matches in page titles.
 Add @ to search for matches in web addresses (URLs). 
+
+
+# Open new tab at end
+# -------------------------------------------------------
+about:config
+browser.tabs.insertRelatedAfterCurrent = false
+
+
+# Stop HTML5 video autoplay
+# -------------------------------------------------------
+about:config
+media.autoplay.enabled = false
+Problem: Vimeo videos will not play.
+Solution: Install extension FlashStopper
+
+
+# Stop Flash video autoplay
+# -------------------------------------------------------
+about:addons -> plugins
+Shockwave Flash = "Ask to activate"
+
+
+# Multiple instances with Profile manager
+# -------------------------------------------------------
+/Applications/Firefox.app/Contents/MacOS/firefox-bin -P --no-remote
+
+
+

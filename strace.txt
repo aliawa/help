@@ -1,0 +1,4 @@
+== strace nginx
+strace -t -f -- nginx -c n.conf -p $PWD/tmp
+
+

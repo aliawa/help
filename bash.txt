@@ -133,6 +133,8 @@ cmd &> file.txt
 exec 2>errors.txt
 
 
+# Action if command successful
+cd blah && echo "success" || echo "fail"
 
 
 #----------------------
@@ -216,10 +218,11 @@ $endif
 
 
 # extract arguments from last command
-!^         # first argument only (short form of !!^)
-!$         # last argument
-!*         # all arguments
+!^         # first argument only (short form of !!^ or !:^)
+!$         # last argument, synonym !:$
+!*         # all arguments, synonym !:*
 !:N        # Nth argument
+!:-        # everything except the last argument
 
 
 # resuse second argument of the command containiing keyword
@@ -237,7 +240,7 @@ e   # Remove all but the trailing suffix.
 
 
 #-------------------------------------------
-# Detect if script is running in background
+# Detect, if script is running in background
 #-------------------------------------------
 # $$ = PID of current process
 case $(ps -o stat= -p $$) in
@@ -253,5 +256,44 @@ esac
 mkdir -p /home/john/Downloads/web
 mkdir -p Downloads/{active-torrents,finished-torrents,web}
 mkdir -p johnbokma.com/{branches,tags,trunk/{cgi-bin,htdocs,scripts}}
+
+
+
+#-------------------------------------------
+# read from file line by line
+#-------------------------------------------
+input="/path/to/txt/file"
+while IFS= read -r var; do
+    echo "$var"
+done < "$input"
+
+
+#-------------------------------------------
+# Get user input
+#-------------------------------------------
+read -p "Continue? " -n 1 -r
+echo
+if [[ $REPLY =~ [Yy]$ ]];then
+    <execute dangerous action>
+fi
+
+
+
+#-------------------------------------------
+# functions
+#-------------------------------------------
+
+# sequence  <start> <step> <end>
+for p in $(seq 10 1 19); do
+done
+
+# random number in the range 0 - 32767 
+number=$RANDOM
+echo "Random number less than 50: $((number % 50))"
+
+# arithmetic expansion with let
+let "end = start + num"
+let "n += 3"
+
 
 

@@ -26,7 +26,18 @@ precedence ::ffff:0:0/96  100
 :wq
 
 # could not resolve us.archive.ubuntu.com
-check /etc/resolve.conf -> add nameserver 8.8.8.8
+check /etc/resolv.conf -> add nameserver 8.8.8.8
+
+
+# Fixing ubuntu boot problems
+# ---------------------------------------------------------
+df -h   # check if boot partition is full.
+uname -r  # which kernel is currently running.
+cd boot && rm initrd.img-4* # create some space in boot.
+sudo apt-get install --fix-broken  (also try apt-get -f install )
+sudo apt-get autoremove --purge
+sudo apt-get purge linux-image-3.13.0-67-generic
+sudo apt-get update
 
 
 # Maintainence old
@@ -52,17 +63,27 @@ sudo apt-get remove --simulate plymouth
 # status 'rc' means removed but configuration is present
 dpkg -l | tail -n +6 | grep -E 'linux-image-[0-9]+' | grep -Fv $(uname -r)
 
+# remove residual packages (state: rc)
+apt-get remove --purge $(dpkg -l | grep "^rc" | awk '{print $2}' | tr '\n' ' ')
+
+# status
+ii 'It should be installed and it is installed' 
+rc 'It's removed/uninstalled but it's configuration files are still there'
+
+# get running kernel
+uname -r
+
+# list all kernels
+dpkg --list | egrep -i --color 'linux-image|linux-headers'
+
+# remove kernel
+apt-get --purge remove linux-image-3.13.0-83-generic
+
 # remove old kernels that are in status ii
 dpkg --purge linux-image-3.13.0-73-generic
 dpkg --purge linux-headers-3.13.0-73-generic
 dpkg --purge linux-headers-3.13.0-73
 dpkg --purge linux-image-extra-3.13.0-73-generic
-
-
-# list all kernels
-dpkg --list | egrep -i --color 'linux-image|linux-headers'
-# remove kernel
-apt-get --purge remove linux-image-3.13.0-83-generic
 
 
 

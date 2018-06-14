@@ -1,9 +1,12 @@
 
 # tcp server:
 nc -l 192.168.1.166 5060
-
 # tcp client:
-nc -s <source-ip> <dest-ip> <dest-port> < data.txt
+nc -s <src_ip> <dst_ip> <dst_port> < data.txt
+# udp server:
+nc -ul 192.168.1.166 5060
+# udp client:
+nc -u -s <src_ip> [-p <src_port>] <dst_ip> <dst_port> < data.txt
 
 # send a udp packet from port 30000 to ip 10.10.10.158:32000
 echo "garbage" | nc -up 30000 10.10.10.158 32000

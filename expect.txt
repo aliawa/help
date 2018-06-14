@@ -1,22 +1,90 @@
-#!/usr/bin/expect -f
+#!/usr/bin/expect -f  
 
-# all output upto the matched pattern, includes the matched string
-expect_out(buffer)
+# scripts
+first line: #!/usr/bin/expect -f
 
-# The string matching the entire pattern
-expect_out(0,string)
+# Basic commands
+spawn                  # Starting a script or a program.
+expect                 # Waiting for program output.
+send                   # Sending a reply to your program.
+send_user              # print to stdout
+interact               # Allowing you to interact with your program.
 
-# regex substring matches (upto 9)
-expect_out(1,string) - expect_out(9,string)
+# command line parameters
+set var1 [lindex $argv 0]   # set var1 = first command line parameter
+set var2 [lindex $argv 1]   # set var2 = second command line parameter
+set var3 5                  # var3 = 5
+
+# check for required number of command line args
+if {[llength $argv] != 5} {
+    puts "usage: ssh.exp username password server port program"
+    exit 1
+}
+
+# pattern in expect
+expect "?assword:*"
+expect -timeout 50 "pattern"
+
+# send
+send -- "string"   # dont interpret any '-' in string as flag
+
+
+# conditional tests
+expect {
+    "something" { send -- "send this\r" }     # '--' to avoid accedentally interpretting a flag in string
+    "*another"  { send -- "send another\r" }  
+}
+
+if { $NUM < 5 } {
+    puts "\Smaller than 5\n"
+} elseif { $NUM > 5 } {
+    puts "\Bigger than 5\n"
+} else {
+    puts "\Equals 5\n"
+}
+
+# while loop
+set NUM 0
+while { $NUM <= 5 } {
+    puts "\nNumber is $NUM"
+    set NUM [ expr $NUM + 1 ]
+}
+
+# for loop
+for {set NUM 0} {$NUM <= 5} {incr NUM} {
+    puts "\nNUM = $NUM"
+}
+
+# foreach loop
+set lst [list usr1 usr2 usr3 usr4]
+foreach user_name $lst {
+    puts "$user_name"
+}
+
+
+# User-defined Functions
+proc myfunc { TOTAL } {
+    set TOTAL [expr $TOTAL + 1]
+    return "$TOTAL"
+}
+set NUM 0
+while {$NUM <= 5} {
+    puts "\nNumber $NUM"
+    set NUM [myfunc $NUM]
+}
+
+# builtin variables
+expect_out(buffer)       # all output upto the matched pattern, includes the matched string
+expect_out(0,string)     # The string matching the pattern
+expect_out(1,string)     # regex substring matches (1-9)
+
 
 # global variable containing spawned process descriptor
-span_id
-
+spawn_id
 
 # send log output to exp.log
 log_user 1
 log_file exp.log
-
 
 # regular expression
 expect -re "failed|invalid password" abort
@@ -26,6 +94,8 @@ set timeout -1
 
 # wait for spawned process to terminate
 wait
+
+
 
 
 

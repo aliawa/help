@@ -5,8 +5,9 @@ tmux kill-session -t mysess         # kill named
 tmux a -t mysess                    # attach to named 
 tmux ls                             # list
 
-C-b s           list all sessions
-C-b d           detach from session
+C-b d                               # detach from current session
+C-b D                               # select and detach
+C-b s                               # list all sessions
 
 
 # WINDOWS
@@ -27,8 +28,9 @@ C-b Alt-2                 # make all panes same size (Alt-1 for verticle)
 C-b ;                     # previously active pane
 C-b o                     # next pane
 C-b x                     # delete pane
-C-b Alt-RArrow            # Resize
-C-b : resize-pane -U 20   # Resize the current pane upwards by 20 cells
+C-b Alt- Right/Down       # Resize
+C-b : resize-pane -U 20   # Resize the current pane up by 20 cells
+C-b : resize-pane -D 20   # Resize the current pane down by 20 cells
 C-b }                     # Swap panes
 
 
