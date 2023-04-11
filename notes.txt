@@ -26,16 +26,16 @@ mount /mnt/floppy
 
 Module management
 -----------------
-lsmod:			list of loaded modules same as catproc/modules
-inod:			install module
-modprobe:		load, remove modules along with dependencies
-modules.dep:		contains module dependencies
-/etc/modules.conf:	controls behavior of modprobe
-rmmod:			remove module
-depmod:			create dependency file for modules
+lsmod                          : list of loaded modules same as catproc/modules
+inod                           : install module
+modprobe                       : load, remove modules along with dependencies
+modules.dep                    : contains module dependencies
+/etc/modules.conf              : controls behavior of modprobe
+rmmod                          : remove module
+depmod                         : create dependency file for modules
 
-example:		load 'bridge' module, verbose mode:
-			modprobe -v bridge
+example                        : load 'bridge' module, verbose mode             :
+	modprobe -v bridge
 
 
 

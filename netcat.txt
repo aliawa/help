@@ -3,6 +3,7 @@
 nc -l 192.168.1.166 5060
 # tcp client:
 nc -s <src_ip> <dst_ip> <dst_port> < data.txt
+
 # udp server:
 nc -ul 192.168.1.166 5060
 # udp client:
@@ -12,8 +13,10 @@ nc -u -s <src_ip> [-p <src_port>] <dst_ip> <dst_port> < data.txt
 echo "garbage" | nc -up 30000 10.10.10.158 32000
 
 
-# An http server: Sends "Hello World" to all connecting 
-# clients
+# Send HTTP request
+GET /a.txt HTTP/1.1 <enter><enter>
+
+# An http server: Sends "Hello World" to all connecting clients
 cat ~/tmp/http.response
 HTTP/1.1 200 OK
 Date: Mon, 27 Jul 2009 12:28:53 GMT

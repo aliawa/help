@@ -1,8 +1,16 @@
+# CONCEPTS
+# ---------------------- 
+session has windows
+windows has panes
+each pane is a separate terminal
+
+
 # SESSIONS 
 # ---------------------- 
 tmux new -s mysess                  # start new 
 tmux kill-session -t mysess         # kill named 
 tmux a -t mysess                    # attach to named 
+tmux a -d -t mysess                 # detach all other sessions when attaching
 tmux ls                             # list
 
 C-b d                               # detach from current session
@@ -21,17 +29,27 @@ C-b ,           rename window
 
 # PANES
 # ----------------------
-C-b "                     # split horizontal
-C-b %                     # split vertical
-C-b z                     # toggles zoom pane
-C-b Alt-2                 # make all panes same size (Alt-1 for verticle)
-C-b ;                     # previously active pane
-C-b o                     # next pane
-C-b x                     # delete pane
-C-b Alt- Right/Down       # Resize
-C-b : resize-pane -U 20   # Resize the current pane up by 20 cells
-C-b : resize-pane -D 20   # Resize the current pane down by 20 cells
-C-b }                     # Swap panes
+C-b "                       # split horizontal
+C-b %                       # split vertical
+C-b z                       # toggles zoom pane
+C-b Alt-2                   # make all panes same size (Alt-1 for verticle)
+C-b ;                       # previously active pane
+C-b o                       # next pane
+C-b x                       # delete pane
+C-b Alt- Right/Down         # Resize
+C-b : resize-pane -U 20     # Resize the current pane up by 20 cells
+C-b : resize-pane -D 20     # Resize the current pane down by 20 cells
+C-b }                       # Swap panes
+Control + up,down,righ,left # Resize pane in steps of 1 cell
+
+:swap-window -s 3 -t 1          swap windows 3 and 1
+:swap-window -t 0               swap current window with the top window
+C-b .RT                         move current window to session "RT"
+
+
+
+
+
 
 
 # Refresh after config change
@@ -40,16 +58,26 @@ tmux source-file .tmux.conf
 
 # COPY PASTE
 # ------------------------
+DEFAULT Key bindings
 [               Enter copy mode
-PgUP            Enter copy mode and page up
-Enter           Exit copy mode
-
-v               Start selection
-Enter           copy selection
-]               paste most recent buffer
+Ctrl+Spc        Start Copying
+Arrow keys      move/extend selection
+Ctrl+w          copy into tmux buffer
+]               paste
 =               Choose buffer to paste
-#               List all paste buffers
-Shift+<select with mouse>  copy to system clipboard
+
+In copy mode
+Ctrl+s          search
+Ctrl+r          reverse search
+PgUp (fn+up)    page up
+PgDown (fn+dn)  page down
+
+In selection mode
+Ctrl+n          select next line
+Ctrl+p          select previous line
+Arrow keys      select up down
+
+
 
 
 # OTHER
@@ -58,3 +86,170 @@ Ctrl-b :        command mode eg. C-b : kill-session
 Ctrl-b ?        help
 Ctrl-b r        redraw 
 
+
+# Example configuration
+/usr/local/opt/tmux/share/tmux
+
+# Bash completion
+/usr/local/etc/bash_completion.d
+
+
+
+# LOAD CONFIGRATION
+#-----------------------------
+tmux source-file ~/.tmux.conf
+C-b : source ~/.tmux.conf
+
+commands can be separated by ";" example:
+bind r source ~/.tmux.conf; display "source file loaded"
+
+# OPTIONS
+#------------------------------
+set-option -p           setp    pane option
+set-option -w           setw    window option
+set-option -s           sets    server option
+set-option -g           setg    global session or window option
+
+set-option <noting>               set session option
+set-option -s  or set -s          set server option
+set -g <option>                   set global server option
+set -w window-style bg=red        set window option: Applies to the window, i.e. all panes
+setw <option>                     set window option short ver.
+set -pt:.0 window-style bg=blue   set pane option. Applies to single pane
+setw -q @foo "abc123"             set user option: like a variable: 
+showw -v @foo                     show window option
+
+show-option -s [option]           show server option
+show-option -w [option]           show window option
+show-option -gw [option]          show global window option
+set-option -wu <option>           unset window option
+set-option -pu <option>           unset pane option
+set-option -su <option>           unset server option
+
+Command prompt
+command-prompt -p "text to display" "command to execute '%%'"
+
+
+# CLIPBOARD
+#-------------------------------
+inside tmux, verify following two options
+tmux show-option -s
+set-clipboard on
+terminal-overrides "xterm*:XT:Ms=\E]52;%p1%s;%p2%s\007...
+
+outside tmux
+tmux show-option -s
+set-clipboard on
+terminal-overrides[0] "xterm*:XT:Ms=\\E]52;%p1%s;%p2%s\\007...
+
+
+# TWO SERVERS
+#-------------------------------
+tmux -L FW -f ~/.tmux.nocolor.conf new -s left
+tmux -L FW a -t left
+tmux -L FW ls
+
+
+# BASIC SETTINGS FOR TMUX
+-------------------------
+unbind C-b
+set-option -g prefix `
+bind-key `  send-prefix
+
+set -g base-index 1                      # pane numbers start from 1
+setw -g window-status-current-bg yellow  # active pane tab color
+set -g default-terminal "tmux-256color"  # so that solarized theme for vi can work properly
+
+bind -r h select-pane -L  # move left
+bind -r j select-pane -D  # move down
+bind -r k select-pane -U  # move up
+bind -r l select-pane -R  # move right
+
+
+# Oh-my-tmux
+-------------------------
+# components to be included on the status bar
+tmux_conf_theme_status_right        # list components from left to right
+tmux_conf_theme_status_right        
+
+#{hostname}                         # builtin ohmytmux variable, see help 
+#()                                 # call an external command
+#I                                  # tmux window number
+#W                                  # tmux window name
+
+
+
+# Appearence
+# -------------------------
+pane-active-border-style        : Pane border style for the currently active pane.  
+pane-border-style style         : Pane border style for panes aside from the active pane
+
+window-status-current-style     : status line style for the currently active window.
+window-status-last-style        : status line style for the last active window.
+
+window-style style              : Set the pane style.
+window-active-style style       : Set the pane style when it is the active pane. 
+
+window-status-format string     : format in which the window is displayed in the status line window list.
+window-status-current-format    : format used when the window is the current window.
+
+status-left                     : content of left side use #S 
+status-left-style               : colors of left side
+
+
+FORMATS
+#H  Hostname of local host
+#h  Hostname without domain
+#D  Pane id
+#P  Pane index
+#T  Pane title
+#S  Session name
+#F  Window flags e.g. '*', '-' etc.
+#W  Window name
+#I  Window index
+
+# Show
+# -------------------------
+# Finding your current status line settings
+tmux show-options -g | grep status
+
+# show all options
+tmux show-option -g
+
+# show all window options
+tmux show-option -gw
+
+C-b q       pane index
+
+
+# Aliases
+# -------------------------
+bind    bind-key
+new     new-session
+setw    set-window-option
+set     set-option
+run     run-shell
+send    send-keys
+
+
+
+# bind-key
+# -------------------------
+* when -T is omitted 'prefix' table is assumed
+* -n same as -Troot
+* -r key can repeat;
+bind-key -T prefix          # defalut table, invoked by prefix key C-b
+bind-key -T root            # keys invoked without the prefix key
+bind-key -T copy-mode-vi    # keys invoked in vi copy mode
+
+
+Get info
+# -------------------------
+get pane id of current pane
+tmux display -pt "${TMUX_PANE:?}" '#{pane_index}'
+
+save new pane id in bash var
+bash_var=$(tmux split-window -P -F "#{pane_id}")
+
+print window name on console
+tmux display-message -p '#{window_name}

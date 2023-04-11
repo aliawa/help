@@ -1,9 +1,11 @@
 see preprocessor output
 ----------------------
--E : Do only preprocessing       # The output is in .o file
--C : Do not discard comments
--P : Do not generate "#line" in output
+-E  : generate preprocessor output in .o file
+-C  : Do not discard comments
+-P  : Do not generate "#line" in output
 
+
+-dM : dump macro defs
 
 
 show which libraries are linked

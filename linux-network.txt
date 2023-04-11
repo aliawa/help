@@ -76,6 +76,9 @@ ip l set eth1 up
 # show
 ip l show
 
+# create a veth pair.
+# it works like a patch cable, each end can be in a different namespace
+ip link add v-eth1 type veth peer name v-peer1
 
 
 # -------------------------
@@ -97,6 +100,44 @@ ip route add default via 195.96.98.253
 
 
 
+# -------------------------
+# ip netns 
+# -------------------------
+
+# create/delete namespace
+ip netns add <name>
+ip netns del <name>
+
+#list all
+ip netns list (or just ip netns)
+
+
+# add interface to namespace
+ip link set <device> netns <namespace>
+
+# show interfaces in namespace
+ip netns exec <namespace> ip link show
+
+# run a command in a given namespace
+ip netns exec <name> <command>
+
+# configure interface in new namespace
+ip netns exec <name> ip link set lo up
+ip netns exec <name> ip link set ens256 up
+ip netns exec myns ip a a 100.10.0.2/24 dev ens256
+ip netns exec myns ip route add default via 100.10.0.2
+
+# start ssh daemon in new namespce
+ip netns exec <name> /usr/sbin/sshd -o PidFile=/run/sshd-<name>.pid
+
+# show all process id's in a given namespace
+ip netns pids <name>
+
+# show the namespace of a given process id
+ip netns identify <pid>
+
+# move interface back to default namespace (1)
+ip netns exec <namespace> ip link set eth5 netns 1
 
 
 
@@ -206,13 +247,11 @@ TFTP server
 
 # config file: 
 /etc/dnsmasq.conf
+/etc/default/dnsmasq
 # dnsmasq directly uses the following files:
 /etc/hosts
 /etc/resolv.conf
 
-# configuration files
-/etc/dnsmasq.conf
-/etc/default/dnsmasq
 
 # start (fedora)
 sudo service dnsmasq restart
@@ -316,7 +355,15 @@ cat /proc/sys/net/ipv4/ip_forward
 
 # 2. Enable forwarding
 sysctl -w net.ipv4.conf.eth0.forwarding=1
-echo 1 > /proc/sys/net/ipv4/ip_forward
+
+echo 1 > /proc/sys/net/ipv4/ip_forward              # temporary
+vi /etc/sysctl.conf, change net.ipv4.ip_forward=1   # permanent
+
+also:
+    sysctl net.ipv4.ip_forward=1
+    sysctl -p
+
+
 
 # 3. NAT rule 
 iptables -t nat -A PREROUTING -p tcp  -d 192.168.1.250 --dport 8001 -j DNAT \
@@ -346,4 +393,156 @@ arp -s 10.0.0.2 00:0c:29:c0:94:bf
 
 # delete static arp entry
 sudo arp -d 10.0.0.2
+
+
+
+Disable Ipv6
+-------------------------------------
+sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
+sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
+sudo sysctl -w net.ipv6.conf.lo.disable_ipv6=1
+
+
+Ubuntu DNS Server
+-------------------------------------
+sudo vi /etc/netplan/50-cloud-init.yaml             # edit config file
+sudo netplan --debug apply                          # apply changes
+systemd-resolve --status | grep 'DNS Servers' -A2   # check 
+
+systemd-resolved:
+systemd-resolved is the default dns request router on ubuntu it is listning on
+on 127.0.0.53:53. All processes query this instead of sending the request 
+directly to DNS servers. It will decide which interface and which Name server
+to send the request to. It gets all info from network manager, we cannot
+manually configure it.
+
+
+- Show which interface will be used
+    resolvectl domain
+- Show which dnsserver will be used
+    resolvectl dns
+- Show cache
+    sudo pkill -USR1 systemd-resolve
+    sudo journalctl -u systemd-resolved > ~/resolved.txt
+- status
+    resolvectl status
+
+
+# Disable systemd-resolved on Ubuntu
+sudo -e /etc/systemd/resolved.conf
+    [Resolve]
+    DNS=127.0.0.1
+    FallbackDNS=1.0.0.1
+    MulticastDNS=no
+    DNSStubListener=no
+sudo systemctl disable systemd-resolved.service
+sudo systemctl stop systemd-resolved.service
+
+
+# Re-enable systemd-resolved on Ubuntu
+sudo -e /etc/systemd/resolved.conf
+    [Resolve]
+    DNS=127.0.0.1
+    FallbackDNS=1.0.0.1
+    MulticastDNS=no
+    DNSStubListener=no
+sudo systemctl enable systemd-resolved.service
+sudo systemctl start systemd-resolved.service
+
+
+
+# Start Unbound
+systemctl start unbound.service
+systemctl enable unbound.service 
+
+# Status: note: sudo is not needed
+systemctl is-active unbound
+systemctl status unbound
+
+# main config file
+/etc/unbound/unbound.conf
+# included configuration files
+/etc/unbound/unbound.conf.d/*.conf
+
+unbound-control status
+unbound-control dump-cache > cache
+
+Who is listning on port 53
+sudo ss -lnptu | grep 53
+
+# Fixing an error when trying to start unbound
+```
+sda: add missing path
+sda: failed to get udev uid: Invalid argument
+sda: failed to get sysfs uid: Invalid argument
+sda: failed to get sgio uid: No such file or directory
+```
+VM option -> Advance -> Configuration Parameter 
+Add Parameter 
+disk.EnableUUID=TRUE
+
+
+A configuration that worked
+server:
+    interface: 10.224.17.56                             # listen on interface 10.224.17.56
+    access-control: 192.168.0.0/16 allow                # clients from this address block will get an answer
+    local-zone: "local.me" static                       # define local zone of type static
+    local-data: "awais.local.me 10800 IN A 10.10.10.10" # data for local zone
+
+Another working
+server:
+    interface: 10.224.17.56
+    access-control: 192.168.0.0/16 allow
+    local-zone: "me.local." static
+    local-data: "awais.me 10800 IN A 10.10.10.10"
+
+
+
+-------------
+Docker
+------------
+stop docker
+sudo snap stop docker
+sudo snap remove docker
+
+install docker
+sudo snap install docker
+
+list interfaces created by docker
+docker network ls
+
+
+ADJUST TCP KERNEL PARAMETERS
+---------------------------------
+net.ipv4.tcp_rmem        TCP receive-window size
+net.ipv4.tcp_wmem        TCP send-window size
+
+sudo sysctl -a | grep tcp.*mem
+net.ipv4.tcp_mem = 93249    124334  186498
+net.ipv4.tcp_rmem = 4096    131072  6291456
+net.ipv4.tcp_wmem = 4096    16384   4194304
+
+sudo sysctl -a | grep core.*mem
+net.core.optmem_max = 20480
+net.core.rmem_default = 212992
+net.core.rmem_max = 212992
+net.core.wmem_default = 212992
+net.core.wmem_max = 212992
+
+RESET to original values
+sudo sysctl -w net.ipv4.tcp_mem='93249 124334 186498'
+sudo sysctl -w net.ipv4.tcp_wmem='4096 16384 4194304'
+sudo sysctl -w net.ipv4.tcp_rmem='4096 131072 6291456'
+sudo sysctl -w net.core.wmem_max=212992
+
+other proposals:
+sudo sysctl -w net.inet.udp.maxdgram=65535
+
+
+
+
+Wireless
+---------------------------------
+# Check for wireless interfaces
+ iwconfig
 

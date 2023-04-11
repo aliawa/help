@@ -55,3 +55,44 @@ PUBLIC DNS SERVERS
 8.8.4.4   : Google
 
 
+
+Message format
+---------------------------------------------------------------------
+
+Request 
+ID                                16 bit
+FLAGS                             16 bit
+No of Queries in this message     16 bit
+No of Answers in this message     16 bit
+No of DNS server addresses        16 bit
+No of Additional resource records 16 bit
+Label length                       8 bit        <-- Query starts here
+Label                             upto 63 octets
+Zero                               8 bit
+
+Response
+ID                                16 bit
+FLAGS                             16 bit
+No of Queries in this message     16 bit
+No of Answers in this message     16 bit
+No of DNS server addresses        16 bit
+No of Additional resource records 16 bit
+Label length                       8 bit        <-- Query starts here
+Label                             upto 63 octets
+Zero                               8 bit
+Qtype                             16 bit  
+Qclass                            16 bit  
+Label length                       8 bit        <-- Resource record starts here
+Label                             upto 63 octets
+Zero or Offset                    8 bit     (Offset starts with 11 and is ofset from beg of message)
+Type                              16 bit    
+Class                             16 bit    
+TTL                               32 bit    
+RDLENGTH                          16 bit  
+RDATA                             variable  (eg. IPv4 address is 4 octets) 
+
+
+
+
+
+

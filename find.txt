@@ -36,9 +36,9 @@ Location
 
 Actions
 --------
--exec cp '{} . \;           cp to current dir
--exec grep -H 'mailto' {} \;
--delete                     delete the file
+-exec cp '{} . \;                cp to current dir
+-exec grep -H 'mailto' {} \;     grep -H = print file name 
+-delete                          delete the file
 
 
 

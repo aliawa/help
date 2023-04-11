@@ -1,8 +1,10 @@
 # vim: set filetype=conf :
 
-# BPF
-# or
-    port 5060 or 53
+# BPF use man pcap-filter
+    'port 5060 or 53'                  # use of OR
+    'tcp[13]  == 2'                    # SYN packets
+    'tcp[13] & 2 == 2'                 # packets with SYN bit set along with any other bit
+    'tcp[tcpflags] & tcp-push  != 0'   # tcp-fin, tcp-syn, tcp-rst, tcp-act, tcp-urg
 
 
 # converting a hex dump to pcap
@@ -28,7 +30,7 @@
   -e : Show ethernet address (link level header)
   -s <num> : snap length 0=unlimited 
   -x : print data in hex
-  -A : prind data in ASCII
+  -A : print data in ASCII
   -X : print data in hex and ascii
   -q : quiet output. Print less protocol information so output lines are shorter. 
   -c : Exit after receiving count packets. 
@@ -47,10 +49,12 @@
   -e            : show ethernet header
   -r <filename> : read from file 'filename'
   -c <number>   : exit after printing 'number' packets 
-  -g            : No line break in output after IP header (BSD only)
   -x            : Print the data of the packet in hex
   -A            : Print the data of the packet in ASCII
-  -o            : Print ordinal number (BSD only)
+  -#            : Print packet number
+  -t            : don't print timestamp
+  -tt           : delta from previous line
+  -v            : more verbose output (shows ip.id, sip packets as ascii)
 
 
   

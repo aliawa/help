@@ -133,3 +133,11 @@ sed '
     }
 '
 
+extended regex
+----------------
+Use extended regex when command line has -E, -r 
+use '(' instead of '\(' for groups
+use '[' and ']' instead of '\[' and '\]' for range
+
+
+

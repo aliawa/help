@@ -2,3 +2,7 @@
 # run and press enter to end
 tput smcup; tmp=$(python -c 'import sys; print repr(sys.stdin.read(20))'); tput rmcup; echo $tmp
 
+
+# Put window back in split pane
+Right Click -> "Move Session to split pane"
+

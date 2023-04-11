@@ -60,6 +60,10 @@ $PTOP/snapgear/snapgear-3.3.0/lib/libssl/certs
 $OSTOP/lib/libssl/certs
 
 
+# Adding new certs on mac
+place .pem file in /usr/local/etc/openssl/certs
+run /usr/local/opt/openssl/bin/c_rehash
+
 
 # --------------------------------------------------------------
 # Creating a self signed certificate using openSSL

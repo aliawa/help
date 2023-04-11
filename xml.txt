@@ -1,14 +1,18 @@
+PRETTY PRINT XML
+tidy -xml -wrap 100 -i ~/Downloads/PAN-203003.xml > clean.xml
+
+
 SYSTEM
 entities declared with the SYSTEM keyword are for private use by an organization of individuals. Entities declared with PUBLIC are public, so they need a formal public identifier (PFI)
 
 
 PREDIFINED ENTITY REFERENCES
 start with & and end with ;
-&amp:&
-&apos; '
-&gt; >
-&lt; <
-&quot; "
+&amp;   &
+&apos;  '
+&gt;    >
+&lt;    <
+&quot;  "
 
 
 COMMENTS 
@@ -40,7 +44,8 @@ NAMESPACE
 
 
 DTD
-start with <!DOCTYPE name [ end wth ]>
+start with  <!DOCTYPE name [ 
+end with    ]>
 
 
 FPI

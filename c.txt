@@ -114,3 +114,43 @@ C header files
 
   
 
+pointer to function
+-----------------------
+int (*p)(const char*, const char*);   // p is a function pointer
+p = strcmp;                           // p is initialized
+char* compStr(char* a, char* b, int(*cmp) (const char*, const char*))   // cmpStr takes a pointer to funcion as parameter
+
+typedef (*stringcomp_t)(const char*, const char*);   // stringcomp_t is now a type
+
+// Dispatch table
+// For such similar~return~type~and~argument operations you can create an array 
+// of function pointers and select a proper function by its index rather than its name
+typedef int (*functionPtr)(int, int);
+functionPtr arrayFp[4] = {getSum, getDifference, getProduct, getDivision};
+arrayFp[0](a,b);
+
+
+pointer to array
+-----------------------
+int (*a)[3] // pointer to array of 3 ints
+int *a[3]   // pointer to array of 3 int pointers
+
+
+Some new learnings
+-----------------------
+offsetof(struct foo,a) // number of bytes between start of foo and a
+compound literal: int *p = (int[]){2, 4};
+
+// GCC specific code
+#if  defined ( __GNUC__ )
+#ifndef __weak
+#define __weak   __attribute__((weak))
+#endif /* __weak */
+#endif /* __GNUC__ */
+
+
+
+Variables
+global: accessible by the entire program
+local: accessible only by the function
+static: intermediate, in-between global and local.

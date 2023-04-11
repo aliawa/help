@@ -69,17 +69,22 @@ p file::variable
 p function::variable
 set print elements 0    # print the whole string, not just the first bytes
 
-# Print array
 p *array@len            # print array of length len
 
-# Print memory
-x/20b pointerVar        # print 20 bytes 
+x pointerVar            # print memory at address
+x/20b pointerVar        # print 20 bytes at address
+x/xb <location>         # print byte in hexadecimal
+x/s <location>          # print the string starting at location
+x/<count><fmt letter><size letter>
+fmt letters:  o,x,d,u,t,f,a,i,c,s,z
+size letters: b,h,w,g
 
-# structures
-ptype a                 # print definition of structure
-print *(structPointr) 
+ptype a                 # print definition of struct
+print *(structPointr)   # print struct
 set print pretty on     # print structs in readable form
 
+print /t var            # print in binary
+print /x var            # print in hex
 
 # Disassembly
 disassemble
@@ -129,5 +134,29 @@ set substitute-path /opt/build/panos-devel/slave/main-vm /home/aawais/pan
 # GUI 
 # --------------------------------------
 Ctrl-x Ctrl a
+
+
+# Examine core file
+# --------------------------------------
+gdb path/to/the/binary path/to/the/core
+.gz core files
+first untar them: tar xzvf
+
+on 5060
+1. untar on mp (/var/cores)
+    tar xzvf all_pktproc_4_8.1.11_1.tar.gz
+2. copy to /opt/var.dp1/cores: 
+    cp all_pktproc_4_8.1.11_1 /opt/var.dp0/cores
+3. telnet to dp1: 
+    telent dp1 
+    cd /var/cores
+4. gdb pan_task all_pktproc_4_8.1.11_1
+5. bt
+
+
+Shared Library
+--------------
+if shared library is not found look at LD_LIBRARY_PATH
+
 
 

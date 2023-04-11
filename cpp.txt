@@ -149,3 +149,9 @@ Predicate
 A function object or function that returns a bool
 
 
+lvalue.
+---------
+something that has an address. for example "int i=5", i has an address
+we can write &i, but '5' does not have an address.
+
+

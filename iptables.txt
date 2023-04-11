@@ -206,4 +206,8 @@ lsmod|grep -E "nf_|xt_|ip"
 cat /proc/net/ip_tables_name
 cat /proc/net/ip_tables_matches
 
-
+# NATTING
+# -------------------------------------------------
+# when source address is in the network 10.200.1.0/255.255.255.0 change it to 
+# the ip address of the interface eth0
+iptables -t nat -A POSTROUTING -s 10.200.1.0/255.255.255.0 -o eth0 -j MASQUERADE

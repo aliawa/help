@@ -10,8 +10,10 @@ send                   # Sending a reply to your program.
 send_user              # print to stdout
 interact               # Allowing you to interact with your program.
 
+command line and env
+------------------------------------------------
 # command line parameters
-set var1 [lindex $argv 0]   # set var1 = first command line parameter
+set var1 [lindex $argv 0]   # set var1 = first command line parameter, note: this is not the script name
 set var2 [lindex $argv 1]   # set var2 = second command line parameter
 set var3 5                  # var3 = 5
 
@@ -21,20 +23,128 @@ if {[llength $argv] != 5} {
     exit 1
 }
 
-# pattern in expect
-expect "?assword:*"
-expect -timeout 50 "pattern"
 
-# send
-send -- "string"   # dont interpret any '-' in string as flag
+# Environment Variables
+# Availalble in global array env, print value of PATH
+set env(PATH) 
+# set value of PATH
+set env(PATH) ".:$env(PATH)"
+# check is environment variable has been defined
+if {[ info exists env(DEV_FW) ]} {
+    puts "DEV_FW is defined"
+}
 
 
-# conditional tests
+
+expect
+---------------------------------------------
+# glob pattern
+expect "220*ready."                 # glob pattern see pages 88-90
+expect "\[a-f0-9]"                  # glob range: first '[' to be escaped becuse Tcl uses '['
+expect "a?b"                        # matches abd, acd etc
+expect -re "a*"                     # regex, matches aa, aaa etc.
+expect -gb "a*"                     # glob, matches ab ac etc.
+
+
+# if there are two "expect" in the program, the data received between these 
+# two calls is buffered by expect and it will use it for the second "expect"
+
+# regex pattern
+expect -re "failed|invalid password" abort
+
+# special pattern 'timeout' and 'eof'
+expect {
+    timeout {puts "timed out"; exit}
+    eof     {puts "finished in time"}
+}
+
+# special pattern 'default' includes both 'timeout' and 'eof' pg.101
+# set exit status pg. 97
+expect "alive" {exit 0} default {exit 1} 
+
+
+# look for multiple strings simultaneously and take action based on what is
+# matched.
 expect {
     "something" { send -- "send this\r" }     # '--' to avoid accedentally interpretting a flag in string
     "*another"  { send -- "send another\r" }  
 }
 
+# default timeout is 10 sec. Change it using
+set timeout 60
+set timeout -1 # wait forever
+set timeout 0  # don't wait at all
+expect -timeout 50 "pattern"
+
+
+
+# wait for spawned process to close the connection, before exiting expect program
+# put a bare expect at the end 
+spawn vi file
+send "ifoo\033:wq\r"
+expect              # wait for vi to send eof
+
+
+#restart expect pg.145
+expect {
+    -re "(\[^r]*)\r" {              # match a line ending in \r
+        process_line
+        exp_continue
+    }
+    eof handle_eof
+    timeout handle_timeout
+    $prompt
+}
+
+
+
+send
+---------------------------------------------
+# send (or print from script)
+send -- "string"   # dont interpret any '-' in string as flag
+send "hello\n"
+send "[lindex $argv 0]\n"  # print first command line param
+
+# Teminate each line with '\r' when sending to process and '\n'
+# when sending to user.
+send "anonymous\r"
+
+
+
+spawn
+---------------------------------------------
+exp_pid     # process id of most recently spawned process
+spawn_id    # global variable containing spawned process descriptor
+
+# close connection to spawned process and wait for it to terminate
+close
+wait
+
+
+
+
+try catch
+---------------------------------------------
+catch {wait -i -1} output 
+catch {<command to execute>} <optional var to store output of command>
+
+
+
+
+
+
+
+
+exec
+---------------------------------------------
+# spawn is good for interactive programs to run non-interactive programs
+# use exec
+exec uncompress rfc$argv.Z
+
+
+
+Conditions
+---------------------------------------------
 if { $NUM < 5 } {
     puts "\Smaller than 5\n"
 } elseif { $NUM > 5 } {
@@ -43,6 +153,10 @@ if { $NUM < 5 } {
     puts "\Equals 5\n"
 }
 
+
+
+Loops
+---------------------------------------------
 # while loop
 set NUM 0
 while { $NUM <= 5 } {
@@ -62,7 +176,10 @@ foreach user_name $lst {
 }
 
 
-# User-defined Functions
+
+
+User-defined Functions
+---------------------------------------------
 proc myfunc { TOTAL } {
     set TOTAL [expr $TOTAL + 1]
     return "$TOTAL"
@@ -73,30 +190,42 @@ while {$NUM <= 5} {
     set NUM [myfunc $NUM]
 }
 
+
+lists
+---------------------------------------------
+set mylst "1 2 3"                   # create a list
+llength $mylist                     # list length
+lindex $mylst 2                     # zero based index of list
+set alst [list a b "Hello World"]   # create list using the 'list' command
+set clst [concat mylst alst]        # append several lists
+
+
+
+
+strings
+---------------------------------------------
+set var "abc"
+append var "efg"                    # join strings
+
+
+
+
+Variables
+---------------------------------------------
+
 # builtin variables
 expect_out(buffer)       # all output upto the matched pattern, includes the matched string
 expect_out(0,string)     # The string matching the pattern
 expect_out(1,string)     # regex substring matches (1-9)
 
 
-# global variable containing spawned process descriptor
-spawn_id
+# Debugging:
+expect "hi\n"
+send "You typed <$expect_out(buffer)>"
+send "And I matched this portion: <$expect_out(0,string)>"
+
 
 # send log output to exp.log
 log_user 1
 log_file exp.log
-
-# regular expression
-expect -re "failed|invalid password" abort
-
-# global disable timeout
-set timeout -1
-
-# wait for spawned process to terminate
-wait
-
-
-
-
-
 

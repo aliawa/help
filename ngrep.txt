@@ -1,15 +1,7 @@
-capture the http post for gui debugging
-NOTE: works with firefox only
-  sudo ngrep -d eth0 -W byline -P ' ' '^POST' 'dst port 80' | sed -ne '6,20p'
 
+# NOTE: to specify <bpf filter> an emptyp <match expression> must also be given
+# otherwise ngrep will treat <bpf filter> as a match expression
 
-For chrome:
-  sudo ngrep -d lo -A 3 -W byline -P ' '  '^POST' dst port 80
-
-
-
-
-tshark
-tshark -r in.pcap -w out.pcap ip.dst==10.10.2.1
+cat all_pcaps.txt | xargs -i ngrep -I {} -W byline -q "" "src host 192.168.204.139 and dst host 77.120.101.121 and src port 49641 and dst port 61720"
 
 

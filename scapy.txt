@@ -6,11 +6,11 @@ brew install libdnet
 
 # 
 # -------------------------------
-# Operations on list of packets:
+# Operations on list of packets (PacketList):
+# such as the list returned by sniff(), rdpcap()
 # -------------------------------
 
-Command             Effect
-----------          ----------------------------------------------------
+COMMAND             EFFECT
 summary()           displays a list of summaries of each packet
 nsummary()          same as previous, with the packet number
 conversations()     displays a graph of conversations
@@ -22,11 +22,19 @@ padding()           returns a hexdump of packets with padding
 nzpadding()         returns a hexdump of packets with non-zero padding
 plot()              plots a lambda function applied to the packet list
 make table()        displays a table according to a lambda function
+pkts[0]             get first packet in list
+len(pkts)           number of packets in the list
 
 # Format summary
 ans.summary( lambda(s,r): r.sprintf("%TCP.sport% \t %TCP.flags%") )
 
+# for loop
+for packet in pkts:
+    if (packet.haslayer(ICMP)):
+        print "ICMP code: " + str(packet.getlayer(ICMP).code)
 
+rx=rdpcap('rx')
+rx.filter(lambda p: TCP in p and (p[TCP].sport == 23495 or p[TCP].dport == 23495))
 
 
 # -------------------------------
@@ -49,9 +57,17 @@ str(pkt)
 pkt[IP].src
 pkt[UDP].dport
 pkt[TFTP_DATA].block
-pkt[Raw].load
+pkt[Raw].load               Note: 'Raw' is the layer and 'load' is the field in that layer
 pkt[ICMP].type
 pkt[ICMP].code
+
+# Layers
+pkt[TCP]                    gets TCP and lower layers same as pkt.getLayer(TCP)
+pkt.underlayer              returns IP layer and following layers
+pkt.payload                 returns payload of TCP 
+                            !! Note: This gives wrong result if there is padding in ehternet frame
+                            !! always check "if Raw in pkt:"
+pkt.load.decode('utf8')     payload as normal string
 
 # Check presense of layer
 if IP in pkt
@@ -66,7 +82,14 @@ pkt.command()   # return Scapy command that can generate 'pkt'
 newpkt = eval(pkt.command())
 or newpkt = pkt
 
+# Replace text in the packet payload
+payload = pkt.load.replace("txt", "new-txt")
+pkt.load = payload
 
+# delete checksum, required if you change the ip
+del pkt.chksum
+del pkt[UDP].chksum
+del pkt[TCP].chksum
 
 
 
@@ -113,6 +136,10 @@ iptables -A INPUT -s <target> -j DROP
 pkts=sniff(iface="eth1", filter="port sip")
 pkts.nsummary()
 
+# sniff on multiple interfaces
+# sniffed_on gives the interface name eth1 or eth2
+sniff(iface=["eth1","eth2"], prn=lambda x: x.sniffed_on+": "+x.summary())
+
 # Details of third packet
 pkts[3]
 
@@ -128,6 +155,12 @@ pkts = sniff(prn=lambda x:x.sprintf("{IP:%IP.src% -> %IP.dst%\n}{Raw:%Raw.load%\
 
 # BPF reference (Berkeley Packet Filter)
 http://biot.com/capstats/bpf.html
+
+a=AsyncSniffer( store=True)
+a.start()
+pktlst = a.stop() # returns scapy.plist.PacketList, len(pktlst) works
+a.results.summary()
+wrpcap("/tmp/write1.pcap",pkts)
 
 
 # -------------------------------
@@ -155,6 +188,14 @@ s = PcapReader(file)
 while 1:
     s.recv(pkt)
 
+# append=True: append packets to the capture file instead of truncating it
+# sync=True:   do not bufferize wirtes to the capture file
+# gz=True:     compress the capture on the fly
+# PcapWriter.write() can take a single packet or a list of packets
+
+writer = PcapWriter(file_name, append=True)
+writer.write(pkt) 
+
 
 # -------------------------------
 # Routing
@@ -175,7 +216,20 @@ conf.route.add(host="192.168.1.1",gw="192.168.8.1")
 # Reload system routing table, Overwrite local changes)
 conf.route.resync()
 
+# Interface address
+get_if_list()                       --> ['eth2', 'lo', 'eth0', 'eth1']
+get_if_addr('ens192')               --> '10.0.0.1'
+get_if_hwaddr('ens192')             --> '00:50:56:9c:03:c7'
+getmacbyip("10.0.0.1")              --> 'f3:ae:5e:76:31:9b'
+conf.route.route("0.0.0.0")[2]      --> '10.0.0.1' (default router)
 
+# input '00:50:56:9c:03:c7' -> output: 'eth1'
+hw2name = { get_if_hwaddr(x):x for x in iflst }
+def getHwName(hw):
+    if hw in self.hw2name:
+        return hw2name[hw]
+    else:
+        return "??"
 
 # -------------------------------
 # Getting information
@@ -198,57 +252,15 @@ inspect.getargspec(srflood)
 help(srflood)
 print (sr1.__doc__)
 
-
-
-
-
+# All configuration options
+conf
 
 # -------------------------------
-# Custom DNS responder
+# Protocols
 # -------------------------------
-from scapy.all import *
- 
-DNSServerIP = "172.16.20.40"
-filter = "udp port 53 and ip dst " + DNSServerIP + " and not ip src " + DNSServerIP
- 
-def DNS_Responder(localIP):
- 
-    def forwardDNS(orig_pkt):
-        print "Forwarding: " + orig_pkt[DNSQR].qname
-        response = sr1(IP(dst="8.8.8.8")/UDP(sport=orig_pkt[UDP].sport)/\
-            DNS(rd=1,id=orig_pkt[DNS].id,qd=DNSQR(qname=orig_pkt[DNSQR].qname)),verbose=0)
-        respPkt = IP(dst=orig_pkt[IP].src)/UDP(dport=orig_pkt[UDP].sport)/DNS()
-        respPkt[DNS] = response[DNS]
-        send(respPkt,verbose=0)
-        return "Responding: " + respPkt.summary()
- 
-    def getResponse(pkt):
- 
-        if (DNS in pkt and pkt[DNS].opcode == 0L and pkt[DNS].ancount == 0 and pkt[IP].src != localIP):
-            if "trailers.apple.com" in pkt['DNS Question Record'].qname:
-                spfResp = IP(dst=pkt[IP].src)\
-                    /UDP(dport=pkt[UDP].sport, sport=53)\
-                    /DNS(id=pkt[DNS].id,ancount=1,an=DNSRR(rrname=pkt[DNSQR].qname,rdata=localIP)\
-                    /DNSRR(rrname="trailers.apple.com",rdata=localIP))
-                send(spfResp,verbose=0)
-                return "Spoofed DNS Response Sent"
-                
-            else:
-                #make DNS query, capturing the answer and send the answer
-                return forwardDNS(pkt)
- 
-        else:
-            return False
- 
-    return getResponse
- 
-sniff(filter=filter,prn=DNS_Responder(DNSServerIP))
-
-
-
-# -------------------------------
-# Important Fields
-# -------------------------------
+Ether:
+    src
+    dst
 IP:
     src
     dst
@@ -258,14 +270,54 @@ UDP:
 TCP:
     sport
     dport
+    flags (S,SA,PA,A) 
+Raw:
+    load
 
 # Binding layers
 bind_layers (TCP, HTTP, sport=80 )
 
 
-# for loop
-for packet in pkts:
-    if (packet.haslayer(ICMP)):
-        print "ICMP code: " + str(packet.getlayer(ICMP).code)
+
+
+
+# -------------------------------
+# Code
+# -------------------------------
+sniff, bridge_and_sniff
+/usr/local/lib/python3.5/dist-packages/scapy/sendrecv.py
+
+route:
+/usr/local/lib/python3.5/dist-packages/scapy/route.py
+
+dpkg --listfiles python3-scapy | less
+
+
+python -m pip list
+python -m pip show scapy
+python -m pip show --files scapy
+
+PacketList
+    parent _PacketList
+        contains list
+
+
+# -------------------------------
+# Scripting
+# -------------------------------
+
+# turn off logging
+import logging
+logging.getLogger("scapy").setLevel(logging.CRITICAL)
+
+# turn off "Sent 1 packets." output from "sendp"
+conf.verb=0
+
+TCP flags
+-------------------
+if (pkt[TCP].flags & 0x02): pass    checking for SYN
+if (pkt[TCP].flags.S): pass         another check for SYN
+print(pkt.sprintf('%TCP.flags%'))   print the packet flags
+
 
 

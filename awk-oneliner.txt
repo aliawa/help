@@ -245,7 +245,7 @@ SELECTIVE PRINTING OF CERTAIN LINES:
 SELECTIVE DELETION OF CERTAIN LINES:
 
  # delete ALL blank lines from a file (same as "grep '.' ")
- awk NF
+ awk NF                  # means awk 'NF >' {print}
  awk '/./'
 
 

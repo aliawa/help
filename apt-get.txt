@@ -1,5 +1,5 @@
 # Using the new apt command 
-apt list                                    # same as dpkg --list
+apt list                                    # list all installed, same as dpkg --list 
 apt search                                  # apt-cache search
 apt show vim-scripts                        # apt-cache show
 apt update                                  # apt-get update
@@ -14,6 +14,7 @@ apt update
 apt full-upgrade
 apt autoremove
 
+do-release--upgrade -d
 
 
 # Troubleshooting
@@ -45,45 +46,57 @@ sudo apt-get update
 apt-get update
 apt-get dist-upgrade
 apt-get autoremove --purge
+If there is "unmet dependencies" error use "apt-get -f ..."
+
+# Get Information
+# ---------------------------------------------------------
+dpkg -S `which apache2`     # which package the binary apache2 is from
+dpkg -S file                # which package put the file here.
+dpkg --list                 # List all installed packages
+
 
 
 # Remove
 # ---------------------------------------------------------
-dpkg --list                 # List all installed packages
-apt-get --purge remove gimp # remove package and config files
-apt-get purge --auto-remove gimp
-                            # uninstall package, dependencies and config files
-sudo apt-get remove --simulate plymouth
-                            # what will happen when package is removed.
-#
+dpkg --list                             # List all installed packages
+apt-get --purge remove gimp             # remove package and config files
+apt-get purge --auto-remove gimp        # uninstall package, dependencies and config files
+apt-get remove --simulate plymouth      # what will happen when package is removed.
 
-# Manually remove old linux kernels
+
+# Old kernels: Periodic cleanup is required
 # ---------------------------------------------------------
-# List all kernels except booted kernel
-# status 'rc' means removed but configuration is present
-dpkg -l | tail -n +6 | grep -E 'linux-image-[0-9]+' | grep -Fv $(uname -r)
-
-# remove residual packages (state: rc)
-apt-get remove --purge $(dpkg -l | grep "^rc" | awk '{print $2}' | tr '\n' ' ')
-
-# status
-ii 'It should be installed and it is installed' 
-rc 'It's removed/uninstalled but it's configuration files are still there'
+# list all installed kernels
+dpkg --list | egrep -i --color 'linux-image|linux-headers'
 
 # get running kernel
 uname -r
 
-# list all kernels
-dpkg --list | egrep -i --color 'linux-image|linux-headers'
+# One command for removing all related packages.
+# Change the number to the one you want to remove.
+VER=4.4.0-97
+sudo apt-get purge $(dpkg -l linux-{image,headers,image-extra}-$VER* | tail -n +6 | awk '{print $2}')
 
-# remove kernel
-apt-get --purge remove linux-image-3.13.0-83-generic
+# After that remove the initrd.img file for each deleted kernel
+sudo update-initramfs -d -k $VER-generic
 
-# remove old kernels that are in status ii
-dpkg --purge linux-image-3.13.0-73-generic
-dpkg --purge linux-headers-3.13.0-73-generic
-dpkg --purge linux-headers-3.13.0-73
-dpkg --purge linux-image-extra-3.13.0-73-generic
+# Additional cleanup tasks
+sudo apt autoremove
+
+# remove residual packages (state: rc, removed but configuration is present)
+sudo apt-get remove --purge $(dpkg -l | grep "^rc" | awk '{print $2}' | tr '\n' ' ')
+
+# Create initrd.img file for remaining installed kernels
+sudo update-initramfs -c -k all
+
+
+FOR REFERENCE
+------------------
+# status
+ii 'It should be installed and it is installed' 
+rc 'It's removed/uninstalled but it's configuration files are still there'
+more: dpkg -l | head
+------------------
 
 
 
@@ -131,7 +144,6 @@ apt-get --compile sources goaccess
 dpkg --listfiles vsftpd     # files installed by the package
 dpkg-query -L vsftpd        # files in a package
 dpkg -c package_file.deb    # files in a .deb file
-dpkt -S `which apache2`     # which package the binary apache2 is from
 
 apt list --installed        # all installed packages
 

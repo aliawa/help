@@ -1,4 +1,20 @@
 #!/bin/sh
+
+
+ref:
+ * ref is anything pointing to a commit, 
+   for example branches aka heads, tags, remote branches
+ * An indirect way of referring to a commit. 
+   You can think of it as a user-friendly alias for a commit hash
+ * Refs are stored as normal text files in the .git/refs directory
+
+convert a commit id to ref: 
+    git show 0c708f
+convert a ref to commit id: 
+    git rev-parse main
+
+ 
+
 #---------------------------------------------------------
 #                         init
 #---------------------------------------------------------
@@ -36,53 +52,52 @@ git fetch [remote-name]
 git remote rename pb paul
 git remote rm paul
 
+# change remote repository, eg to change from https to ssh
+git remote set-url origin git@github.com:aliawa/dotfiles.git
+
+
+
+
 
 #---------------------------------------------------------
-#                         History
+#                            Log
 #---------------------------------------------------------
 
 # log
 git log --oneline --abbrev-commit --all --graph --decorate --color
 
-# see change log of one file:
-git log -- Makefile
+git log -- Makefile             # see change log of one file:
+git log <branch>                # show commits going back from a specific branch
+git log .                       # show changes in current directory only
+git log --patch                 # log with patch
+git log -Sfunc_name             # which commit added or removed the function
 
 # see change log from a date to a date
 git log --since="2 weeks ago" --until="yesterday"
 
-# show changes in current directory only
-git log .
-
-# all commits in 13_11_x_br that are not in master
-git log master..ver_13_11_x_br
-
-# all commits in master that are not in 13_11_x_br
-git log ver_13_11_x..master
+git log master..ver_13_11_x_br  # all commits in 13_11_x_br that are not in master
+git log ver_13_11_x..master     # all commits in master that are not in 13_11_x_br
 
 # all tags and branches on 11_6_4_br not reachable from master
 git log --simplify-by-decoration master..ver_11_6_4_br
 
-# by user
-git log --author=aawais
+git log --author=aawais         # by user
+git log --name-status           # show only files that have changed
 
-# show only files that have changed
-git log --name-status
-
-# search in log
 # Get the patch for a particular bug fix.
 git log --grep='Bug.*11197'
 
 # show information about a commit
 git show 09ce34b9
 
-# Which branch contains the commit
-git branch --contains 4e33b3d
+# match by author and grep (all-match: match all conditions)
+git log --author=aawais --grep=time_t --all-match
 
-# is the change part of a release, output:tag name and position
-git name-rev --name-only 50f3754
 
-# Binary search to find which change introduced the bug
-git bisect
+
+#---------------------------------------------------------
+#                         History
+#---------------------------------------------------------
 
 # show current branch only
 git show-branch --more=20
@@ -91,64 +106,47 @@ git show-branch --more=20
 git checkout <treeish> -- /path/to/dir
 git checkout ver_13_6_0 mand
 
-# find the most recent tag that is reachable from a commit
-git describe --all <commit>
-
-# log with patch
-git log -p
-
-# match by author and grep (all-match: match all conditions)
-git log --author=aawais --grep=time_t --all-match
-
-# which commit added or removed the function
-git log -Sfunc_name
 
 #---------------------------------------------------------
 #                       Branching
 #---------------------------------------------------------
 
-# show all remote branches
-git branch -r
+### create
+git branch foo                     # create a branch at last commit
+git branch foo <starting-commit>   # start a branch from any point
 
-# List remote branches matching pattern
-git branch -r --list 'origin/ver_11_6_*'
+git switch -c foo                  # create a branch and switch to it
+git switch -c foo -m
+git stash branch <new_branch_name> # create a branch from stashed changes, starting the branch from commit at which stash was created
 
-git branch -vv          # More info about branchl
-git branch foo          # create a branch at last commit
+### switch
+git switch master                  # switch to branch master
 
-# start a branch from any point
-git branch foo <starting-commit>
-
-# create a branch from stashed changes
-git stash branch dbr_aaw_em9459
-
-# switch to branch master
-git checkout master
-
-# create a branch and switch to it
-git checkout -b foo
-
-# delete a branch
+### delete a branch
 git branch -d test_merge
 
-# merge another branch with the current branch
-git merge test_merge
+### push
+# First time checkin of a branch (to remote with alias 'origin', check with 'git remote -v'
+git push -u origin dbr_aaw_em9459
+# Push the branch to remote repository
+git push [remote-name] [branch-name]  # General Syntax
+git push origin <branch>
 
+### info
+git branch -r                            # show all remote branches
+git branch -r --list 'origin/ver_11_6_*' # List remote branches matching pattern
+git branch -vv                           # More info about all local branches
+git merge-base master origin/ver_14_0_x_br # show starting point of branch made on master
+
+### merging
+git merge test_merge                     # merge another branch with the current branch
 # Merging from a developer branch using rebase (four steps)
 git checkout dbr_aaw_em9459
 git rebase master
 git checkout master
 git merge dbr_aaw_em9459
 
-# Push the branch to remote repository
-git push [remote-name] [branch-name]  # General Syntax
-git push origin <branch>
 
-# First time checkin of a branch
-git push -u origin dbr_aaw_em9459
-
-# show starting point of branch made on master
-git merge-base master origin/ver_14_0_x_br
 
 #---------------------------------------------------------
 #                           Pull
@@ -212,12 +210,8 @@ git stage --patch models.rb
 git stage <file>
 git commit
 
-# checkin a file (single step)
+# auto stage modified and deleted files but not new files and then commit
 git commit -a  
-
-# delete a file
-rm <file> # physically delete the file
-git commit -a
 
 # prevent files from being checked in
 git update-index --assume-unchanged cfg_sip.h
@@ -230,24 +224,18 @@ git log origin/master..  #HEAD is default
 
 
 #---------------------------------------------------------
-#                          Changes
+#                          Patch
 #---------------------------------------------------------
 
+# create patch
+git diff > ~/tmp/mypatch
+
 # Apply a patch using git (Atomic, handles file rename, delete etc.)
-git apply ~/tmp/bug1234.patch
+git apply ~/tmp/mypatch
 
-# Apply a patch generated using format-patch command
-git am ~/tmp/bug1234.patch
 
-# create a patch
-git --no-pager show 39ec73f9d > bug11071_bug11072.patch
-
-# create a patch with format-patch
-git format-patch -M origin/master
-
-# ignore versioned files
-git update-index --assume-unchanged cfg_sip.h
-git update-index --no-assume-unchanged cfg_sip.h
+# patch from single commit
+git format-patch -1 3c2ab26f8ae --stdout
 
 
 
@@ -278,14 +266,6 @@ git checkout HEAD^ path/to/file
 git rebase -i HEAD~2
 
 
-# undo a "git add"
-git reset [file]
-git reset -- frotz.c   # reset a single file in index
-
-# Reset the staging area and working dir to match the latest commit.
-# meaning discard all uncommitted changes.
-$ git reset --hard
-$ git reset --hard HEAD~3 # remove last three commits from branch,index and work dir
 
 
 
@@ -298,8 +278,7 @@ $ git reset --hard HEAD~3 # remove last three commits from branch,index and work
 # which moves forward with commits
 #---------------------------------------------------------
 
-# show all tags
-git tag -l
+git tag -l                            # show all tags
 git tag v1.8.5*                       # list pattern
 git tag -a v1.4 -m 'my version 1.4'   # create anotated
 git show v1.4                         # see tag data
@@ -370,23 +349,36 @@ git config --global merge.stat true
 cd ~/dotfiles/vim/bundle
 git submodule add git://github.com/tpope/vim-fugitive.git vim-fugitive
 
-# Clone including the submodules
-git clone --recursive https://github.com/aliawa/dotfiles
-
-# clone submodules if not done using --recursive
+# Clone a project with submodules
+git clone --recurse-submodules https://github.com/aliawa/dotfiles
+# -- OR manualy --
+git clone https://github.com/aliawa/dotfiles
 git submodule init
 git submodule update # get the submodule version recorded in main project
 
-# fetch latest submodule code
-cd submodule_dir
-git pull
-cd .. # go back to main project
-git ci -m "Pulled down update to submodule_dir"
+# List submodules
+git submodule --recursive
+git submodule--helper list
+
+# Pulling in upstream changes from the submodule remote
+git submodule update --remote DbConnector
 
 # fetch latest code for all submodules
 git submodule foreach git pull origin master
 
+# Pulling Upstream Changes from the Project Remote
+git pull
+git submodule update --init --recursive
 
+# Remove submodule
+git rm -r <submodule_folder>
+rm -rf .git/modules/<submodule_folder>
+git config -f .git/config --remove-section submodule.<submodule_folder>
+
+
+#---------------------------------------------------------
+#                       Vim related
+#---------------------------------------------------------
 # Activate spell check in checckin comment
 autocmd Filetype gitcommit setlocal spell textwidth=72
 
@@ -405,6 +397,7 @@ git clean -f
 # Three way merge
 git merge-file -p file.ours file.common file.theirs > file.c
 
+
 # Binary search
 git bisect start 
 git bisect bad          # Current version is bad
@@ -414,11 +407,11 @@ git bisect bad          # This version is also bad
 git bisect good         # This version is good
 # >> continue until first bad commit is found <<
 git bisect reset        # go back to original head
+# >> if you have an automated ./test script that has exit status 0 iff the test is OK <<
+# >> then git can automate the process <<
+git bisect start <known-bad-commt> <known-good-commit>
+git bisect run ./test
 
-
-# Binary Search Automated
-git bisect start HEAD v1.0
-git bisect run test-error.sh
 
 
 #---------------------------------------------------------
@@ -450,5 +443,106 @@ git-new-workdir
 
 # add git command completion to bash
 git-completion.bash
+
+
+#---------------------------------------------------------
+#                       github
+#---------------------------------------------------------
+For github
+git remote set-url origin git@github.com:aliawa/scapy.git
+
+
+
+#---------------------------------------------------------
+#                       Git cleanup
+#---------------------------------------------------------
+
+From Ben Villalobos guy
+git gc
+git fsck
+git prune
+
+# remove any remote-tracking references that no longer exist on the remote
+# This does not remove local branches setup to track remote branches
+git fetch --prune
+
+
+#------------ HEAD and Branch meaning ------------------------------
+NOTE that a branch name i.e. a branch label is actually a reference to the
+latest commit on a branch or the tip of the branch. In the diagram above,
+featureX, master and HEAD are just references to specific commits. featureX and
+master labels refer to latest commits on their respective branches. HEAD
+generally refers to the tip of the currently checked out branch - master in
+this case.  
+
+If you checkout an older commit on your current branch, then HEAD
+will be in a detached state, i.e., it will point to the older commit instead of
+the latest one. Also note that HEAD is called a symbolic reference because it
+actually points to the current branch label and any branch label always points
+to the tip of the branch. So, under normal circumstances, HEAD indirectly
+points to the latest commit.
+
+As an aside, note that Git represents its commit graph/history as a directed
+acyclic graph. Each commit has a reference to its parent. Hence, the arrows in
+a commit diagram point from child commit to parent commit. We need a reference
+to the latest child commit in order to reach the older commits on a branch.
+
+
+
+#---------------------------------------------------------
+#                       git reset
+#---------------------------------------------------------
+
+git reset [<mode>] [<commit>]
+
+In all modes the HEAD will be moved to <commit>, 
+defaults to HEAD when no <commit> specified, in this case the HEAD will not move ofcourse, 
+but the side-effect determined by <mode> will take place.
+
+mode can have one of five values
+--soft  : just move the HEAD but leave index and working tree alone
+          This can for example be used to combine several commits.
+            git add -A; git commit -m "Start here."
+            git add -A; git commit -m "One"
+            git add -A; git commit -m "Two"
+            git add -A; git commit -m "Three"
+            git reset --soft HEAD~3
+            git add -A; git commit -m "All in one"
+--hard  : move the HEAD and also change index and working tree to match, discarding local changes
+--mixed : [default mode] move the HEAD, change index to match it but leave working dir unchanged
+        so if you do "git reset --mixed HEAD" or just "git reset" this will practically
+        unstage any staged changes.
+--merge and --keep : 
+        They are similar to hard in that they both update the index and working tree to match
+        the new HEAD. Differ as follows
+        1. If there are no staged changes then merge and keep are similar, they 
+        both keep the working tree changes intact.
+        2. If there are staged changes but no unstaged changes then keep will unstage the 
+        staged changes but merge will discard the staged changes
+        
+        see manual for more.
+
+
+#---------------------------------------------------------
+#             Which branch / tag has the commit
+#---------------------------------------------------------
+
+git branch --contains f9320513e6a
+git tag --contains f9320513e6a          # lists all tags that contain the commit
+git name-rev --name-only f9320513e6a    # The first tag that contained this commit (meaning after this commit)
+git describe --all <commit>             # The first tag before this commit
+git describe --contains <commit>        # The first tag after this commit
+
+
+
+#---------------------------------------------------------
+#                       Switch
+#---------------------------------------------------------
+
+git switch -c foo <start-point>         # grow a new branch at start point
+git switch -c foo -m <start-pt>         # same as above but also merge local changes into the files from swith target
+git switch <branch-name>                # switch to branch
+git switch --discard-changes <branch>   # swith to branch and discard all local changes
+git switch --detach <commitish>         # where committish is tag name or commit number
 
 

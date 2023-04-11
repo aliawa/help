@@ -10,7 +10,6 @@ status = open AND fixVersion = "Current Sprint" AND fixVersion WAS "Last Sprint"
 status = open ORDER BY priority, assignee
 status changed after -1w and assignee = CurrentUser()  #issues changed in last week
 
-
 fixversion = "Sprint A"
 fixversion = latestReleasedVersion(PWC)
 
@@ -47,6 +46,36 @@ summary ~ "customize"  [ customized, customizing, customs, customer, etc. ]
 
 
 # Exact phrase
-comment "\"the firewall will\""
+text ~ "\"the firewall will\"~0"
+
+# -------------------
+# searches
+# -------------------
+# subtask
+project in (PAN-OS, WF-500, Plugins) AND issuetype in (bug, Feature, Improvement) AND resolutiondate >= 2019-03-25 AND issue in subtask("\"approved branches\" ~ kiev") AND issue not in subtask("\"approved branches\" ~ beijing") and issue not in subtask("\"Pending Branch Requests\" ~ dev_panos_beijing") and assignee in (membersOf("DL Liang Li - All"),sdeng)
+
+
+created >= "2020-07-01" AND issuetype in (Bug, Feature, Improvement, Task) AND resolution != Fixed AND assignee in (currentUser()) ORDER BY resolutiondate DESC
+
+created >= "2020-07-01" and assignee was  currentUser() and type != "Backport Request" 
+
+# last month
+resolutiondate > -4w
+
+
+
+
+# -------------------------
+# Search for custom fields
+# -------------------------
+
+# looking for "sequence" in the value of custom field "Explain Root Cause"
+assignee = currentUser() and cf[11429] ~ "sequence"
+
+# Another way to do the above
+assignee = currrentUser() and "Explain Root Cause" ~ "sequence"
+
+# Search Regression bugs from a given bug id
+"Perforce ID/Feature/Bug related to DEV Root Cause" ~ PAN-160387
 
 

@@ -31,31 +31,38 @@ gt gT            (next prev tab)
 #        "search the string under cursor backwards
 [I       "Show all lines containing word under cursor 
 
-" ---- flags -----
-\c<pattern>  "ignore case for this pattern (/\cpattern)
-\C<pattern>  "don't ignore case
+case
+\c<pattern>  ignore case
+\C<pattern>  Case sensitive
+i            ignore case :s/foo/bar/gi
 
-" ---- patterns ----
-" What does not need to be escaped in regular expressions:
-- the brackets '[' in character ranges e.g: [0-9a-f]\+
-- quantifier star *
-- the replacement; the whole matched pattern &
+
+Don't escape in regular expression
+[ and ]     range
+*           star quantifier
+&           the whole matched pattern
+
+Escape in regular expression
+\?
+\( and \)
+\+
 
 :h ordinary-atom
-/the\>                  "words ending in the
-/\<the\>                "search for the word 'the' exactly
-/\%>9l\%<21lgreen       "Search in lines 10 to 20 inclusive
-/\%>'a\%<'bgreen        "Search between marks a and b
-/^"INVITE\_.\{-}Cont    "Search for INVITE at begining of line followed by Cont somewhere in text 
-\{-}                    "0 or more but as few as possible.
-\_.                     "any char or end-of-line :h ordinay-atom
-/^\w\+\ze(/j            "Search for functions 
-:s/CTRL-v CTRL-m//g     "search and replace new lines (windows)"
-:s/\(^\s\+\)/\1\/\//    "comment out lines (comment characters placed after the initial space)
+/the\>                  words ending in 'the'
+/\<the\>                search for the word 'the' exactly
+/\%>9l\%<21lgreen       Search in lines 10 to 20 inclusive
+/\%>'a\%<'bgreen        Search between marks a and b
+/^"INVITE\_.\{-}Cont    Search for INVITE at begining of line followed by Cont somewhere in text 
+\{-}                    0 or more but as few as possible.
+\_.                     any char or end-of-line :h ordinay-atom
+\=                      zero or one occurance of previous atom
+/^\w\+\ze(/j            Search for functions 
+:s/CTRL-v CTRL-m//g     search and replace new lines (windows)"
+:s/\(^\s\+\)/\1\/\//    comment out lines (comment characters placed after the initial space)
 
-:set nows               "will not search past the top or bottom.
-:set hls                "Highlight search pattern
-:noh                    "No highlight search pattern
+:set nows               will not search past the top or bottom.
+:set hls                Highlight search pattern
+:noh                    No highlight search pattern
 
 :vimgrep term *.c* *.h         "grep in current directory (:pwd)
 :vimgrep term **/*.c* **/*.h   "grep in current and sub-directories
@@ -63,10 +70,12 @@ gt gT            (next prev tab)
 :!grep 'pattern' %:p:h/*       "grep in directory of current file
 
 
-s/\d\+/\=submatch(0) + 1/      "Alter sequence number in a numbered list
-\d\+                           "search a digit sequence
-\=submatch(0) + 1              "get the matched pattern and add 1 to it.
-
+s/\d\+/\=submatch(0) + 1/      Alter sequence number in a numbered list
+\d\+                           search a digit sequence
+\=submatch(0) + 1              get the matched pattern and add 1 to it.
+\=<expression>                 Replace with the result of the expression
+:s/pat/\=expand("%:p")/        The expression can be quiet complex for example: \="\n  " . substitute(submatch(1), "}", "\n}", "")/g
+                            
 
 :.,$ g/FINDME/p                "search from cursor to end of file
 
@@ -74,10 +83,18 @@ s/\d\+/\=submatch(0) + 1/      "Alter sequence number in a numbered list
 
 \_s                            "space including new line
 
+
 " ---- multiple files search ----
 
 :bufdo %s/pattern/replace/ge | update  "Search and Replace in all open buffers
 :windo %s/pattern/replace/ge           "Search and Replace in all windows
+
+
+:argsdelete *                          clear args list
+:bufdo :argadd %                       Populate args list, same as ':args ## %'
+:args                                  check args list
+:bufdo :vimgrep /blah/ ##              search in all files in args list 
+
 
 " Search and replace in all files in arglist. 
 :arg *.cpp      " All *.cpp files in current directory.
@@ -90,17 +107,6 @@ s/\d\+/\=submatch(0) + 1/      "Alter sequence number in a numbered list
 
 
 
-cut long lines
----------------
-selection: gp
-current paragraph: gqap
-
-
-
-Get Info
-----------
-Ctrl-g    relative path of current file
-1 Ctrl-g  full path of current file
 
 
 
@@ -114,8 +120,8 @@ L     # bottom of screen
 30|   # Jump to column 30
 `.    # move to last edit position
 
-^E - scroll the window down
-^Y - scroll the window up 
+^E - scroll the view-port down
+^Y - scroll the view-port up 
 ^F - scroll down one page
 ^B - scroll one page up
 
@@ -209,28 +215,14 @@ gf : file under cursor, Ctrl-O to come back.
 #include "f CTRL−x CTRL−f"
 :set dictionary=file
 Ctrl-x Ctrl-k : complete from dictionary
-[[ go to start of function
-][ go to end of function if '}' is in the first column
+[[      go to start of function     previous '{' in the first column
+][      go to end of function       next '}' in the first column
 :help 29.3
 
+[{ jump back to "{" at the start of current block
+gd jump from use of variable to its local declaration.
 
 
-Executing commands (v and g)
------------------------------
-:[range]g/{pattern}/[cmd]
-             Execute Ex command [cmd] (default: ":p") on the lines
-                within [range] where {pattern} matches.
-:[range]g!/{pattern}/[cmd]     or    :[range]v/{pattern}/[cmd]
-             Execute Ex command [cmd] (default: ":p") on the lines
-                within [range] where {pattern} does NOT match.
-Examples:
-:%g/^a/-1join     join lines starting with character 'a' to previous line
-:%g/^ *$/d        delete empty lines
-:g/^$/d           delete all blank lines
-:g/^\s\+$/d       remove all lines with only whitespace (space or tab)
-:g/^\s*$/d        remove all lines with only whitespace or nothing
-:%v/vim/m 1       move lines not matching the word 'vim' to line 1
-:%g/^a/+1d        delete lines after the ones starting with character 'a'
 
 
 
@@ -304,7 +296,7 @@ zM -- close all folds
 ' go in the block and zm
 
 :set foldmethod=manual
-' then go inside a {} block zfa}
+' then go inside a {} block zfa}        'zf = create fold'
 ' visual select and zf
 
 
@@ -315,7 +307,6 @@ dL - Delete to end of page, in other words, everything visible.
 
 tricks
 ------
-daw     : delete whole word
 imap <M-f> <E
 visual mode selection followed by !sort is really useful for sorting lines
 C - Often overlooked: chop off end of line and go into insert mode.
@@ -351,9 +342,6 @@ q   stop recording
 
 
 
-vip : select upto next blank line
-
-
 Or right in VIM - :E - would list files in :pwd.
 
 :sh works well when you don't know root, but have sudo privs.
@@ -387,28 +375,26 @@ Ctrl-[, which does exactly the same as Escape, and Ctrl-C
 To view man page of a word under curser, type K(shift+K)
 
 
-Deleting empty lines from a file: :%g:^\s*$:d
 
 
 
 # --------------------
 # Editing binary files
 #--------------------
+
+# open and edit
 vi -b file.bin
+:%!xxd                # view in hex format
+:set display=uhex     # show unprintable chars as hex <xx>
+:set rulerformat=0x%B # show hex value of character under cursor in ruler
+:set statusline+=%o   # Add byteoffset to status line
+:goto 2356            # jump to nth byte
 
-# show hex value of character under cursor in ruler
-:set rulerformat=0x%B
-
-# show unprintable chars as hex <xx>
-:set display=uhex
-
-# view in hex format
-:%!xxd
-
-# revert to normal view (must do before saving)
-:!%xxd -r 
-:set binary # if not already done.
+# save
+:!%xxd -r             # revert to normal view (must do before saving)
+:set binary 
 :wq
+
 
 # other hex editors
 bvi
@@ -490,17 +476,29 @@ Using quickfix commands
 
 copy to X11 clipboard
 ------------------------
-"*yy:   copy to X11 clipboard so that it can pasted with middle mouse button
-"*p:    paste text form X11 clipboard.
+- On linux there are two system clipboards '*' and '+'. On windows and MacOSX the are both the same
+- Vim must be compiled with "+clipboard". Check with :echo has('clipboard')
 
-"+yy:   copy to X11 copy/paste clipboard (not needed when compiled with 
-        -xterm_clipboard)
+"*yy:   copy to X11 mouse select clipboard so that it can pasted with middle mouse button
+"*p:    paste text form X11 mouse select clipboard.
+
+"+yy:   copy to copy/paste (ctrl-c/ctrl-v) clipboard
 "+p:    paste from X11 copy/paste clipboard 
 
-To make clipboard usable through ssh:
+To make clipboard work through ssh:
 ssh -Y aawais@terbium
-then use "+y
 
+To get a vim version with +clipboard install
+ubuntu: vim-gtk3
+fedora: vim-X11 and then run vimx instead of vim
+
+To make vim automatically copy to '+' and '*' clipboards
+set clipboard=unnamedplus
+set clipboard+=unnamed
+
+To use xclip if +clipboard is not available
+:'<,'>w !xclip                  # Linux
+:'<,'>w !pbcopy                 # MacOsx
 
 
 
@@ -646,6 +644,20 @@ git clone https://github.com/scrooloose/nerdtree.git
 :verbose set foldcolumn?   # which script set foldcolumn option
 
 
+Ctrl-g                  relative path of current file
+1 Ctrl-g                full path of current file
+:setlocal syntax?       # syntax file being used
+:verbose set ft ?       # current filetype and who set it
+:scriptnames            # all loaded scripts
+
+:echo expand('#')       alternate file, see help _#
+:echo expand('%')       current file, see help _%
+:echo has('clipboard')  check vim compile time options
+
+:set <option> ?         check current value of any option
+
+
+
 " -------------------------------------------------------------
 "                   Create your own syntax file                 
 " -------------------------------------------------------------
@@ -668,15 +680,19 @@ vim -S ~/.vim_sessions/mysession.vim
 
 
 " -------------------------------------------------------------
-"                          Latest
+"                          Register
 " -------------------------------------------------------------
-" copy form register in insert mode
-Ctrl a -- insert content of register "."
-Ctrl r -- followed by name of register, e.g. "a"
+" copy from register in insert mode
+Ctrl-a                  insert content of register "."
+Ctrl-r {reg}            followed by name of register
+Ctrl-r Ctrl-r {reg}     don't interpret control characters in register
 
 
 " show content of registers
 : reg
+
+Example: assign "the" to the search register "/"
+:let @/ = "the"
 
 
 " -------------------------------------------------------------
@@ -689,45 +705,78 @@ Ctrl r -- followed by name of register, e.g. "a"
 
   
 " -------------------------------------------------------------
-"                          vim and unix
+"              Working with external commands
 " -------------------------------------------------------------
-:r !ls      read output of a command
-:.!wc       send current line to an external command and put
-            the output of that command here.
-!!sh<CR>    Treat current line of text as command, execute it
-            and put the output here
-vip: !wc -w select paragraph and send it to wc -w
+Run external command
+:! wc %         run external command on file (%)
+
+Read command output
+:r ! ls         
+
+Filter text through external command
+:.!wc           filter current line through external command
+:20,25 ! rot13  filter range
+vip: !wc -w     select paragraph and send it to wc -w
+
+!!sh            same as ":.!sh", execute the cmd on current line
+
+
+
+" -------------------------------------------------------------
+"                          operators
+" -------------------------------------------------------------
+{operator}{count}{motion}
+{operator}{i/a}{text-object}  # see section below for text objects
+
+d2w         operator d, count 2, motion word
+d5j         delete to 5 lines downwards
+df'         delete to first occurance of ' including the character itself
+dt'         delete to first occurance of ' not including the character itself
+
+useful operators
+
+c   change
+y   yank
+=   format
+g~  toggle case
+d   delete
+p   paste
+gU  make uppercase
+gu  make lowercase
+>   shift right
+<   shift left
+gq  format lines
 
 
 " -------------------------------------------------------------
 "                          text objects
 " -------------------------------------------------------------
-quoted string literals " ' `
-brackets []
-parens   ()
-Tags (t)  <Tags> </Tags>
-blocks of source code {}
-help text-objects
+{i|a}{text-object-id}
+a  all or around
+i  inner
 
-" Examples
-dit -- delete inside tags
-da" -- delete all "
-vi) -- visualize inside ()
+some text object identifiers
 
-in com count -> operator -> motion scheme, text objects 
-are like motion
+w           word
+p           paragraph
+b or (      block surrounded by ( )
+B or {      block surrounded by { }
+" or '      quoted text
+< or >      block surrounded by < >
+[ or ]      block surrounded by [ ]
+t           tag
 
+daw         delete word and trailing white spaces
+da"         delete something in double quotes, including the double quote
+di"         delete something in double quotes, not including the double quote
+da}         delete block surrounded by { }
+da{
+daB   
+dat         delete entire HTML/XML text including start and end tags
+cit         change text inside HTML tags
+vit         or vat, select inside html/xml tags. Use o to jump between ends of selection
+vip         select to next blank line (v {inside}{paragraph}
 
-
-a - all 
-i - in 
-t - 'til
-caw - change all word
-diw - delete in word
-di[ - delete inside bracket
-yi) - yank all text inside parentheses
-vi" - visually select inside the double quote
-va' - visually select all including quote
 
 
 " -------------------------------------------------------------
@@ -757,4 +806,307 @@ n       find next
 
 [I:     prototype of the function in the included header files
 
+
+
+" -------------------------------------------------------------
+"     Power of g  [https://vim.fandom.com/wiki/Power_of_g]
+" -------------------------------------------------------------
+:[range]g/pattern/cmd   # cmd is ex command use ":" to search e.g. help :d
+:g/pattern/z#.5         # display 5 context lines
+:g/pattern/z#.5|echo "========"
+:g/pattern/d            # delete all lines with pattern
+:g!/pattern/d           # delete all lines that do not match pattern
+:v/pattern/d            # delete all lines that do not match pattern
+:g/^\s*$/d              # delete all blank lines
+:g/^/put =\"\n\"        # double space file 
+:g/^/put _              # double space file, put blackhole register
+:g/pattern/t$           # copy lines matching pattern to end of file
+:g/pattern/m$           # move all lines matching pattern to end of file
+:g/pattern/y A          # copy matching lines to register A
+:.,$g/^\d/exe "normal! \<C-A>" 
+                        # Increment each number at the start of line
+:g/^pattern/s/$/mytext  # Add text to end of line that begins with pattern
+:g/pattern/nomal @q     # run macro q on each matching line
+:g/pattern1/s/pattern2/string/gi
+                        # in lines matchin pattern1 replace pattern2 with string
+:v/./,/./-g             # compress multiple blank lines to a single blank line
+:%s/^\_s\+$/\r/g         # another way to collapse empty lines
+
+
+Executing commands (v and g)
+-----------------------------
+:[range]g/{pattern}/[cmd]
+             Execute Ex command [cmd] (default: ":p") on the lines
+                within [range] where {pattern} matches.
+:[range]g!/{pattern}/[cmd]     or    :[range]v/{pattern}/[cmd]
+             Execute Ex command [cmd] (default: ":p") on the lines
+                within [range] where {pattern} does NOT match.
+Examples:
+:%g/^a/-1join     join lines starting with character 'a' to previous line
+:%g/^ *$/d        delete empty lines
+:g/^$/d           delete all blank lines
+:g/^\s\+$/d       remove all lines with only whitespace (space or tab)
+:g/^\s*$/d        remove all lines with only whitespace or nothing
+:%v/vim/m 1       move lines not matching the word 'vim' to line 1
+:%g/^a/+1d        delete lines after the ones starting with character 'a'
+
+
+
+
+" -------------------------------------------------------------
+"                            help
+" -------------------------------------------------------------
+:help ex-cmd-index      # list of ex commands useful for :g
+:help 10.4              # :g or :global command
+:help multi-repeat      # :g and :v commands
+:helpgrep               # use \c to ignore case, :cn next :cp previous
+
+
+
+" -------------------------------------------------------------
+" pipe, redirect, capture output of ex commands
+" -------------------------------------------------------------
+:redir @a   # start redirect to register a
+:g/GRP_     # all output copied to a
+:redir END  # stop redirecting
+:new        # create a new window
+:put! a     # paste into new window
+
+append, write selection to file
+:w filename.txt
+:w >> filename.txt
+:w! filename.txt
+
+
+" -------------------------------------------------------------
+" sort
+" -------------------------------------------------------------
+:sort u                 uniq
+:sort /\a\a\a/ r        sort on pattern. first 3 letters of line
+
+
+
+" -------------------------------------------------------------
+" calculate, math
+" -------------------------------------------------------------
+insert mode: <C-r>=7*7<CR>
+
+convert hex to dec.
+echo 0xabc
+
+add, subract, multiply
+echo 0x10 + 3
+
+get hex code of character under cursor in normal mode
+g8  
+
+
+" -------------------------------------------------------------
+" Remove color codes, bash color codes
+" -------------------------------------------------------------
+%s/\%x1b\[?*[0-9;]*[HKlhmGP]//g
+%s/\e[>=]//g
+
+
+
+
+" -------------------------------------------------------------
+" Vim 8 native plugin manager
+" -------------------------------------------------------------
+~/.vim/pack/plugins/start       " loaded at startup, the name 'plugins' can be anything, only 
+                                " > 'start' directory is important
+~/.vim/pack/plugins/opt         " loaded with 'packadd' e.g: :packadd DrawIt
+~/.vim/pack/themes/opt          " themes, such as vim-colors-solarized, the name 'themes' is 
+                                  > for user, vim only looks at the 'opt' directory
+~/.vim/pack/syntax/start        " syntax files, could be under plugins, but just for organization
+
+" Install a plugin
+cd ~/.vim/pack/plugins/start/
+git clone https://github.com/ycm-core/YouCompleteMe.git
+:helptags ~/.vim/pack/plugins/start/YouCompleteMe
+
+" Remove plugin
+rm -r ~/.vim/pack/plugins/start/YouCompleteMe
+
+" Update plugin
+cd ~/.vim/pack/plugins/start/YouCompleteMe
+git pull origin master
+
+
+
+
+
+" -------------------------------------------------------------
+" Special characters in ed commands
+" -------------------------------------------------------------
+%   current filename
+##  current argument list
+:p  convert to absolute path
+:h  head, last component and separator removed
+:t  tail, last component of the name
+
+
+
+
+" -------------------------------------------------------------
+" One Vim
+" -------------------------------------------------------------
+gvim --remote-silent
+gvim --remote-tab
+change to directory of current file
+:lcd %:h<CR>
+
+
+
+" -------------------------------------------------------------
+" Saved
+" -------------------------------------------------------------
+s#\v(Duplicate flows[^0-9]+)(\d+)(, flow)(\d+)#\=printf("%s%d(%d,%d)%s%d(%d,%d)", submatch(1), submatch(2),
+            submatch(2)/2, submatch(2)%2, submatch(3), submatch(4) , submatch(4)/2, submatch(4)%2)#
+
+s#\v(^Predict flow )(\d+)(.*$)#\=printf("%s%d(%d,%d)%s", submatch(1), submatch(2), submatch(2)/2, submatch(2)%2, submatch(3))#
+
+
+" convert hex to decimal
+s/[a-f0-9]\+$/\=printf("%d", str2nr(submatch(0),16))/
+
+" convert hex number to ipv4 address
+s/addr-\(..\)\(..\)\(..\)\(..\)/\=printf("%d.%d.%d.%d",
+        str2nr(submatch(1),16), str2nr(submatch(2),16),
+        str2nr(submatch(3),16),
+        str2nr(submatch(4),16))/
+
+" move blocks containing address in appinfo2ip dump to top
+/saddr 192.168.1.125^M}m1?^key:^M:.,'1t0^M'1
+
+
+" convert peerkey:<hex-ip:decimal-port> to dotted ip address
+:%s/peerkey:\(..\)\(..\)\(..\)\(..\):\(\d\+\)/\=printf("%s
+        (%d.%d.%d.%d-%d)",submatch(0), str2nr(submatch(1),16),
+        str2nr(submatch(2),16),str2nr(submatch(3),16),
+        str2nr(submatch(4),16),str2nr(submatch(5),16))/
+
+"  convert addr-<hexIP>-<hexPort> to dotted ip and decimal port
+:%s/addr-\(..\)\(..\)\(..\)\(..\)-\(....\)/\=printf("%s
+        %d.%d.%d.%d-%d",submatch(0), str2nr(submatch(1),16),
+        str2nr(submatch(2),16),str2nr(submatch(3),16),str2n
+        r(submatch(4),16),str2nr(submatch(5),16))/
+
+
+
+" -------------------------------------------------------------
+" cool features
+" -------------------------------------------------------------
+" Open remote file with scp
+:e scp://remoteuser@server.tld//absolute/path/to/document
+
+" Find a man page
+:runtime! ftplugin/man.vim
+:Man csh
+:Man 3 echo
+shift + k
+
+insert command <c-r>=
+example: run x.py and insert its output at cursor location
+:imap <c-j>d <c-r>=system('/tmp/x.py')<cr>
+
+
+
+# -----------------------------------------------------------------
+# shell
+# -----------------------------------------------------------------
+:sh                 a shell inside vim
+:terminal           or :term, new terminal as a horizontal split
+:vert :terminal     terminal as vertical split
+Ctrl+w  w           going in and out of terminal
+
+
+
+" -------------------------------------------------------------
+" Explore
+" -------------------------------------------------------------
+Lexplore
+-               up directory
+qb              List bookmarked directories (query bookmark)
+qf              quick info about the file
+mf              mark file
+:MF *c          mark a group of files
+:MT [dir]       set move/copy target directory
+gb              go back to previous directory
+gn              go to directory under cursor
+:NTree [dir]    like cd
+gh              show / hide files starting with '.'
+D               delete file
+
+copy file:
+mt <target-dir>
+mf <file-to-copy>
+mc
+
+:Rexplore       return to explorer from editing
+
+p               when using Vexplore, Sexplore etc, open file in preview window
+
+
+" -------------------------------------------------------------
+"                    Overwrite functionality
+" -------------------------------------------------------------
+select with gh <arrow keys>
+gh      character wise select
+gH      line wise select
+
+
+
+
+" -------------------------------------------------------------
+"                    XML / HTML files
+" -------------------------------------------------------------
+" enable matchit.vim in .vimrc
+packadd! matchit 
+
+" use text objects
+dat   delete entire HTML/XML text including start and end tags
+cit   change text inside HTML tags
+vit   or vat, select inside html/xml tags. Use o to jump between ends of selection
+
+" pass through external tidy filters
+:% ! xmllint --format --noblanks -
+:% ! tidy -xml -iq -w 90 -raw 
+
+
+
+" -------------------------------------------------------------
+"                    CSV VIM
+" -------------------------------------------------------------
+:WhatColumn         in which column is the cursor
+:NrColumns          how many columns are there 
+:ArrangeColumn
+:DeleteColumn 2 
+:Header 2           Fix first two rows as column heading. default is first row
+:Header!            Hide header lines
+:Sort 3             Sort on column 3
+:Sort 3f            Numeric sort on floating point
+:Column a           Copy entire column to register a
+:MoveColumn 1 $     Move column to end
+:SumCol 2
+:NewRecord [count]  Add new line
+
+L                   next col
+H                   prev col
+K                   up within same col
+J                   down within same col
+
+:Analyze 3
+:VertFold [<nr>]                            Hide some columns
+:VertFold!                                  Undo vert fold
+:AddColumn [n] [count]                      add <count> columns after column number <n>
+:Substitute [col]pattern/string/flags       search and replace in column
+:CountCol [n] [distinct]                    number of [distint] values in column number <n>
+:MaxCol
+:MinCol
+:AvgCol
+:PopVarCol                                  population variance
+:SmplVarCol                                 Sample variance
+:PopStdCol                                  population standard deviation
+:SmplStdCol                                 Sample standard deviation
 

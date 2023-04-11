@@ -111,8 +111,10 @@ main:
 %           register name
 $           constant value
 
-pushl       l says use the 32 bit version of push
-            it will decrement the SP appropriately
+pushl       push 32 bits to stack and decrement SP
+pushq       push 64 bits to stack
+pushb       push a byte to stack
+pushw       push a word (16 bit) to stack
 
 %ebp        memory location pointed by ebp
 -4(%ebp)    offset fromt the memory location
@@ -122,4 +124,75 @@ pushl       l says use the 32 bit version of push
 bss section
 -------------------
 Does not take any space in memory because it is initialized to zero
+
+
+x86 assembyl
+----------------------------------------------------------------------------------------
+mov S,D         Move source to destination in AT&T syntax
+                in intel syntax this would be mov D,S
+                if register name is prefixed by "%" then it is AT&T syntax
+                movl, movq etc are AT&T syntax, in intel syntax it is just mov
+
+instruction suffix:
+b byte
+w word (two bytes)
+l doubleword (four bytes)
+q quadword   (eight bytes)
+
+
+%rax            function's retrun value
+%eax            lower 32 bits(byte 0-3) of %rax 
+%ax             lower 16 bits(byte 0-1) of %rax
+%al             lower 8 bits(byte 0) of %rax
+
+%rdi            first int or pointer parameter
+%rsi            second int or pointer parameter
+%rdx            third int or pointer parameter
+%rcx            fourth
+%r8             fifth
+%r9             sixth
+
+%rax            Function's return value.
+
+movl %edi, -116(%rbp)       move edi to %rbp-116 bytes
+
+.LC0            local constant
+.LFB0           local function begining
+.LFE0           local function ending
+
+
+stack management
+----------------
+%rsp                    Stack pointer (points to topmost element in the stack)
+%rbp                    Stack base pointer, used when amount of stack space is
+                        not known at the beginig of function.
+
+subq $0x18, %rsp        Allocate 24 bytes of space on the stack (same as addq $-0x18, %rsp)
+pushq %rbx              Restore %rbx from stack
+addq $0x18, %rsp        Give back 24 bytes of stack space
+
+
+Example function
+
+# Prolog
+pushq %rbp              # Use base pointer
+movq %rsp, %rbp
+pushq %rbx              # Save registers
+pushq %r12
+subq $0x18, %rsp        # Allocate some stack space
+...
+call rand               # Get random number
+andq $0xF8, %rax        # Make sure the value is 8-248 bytes and aligned on 8 bytes
+subq %rax, %rsp         # Allocate space on stack
+...
+...
+# Epilog
+movq (%rbp), %r12       # Restore registers from base of frame
+movq 0x8(%rbp), %rbx
+movq %rbp, %rsp         # Reset stack pointer and restore base pointer
+popq %rbp ret
+
+
+
+
 

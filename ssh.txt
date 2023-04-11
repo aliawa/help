@@ -49,15 +49,31 @@ Permissions on authorized keys: chmod 644 ~/.ssh/authorized_keys
 # ssh tunnel
 # --------------------------------------
 
-# ssh to C through B  (A--->B--->C)
-# Execute on A
+# ssh to C through B  (Local ---> Jumphost ---> Remote)
+# Execute on Local
 ssh -J user@jumphost fred@remote
+
+
+Reverse ssh tunnel
+--------------------
+# You can ssh from local to remote, but not from Remote to local
+# Local -----> Remote
+#       <--x--
+
+# on Local
+ssh -R 43022:localhost:22 fred@remote
+
+# after that to connect to local from romote, run on remote
+ssh localhost -p 43022  <<-- success
+
+
+
 
 
 
 Local port forwarding (-L)
 ---------------------------
-## Case 1: target is different from gateway
+# Case 1: target is different from gateway
 Execute on local-host:
 ssh -L <local-port>:<target-host>:<target-port> <gateway-computer>
 
@@ -225,5 +241,28 @@ ssh root@my-server.com -- cat /var/log/secure | tee secure.log | wc -l
 UseDNS no
 UsePAM no
 service sshd restart
+
+
+# -----------------------------------------------
+# Multiplexing SSH
+# -----------------------------------------------
+# Reuse a single TCP connection for multiple concurrent SSH sessions.
+
+# First establish the control master
+# Location of control socket is "~/.ssh/controlmasters"
+# Name of control socket is "a"
+ssh -MS ~/.ssh/controlmasters/a user@remote.server
+
+# Subsequent multiplexed connection using option "-S"
+ssh -S ~/.ssh/controlmasters/a user@remote.server
+
+# The control socket name can be made unique automatically
+# %r=remote user, %h=remote host, %p=remote hosts's port
+# This will create a control socket with name: "user@remote.server:22"
+ssh -MS ~/.ssh/controlmasters/%r@%h:%p user@remote.server
+
+# Stop multiplexing
+ssh -O stop -S ~/.ssh/controlmasters/%C user@remote.server
+
 
 

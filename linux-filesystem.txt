@@ -43,6 +43,9 @@ remount an already mounted filesystem as read-only
 # A graphical tool to look at /etc/fstab
 usermount
 
+determine if filesystem is mounted readonly
+egrep " ro,|,ro " /proc/mounts
+
 
 
 Info about current filesystems

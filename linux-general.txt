@@ -1,8 +1,5 @@
 #!/bash/bin
 
-change the name of network devices:
-    check /etc/udev/rules.d/70-persistent-net.rules
-
 at:
     at now + 4 minutes  (hours,days,weeks)
     at HH:MM
@@ -45,8 +42,6 @@ fuser -k /dev/sdb1
  change runlevel: init 3
 
 
-# Check for wireless interfaces
- iwconfig
 
 
 # Colored man pages (solarized)
@@ -65,12 +60,25 @@ export LESS_TERMCAP_so=$'\E[01;35;47m'    # standout statusbar/search -> magenta
 # NOTE useradd is the backend for adduser
 adduser aawais
 
+# add to sudo group
+usermod -aG sudo aawais
+
+# check
+id [username]
+
+# delete user
+deluser --remove-all-files
+
+# users groups
+groups [username]
+
+
 
 
 # Setup
 # -------------------------------------------------
 
-# Fix /boot is full problem
+# When /boot is full 
 # --> section Troubleshooting in apt-get.txt
 # --> section Fixing ubuntu boot problems in apt-get.txt
 # --> section Manually remove old linux kernels
@@ -103,6 +111,14 @@ apt-get install libssl-dev
 apt-get install libpcap-dev
 
 
+# enable sudo
+visudo
+copy line "root ALL=(ALL:ALL)ALL
+change root to aawais
+
+
+# change your login shell
+chsh -s /bin/bash aawais
 
 
 # locale removal
@@ -121,25 +137,87 @@ apt-get install libpcap-dev
 3. . ~/.light_bash_prompt
 
 
-# Free up memory
+# Free up disk space
 # -------------------------------------------------------
 
-1. /boot/initrd.img* can be deleted.
-   Use: dpkg -S /boot/initrd.img* to see which package placed the image
-   sudo rm /boot/initrd.img*
-   then regenerate for current kernel: sudo update-initramfs -c -k all
-
-2. sudo du -hsx /* | sort -rh | head -n 40
+1. sudo du -hsx /* | sort -rh | head -n 40
    to see where all the disk space is going.
 
-3. Everything in /var/tmp can be deleted.
-   sudo find /tmp -type f -atime +10 -delete
+2. /boot/initrd.img* can be deleted.
+   sudo update-initramfs -d -k $VER-generic
+   then regenerate for current kernel: sudo update-initramfs -c -k all
+
+3. Everything in /var/tmp and tmp can be deleted.
    deletes files older than 10 days.
+   sudo find /var/tmp -atime +10 -exec rm -rf "{}" \;
+   sudo find /tmp -atime +10 -exec rm -rf "{}" \;
 
 4. See who is using files in a directory to make sure safe to delete.
    lsof -Pn +D /var/cache/ | awk '{print $1}' | sort | uniq
 
 5. Files in /var/cache can be deleted.
-   
+   sudo find /var/cache -type f -atime +10 -delete
+
+6. Configure the temporary files rotation in /usr/lib/tmpfiles.d/tmp.conf
+   by specifying the "Age" field.
+
+7. /var/log
+  sudo find /var/log -atime +7 -exec rm -rf "{}" \;
+
+8. /var/crash
+   /var/core
+   Delete files here if not needed
+
+
+Ubuntu 18.04 setup
+--------------------------------------------------------
+network:
+edit /etc/netplan/50-cloud-init.yaml
+
+
+
+Reset password in ubuntu VM 
+-------------------------------------------------------
+vsphere: right-click-> Edit settings -> VM Options -> Boot Options -> Boot Delay
+boot -> launch web console -> Press Esc
+select "Advanced options for Ubuntu" on grub and go to recovery mode.
+Drop to root shell prompt
+
+mount -o rw,remount /
+ls /home
+passwd username
+
+
+# Check your powerline fonts
+---------------------------------------------------------
+echo "\ue0b0 \ue0b1 \ue0b2 \ue0b3"   
+
+
+# install gtags locally
+---------------------------------------------------------
+curl -O https://invisible-island.net/datafiles/release/ncurses.tar.gz
+./configure --prefix=/home/aawais/bin --without-debug
+make
+make install
+
+curl -O https://ftp.gnu.org/pub/gnu/global/global-6.6.tar.gz
+export CFLAGS="-I/home/aawais/bin/include/ncurses -I/home/aawais/bin/include"
+./configure --prefix=/home/aawais/bin --with-ncurses=/home/aawais
+make
+make install
+
+
+# --------------------------------------------------------
+# Unix Text tools
+# --------------------------------------------------------
+
+# check line ending
+cat -vE file
+output: what isgoingon^M$
+
+od -c file
+output:
+0000000   w   h   a   t       i   s   g   o   i   n   g   o   n  \r  \n
+0000020
 
 

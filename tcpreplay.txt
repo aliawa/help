@@ -22,10 +22,11 @@ tcpprep -c 68.68.117.60 -i rx_filtered.pcap  -o rx_filtered.prep
 # mac for server-to-client traffic, which is responses in case of SIP.
 # The second mac address in the enet-dmac option is for client-to-server
 # traffic, for example the SIP request.
-# First: mac addr of DUT interface that will receive the server2client packts
-# Second: mac addr of DUT interface that will receive the client2srvr packts
-tcprewrite --enet-dmac=d4:f4:be:0b:a2:1b,d4:f4:be:0b:a2:1a \
-    -c rx_filtered.prep -i rx_filtered.pcap -o rx_replay.pcap
+# First: mac addr of DUT interface that will receive the server2client packts(primary)
+# Second: mac addr of DUT interface that will receive the client2srvr packts(secondary)
+C2S_MAC=00:0c:29:b6:9c:6d
+S2C_MAC=00:0c:29:b6:9c:8b
+tcprewrite --enet-dmac=$S2C_MAC,$C2S_MAC -c rx_filtered.prep -i rx_filtered.pcap -o rx_replay.pcap
 
 # 3. Check
 tshark -r rx_replay.pcap -e frame.number -e ip.src -e ip.dst \
@@ -35,16 +36,16 @@ tshark -r rx_replay.pcap -e frame.number -e ip.src -e ip.dst \
 #    a. Add Original NAT policy as applied in the pcap
 #    b. Set security policy to allow traffic
 #    c. Por mapping may need to be set
-debug dataplane nat static-mapping add from-ip 198.168.60.168 from-port 41660 to-ip 10.3.36.168 to-port 34681
-debug dataplane nat static-mapping del from-ip 198.168.60.168 from-port 41660
+debug dataplane nat static-mapping add from-ip 192.168.60.168 from-port 53791 to-ip 10.3.36.168 to-port 13442
+debug dataplane nat static-mapping del from-ip 192.168.60.168 from-port 53791
 
 
 # 5. On the target system (pcap server)
 #    a. Set interface address to match the pcap target
 #    b. For UDP: block icmp, for TCP block RST
 #ipv4
-iptables -A OUTPUT -p icmp --icmp-type 3 -j DROP
-iptables -A OUTPUT -p tcp --tcp-flags RST RST -j DROP
+sudo iptables -A OUTPUT -p icmp --icmp-type 3 -j DROP
+sudo iptables -A OUTPUT -p tcp --tcp-flags RST RST -j DROP
 #ipv6
 ip6tables -A OUTPUT -p icmpv6 --icmpv6-type 1 -j DROP
 ip6tables -A OUTPUT -p tcp --tcp-flags RST RST -j DROP
@@ -56,9 +57,11 @@ ip6tables -A OUTPUT -p tcp --tcp-flags RST RST -j DROP
 
 
 # 7. replay
-# intf1 - receives server-to-client packets (SIP responses)
-# intf2 - receives client-to-server packets (SIP requests)
-tcpreplay -c rx_filtered.prep --intf1=eth1 --intf2=eth3 rx_replay.pcap
+# intf1 - receives server-to-client packets (SIP responses) Primary
+# intf2 - receives client-to-server packets (SIP requests) Secondary
+C2S_INT=eth1
+S2C_INT=eth4
+tcpreplay -c rx_filtered.prep --intf1=$S2C_INT --intf2=$C2S_INT rx_replay.pcap
 
 
 
@@ -96,14 +99,76 @@ tcprewrite --enet-dmac=d4:f4:be:0b:a2:1a,d4:f4:be:0b:a2:1b \
                        --cachefile=rx_filtered.prep \
                        --infile=rx_filtered_new_ips.pcap --outfile=rx_filtered_mac_rewrite.pcap
 
-
 # rewrite ips in content
 ~/workspace/scappy/change_ips_in_content.py
 
 
+# remove vlan tag
+tcprewrite --enet-vlan=del -c the_flow.cache -i the_flow_ed3.pcap -o the_flow_ed4.pcap
 
+
+
+# GET INFO about cache file
 # --------------------------------------------------------------------------
+tcpprep --print-info=sip-1.cache
+tcpprep --print-stats=sip-1.cache
+tcpprep --print-comment=sip-1.cache      # shows original command line args
 
 
+
+# tcpreplay-edit options
+# --------------------------------------------------------------------------
+--enet-dmac=<mac1>,<mac2>
+change dst-mac of "to Secondary" or initiated by non '-c <cidr>' to mac1
+change dst-mac of "to Primary" or initiated by '-c <cidr>' to mac2
+
+--enet-subsmac=<mac_orig>,<mac_new>
+mac address search and replace.
+
+--intf1=ens192 or -i
+send "to Primary" marked packet to this interface
+
+--intf2=ens224 or -I
+send "to Secondary" marked packet to this interface
+
+
+# tcpprep options
+# --------------------------------------------------------------------------
+tcpprep -c <cidr>
+All packets whose src-ip matches <cidr> are marked "to Primary"
+the rest are marked "to Secondary"
+
+
+
+# tcpdump options
+# --------------------------------------------------------------------------
+# dont resolve host names -n
+# be verbose when printing packets -v
+# print frame number -#
+tcpdump -nv# -r rx
+
+
+
+1. make sure vsphere vswitch in promiscuous mode
+2. Remove vlan tag from the pcap
+tcprewrite --enet-subsmac=b4:0c:25:e0:80:14,00:50:56:9c:03:c7 -c sip.cache -i sip_tcp_50.pcap -o sip_tcp_50.edit.pcap.1
+tcprewrite --enet-vlan=del -c sip.cache -i sip_tcp_50.edit.pcap.1 -o sip_tcp_50.edit.pcap.2
+tcprewrite --portmap=59619:5060 -c sip.cache -i sip_tcp_50.edit.pcap.2 -o sip_tcp_50.edit.pcap.3
+tcprewrite --fixcsum -c sip.cache -i sip_tcp_50.edit.pcap.3 -o sip_tcp_50.edit.pcap.4
+
+3. start listner on the remote machine. (not needed)
+4. set session tcp-reject-non-syn no
+5  set system setting layer4-checksum disable (if you change the dst port)
+6  set session strict-checksum no
+
+# How to enable promiscuous mode (vmware vsphere)
+1. Select host from left pane "10.5.12.208"
+2. go to "Configure" tab
+3. select "Networking > Virtual Switches"
+4. Edit > Security > Promiscuous mode > Accept
+
+
+# Split a pcap file
+tcpdump -r h225.pcap -w one.pcap -c 10
 
 
