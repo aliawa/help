@@ -1,0 +1,167 @@
+UAC instructing the proxy
+-----------------------------------------------------
+RFC 3841: Caller preferences for SIP
+
+1. Caller includes "pref" in Proxy-Require
+
+2. To control wheather the request is proxied or 
+   redirected:
+   Request-Disposition: proxy | redirect
+   
+   Other values:
+   fork / no-fork
+   recurse / no-recurse      take action on 3xx
+   parallel / serial
+   queue / no-queue
+
+3. Specify acceptable targets:
+   Accept-Contact: *;audio
+
+4. Specify unacceptable targets:
+   Reject-Contact: *;video
+
+
+
+UAC giving instructions to UAS
+------------------------------------------------
+Content-Disposition: session/render/icon
+What to do with the message body or body part, 
+create a session, render it or use as an icon
+
+Content-Encoding: gzip
+Message body could be compressed. This header
+tells how to decode it.
+
+Content-Language: fr
+
+Content-Length: Lenght of message body in octets.
+This is mandatory in TCP.
+
+Content-Type: 
+
+Event: which event or class of event it is subscribing to
+
+
+
+Proxy instructing UAS or Gateways
+---------------------------------------------------
+* Proxy controlling the ring back or ring tone
+  Alert-Info: uri;name=value...
+  in INVITE: specify ring tone
+  in 180: specify ringback tone
+
+* Tell PSTN gateways to give priority to a specific call.
+  Resource-Priority: name_space.r-priority
+  Option-Tag:  resource-priority
+  Name_Space: Defense Switched Network (dsn.) r-priority values:
+  (lowest)  routine 
+            priority, 
+            immediate, 
+            flash, 
+  (highest) flash-override 
+  
+* Control whether a UA will alert the user or automatically
+  answer the call.
+  Answer-Mode: Manual/Auto
+  
+* Flow-Timer: How often to send the keep alive.
+
+
+
+Methods for user agent to show its capabilities
+------------------------------------------------
+* Tell server the acceptable encoding for the message
+  body
+  Accept-Encoding: gzip
+
+* Show which event packages it supports
+  Allow-Events: abc,efg,...
+
+* Tell server the languague for reason phrases, 
+  session description, status response
+  Accept-Language: en | da
+
+* Indicate supported capabilities in REGISTER
+  extensions parameter in Contact header
+  Contact:...;extensions="answermode,100rel,gruu"
+
+* Recv-Info: list of accepted info packages
+
+Methods for proxies/gateways to show its capabilities
+------------------------------------------------
+* Resource priorities supported. Applicable to gateways
+  Accept-Resource-Priority: valid resource-priority values.
+
+
+Authentication
+------------------------------------------------
+Authentication-Info
+Authorization: Usually sent in response to 401
+Proxy-Authorization
+
+Identity: A proxy authenticates the request sender and 
+then calculates a hash over From and other headers and message body.
+It then signs the hash with its own domain certificate and inserts
+the result in the identity header field.
+  The end user can then verify the identity of the originator.
+
+Identity-Info: How to aquire the certificate used in Identity 
+header.
+
+
+Message identification
+------------------------------------------------
+Call-ID
+From
+
+
+Transactions
+------------------------------------------------
+CSeq : identify and order transactions
+
+
+No catagory
+------------------------------------------------
+Error-Info
+Expires
+Feature-Caps: Any entity can insert its feature capabilities
+
+Geolocation
+Geolocation-Routing
+
+History-Info
+
+
+
+Information
+------------------------------------------------
+* More info about caller or callee. For example proxy can 
+  insert this field
+
+  Call-Info: <URI>;purpose=icon, <URI>;purpose=info
+
+Info-Package: name of info package used in this request
+
+
+Addresses
+------------------------------------------------
+Contact: "name" <URI?;name=value
+Geolocation: can contain a SIP or HTTP Uri for retrieving location.
+History-Info: capture previous Request-URIs of the message as it went
+              through different SIP entities on its way.
+
+
+
+
+
+sip history
+------------------------------------------------
+ietf-mmusic-sip-01.txt  1996  INVITE,CAPABILITIES
+ietf-mmusic-sip-02.txt  1997  INVITE,OPTIONS
+ietf-mmusic-sip-03.txt  1998  INVITE,OPTIONS,CONNECTED,BYE,REGISTER,UNREGISTER
+ietf-mmusic-sip-04.txt  1998  INVITE,OPTIONS,ACK,BYE,REGISTER,UNREGISTER
+ietf-mmusic-sip-05.txt  1998  INVITE,OPTIONS,ACK,BYE,REGISTER,CANCEL
+ietf-mmusic-sip-06.txt  1998  INVITE,OPTIONS,ACK,BYE,REGISTER,CANCEL
+RFC 2543: branch parameter was mandatory only when forking, otherwise optional
+
+

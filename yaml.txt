@@ -1,0 +1,46 @@
+dump(data, stream=None, Dumper=Dumper,
+    default_style=None,
+    default_flow_style=None,
+    encoding='utf-8', # encoding=None (Python 3)
+    explicit_start=None,
+    explicit_end=None,
+    version=None,
+    tags=None,
+    canonical=None,
+    indent=None,
+    width=None,
+    allow_unicode=None,
+    line_break=None)
+
+
+default_flow_style:
+    None
+    True
+    False           block output 
+
+default_style
+    "'"             all strings enclosed in ''
+    '"'             all strings enclosed in ""
+    '|'             keep newlines in the text
+    '>'             smush text into a single line
+
+# dump keys in order
+with open(CaseFile, 'w') as f:
+    yaml.dump(lyml, f, default_flow_style=False, sort_keys=False)
+
+
+# pipe charactor
+    pipe character at end of line signifies that any indented text that 
+    follows should be interpreted as a multi-line scalar value. 
+    Specifically, the pipe indicates that (except for the indentation) 
+    the scalar value should be interpreted literally in such a way that
+    preserves newlines. 
+
+    Conversely, the > character indicates that multi-line "folded" 
+    scalar follows, meaning that newlines are converted to spaces. 
+
+    |2+     two spaces are used as indetation at left
+    |-      remove all new-lines from end of string
+    |+      keep all new-lines at end of string
+    |       keep only one new-line at end, remove the rest
+

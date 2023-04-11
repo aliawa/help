@@ -1,0 +1,6 @@
+Overloading and Overriding.
+
+Overloading: Functions have same name but different signature.
+Overriding:  Functions have same name and same signature.
+
+

@@ -1,0 +1,207 @@
+
+How does client find about the media stream 
+------------------------------------------------------------
+RTSP URL identifies the media stream
+Client learns about the properties of media by downloading a "presentation
+description" file. Client obtains this file using any means such as http etc
+from somewhere, for example a Web page
+
+
+RTSP actually controls presentation
+------------------------------------
+Presentations have names that is included in the URL, forexample "twister". Presentation is a
+combination of streams such as audio and video.
+rtsp://media.example.com:554/twister
+
+
+How does the client find out the server port and address
+---------------------------------------------------------
+From the RTSP URL:
+rtsp://<host>:<port>         use tcp
+rtsp://<host>/<path>         use tcp port 554
+rtspu://<host>:<port>        use udp
+
+
+
+Use of SDP.
+------------
+* SDP can be retrieved by clients from server using HTTP or DESCRIBE. So SDP is
+  only send from server to client.
+* The port in "m=" is typically 0, if it does contain a value it is just a
+  recomendation from server, the client can ignore it.
+* The "c=" field is typically "0.0.0.0" because the destination address is
+  specified by client in SETUP request.
+* Aggregate Control: if there is session level "a=control" field then it is to control all
+  streams. Media level "a=control" is for individual streams.
+
+
+Default server port
+------------------
+554
+
+
+RTSP has sessions
+-----------------
+during its lifetime, a single media stream may be controlled by RTSP requests issued 
+sequentially on different TCP connections. Therefore, the server needs to maintain 
+"session state" to be able to correlate RTSP requests within a stream
+
+
+RTSP message length
+-------------------------
+- An empty line containing only CRLF
+- Content-Length header if present
+
+
+
+mode=record / mode=play
+-------------------------
+- In record mode the stream source address is the client unless another address
+  is given in source= field.
+- In play mode the stream source in server unless source= field contains a
+  different address.
+
+
+destination in SETUP
+-------------------------
+If the presentation is to be sent only to the client via unicast, the client
+provides the destination for security reasons.
+
+The client may specify the multicast address with the destination parameter
+NOTE: client can only specify multicast address in "destination="
+
+Unless the media content has a fixed destination address, the "c=" field is to be set 
+to a suitable null value. For addresses of type "IP4", this value is "0.0.0.0"
+NOTE: In most cases the "c=" will be null, because the destination address is 
+exchanged in SETUP
+
+
+client_port
+-----------
+This parameter provides the unicast RTP/RTCP port pair on which the client has chosen to 
+receive media data and control information
+NOTE: only makes sense for unicast
+
+
+
+Media transport
+----------------
+The media always flows from server to client therefore only one address is
+needed. There are three cases.
+    unicast: transmitted to the source of RTSP request with port chosen by client
+    multicast: server chooses address: e.g. live transmission.
+    multicast: client chooses address: e.g. server to participate in existing multicast conference
+
+
+Methods:
+----------
+SETUP:      Start an RTP session
+PLAY:       Start data stream on a session allocated via SETUP
+PAUSE:      Temporarily halts a stream without freeing server resources
+TEARDOWN:   Frees resource associated with the stream.
+DESCRIBE:   Obtain media information about the resource identified by request
+            URL. The response contains SDP
+
+
+
+Asterisk in request URI
+------------------------------
+The asterisk "*" in the Request-URI means that the request does not
+apply to a particular resource, but to the server itself, and is only
+allowed when the method used does not necessarily apply to a
+resource.  Example: OPTIONS * RTSP/1.0
+
+
+Interleaved media
+--------------------
+Media can be sent on the RTSP control channel
+Transport: RTP/AVP/TCP;interleaved=0-1
+means channel 0 and 1 are interleaved
+
+
+Transport examples from pcaps
+-------------------------------
+C->S Transport: RTP/GNSS;unicast;client_port=64190
+S->C Transport: RTP/GNSS;unicast;client_port=64190;server_port=43857
+
+C->S Transport: RTP/AVP;unicast;client_port=6976-6977
+S->C Transport: RTP/AVP;unicast;mode=play;client_port=6976-6977;server_port=10580-10581;source=74.125.208.210;ssrc=00609F93
+
+C->S Transport: RTP/AVP/TCP;unicast
+S->C Transport: RTP/AVP/TCP;unicast;destination=255.255.255.255;interleaved=0-1
+
+C->S Transport: RTP/AVP;unicast;client_port=6970-6971
+S->C Transport: RTP/AVP;unicast;destination=10.5.132.10;source=10.5.132.210;client_port=6970-6971;server_port=6970-6971
+
+
+
+# -----------------
+#  RTSP EXAMPLE 
+# -----------------
+
+------>
+OPTIONS * RTSP/1.0
+CSeq: 1
+User-Agent: eventIS_VOD_V1
+
+<------ 
+S2C
+RTSP/1.0 200 OK
+CSeq: 1
+Public: OPTIONS, GET_PARAMETER, SETUP, TEARDOWN
+
+------>
+SETUP rtsp://18.130.20.194:1199/e04bbfab-0a5b-44a1-8f3b-7bd2641a6b0b?VODServingAreaId=0.0.0.0/0&STBId=01899752772 RTSP/1.0
+CSeq: 2
+User-Agent: eventIS_VOD_V1
+Transport: MP2T/AVP/UDP;unicast;destination=172.16.181.120;client_port=54504
+
+<------ 
+RTSP/1.0 200 OK
+CSeq: 2
+Session: S_0c3d16d1a54b3fe9fba1d7b1da232aa0
+Location: rtsp://18.130.20.194:5005/
+ControlSession: C_5688f10cb48860937707f72a7e0411da
+Transport: MP2T/AVP/UDP;unicast;destination=101.100.167.226;client_port=54504;source=51.91.11.76;server_port=54504
+Duration: 139
+Bookmark: 0
+
+------>
+OPTIONS * RTSP/1.0
+CSeq: 1
+User-Agent: eventIS_VOD_V1
+
+<------ 
+RTSP/1.0 200 OK
+CSeq: 1
+Public: DESCRIBE, SETUP, TEARDOWN, PLAY, PAUSE, OPTIONS, GET_PARAMETER
+
+
+------>
+PLAY * RTSP/1.0
+CSeq: 2
+Session: C_5688f10cb48860937707f72a7e0411da
+User-Agent: eventIS_VOD_V1
+Scale: 1.0
+Range: npt=0.0-
+
+<------ 
+RTSP/1.0 200 OK
+CSeq: 2
+Session: C_5688f10cb48860937707f72a7e0411da
+Scale: 1.000000
+Speed: 1.000000
+Range: npt=0.000000-138.720000
+
+
+------>
+TEARDOWN rtsp://18.130.20.194:1199/e04bbfab-0a5b-44a1-8f3b-7bd2641a6b0b?VODServingAreaId=0.0.0.0/0&STBId=01899752772 RTSP/1.0
+CSeq: 3
+Session: S_0c3d16d1a54b3fe9fba1d7b1da232aa0
+User-Agent: eventIS_VOD_V1
+
+<------ 
+RTSP/1.0 200 OK
+CSeq: 3
+Session: S_0c3d16d1a54b3fe9fba1d7b1da232aa0
+

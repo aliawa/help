@@ -1,0 +1,35 @@
+inoremap jk <ESC>
+set tabstop=4       "4-space tabs
+set shiftwidth=4    "autoindent setting
+set expandtab       "convert tab to spaces
+set softtabstop=4   "backspace key treat four spaces like a tab
+
+filetype plugin indent on
+
+" windows
+set splitright " new vertical split appears on right
+nmap <silent> <C-h> :wincmd h<CR>
+nmap <silent> <C-j> :wincmd j<CR>
+nmap <silent> <C-k> :wincmd k<CR>
+nmap <silent> <C-l> :wincmd l<CR>
+
+"------ Tagbar -----
+let mapleader=","
+nnoremap <leader>t :TagbarOpenAutoClose<cr>
+
+
+"------ Lightline -----
+set laststatus=2
+" add this to .bashrc .zshrc export TERM=xterm-256color
+
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'readonly', 'filename', 'modified', 'tagbar' ] ]
+      \ },
+      \ 'component': {
+      \     'tagbar': '%{tagbar#currenttag("%s", "", "f")}',
+      \ },
+      \ }
+

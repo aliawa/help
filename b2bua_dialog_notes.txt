@@ -1,0 +1,7 @@
+1. Dialog states make sure what can be done to a dialog in a particular
+situation.
+
+2. Dialog cannot be UAS or UAC because a dialog can be created when a NOTIFY
+is received 
+
+

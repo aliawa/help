@@ -1,0 +1,49 @@
+General Notes:
+- 8 groups of 16 bit hexadecimal values separated by colons
+  or 8 groups of 2 bytes each, for a total of 16 bytes.
+  example: 2001:0db8:85a3:0000:0000:8a2e:0370:7334
+- An address starting with FF is a multicast address.
+
+
+::/128                  unspecified
+::1/128                 loopback
+::ffff:a.b.c.d/96       0:0:0:0:0:ffff:AB:CD IPv4 mapped address
+                        Example- 192.168.1.100  --> ::ffff:c0a8:0164
+
+64:ff9b::/96            IPv4 tranlatable IPv6 addresses (NAT64?)
+                        Example: 64:ff9b::1234:5678/96
+
+100::/64                Discard only address block
+2001:0000::/32          Teredo (IPv6 tunneling protocol)
+2001:db8::/32           Documentation and examples.
+2001:0010::/29          ORCHID2: They should not appear in IPv6 headers
+2002::/16               6to4, Connection of IPv6 domains via ipv4 clouds
+
+fc00::/7                Unique Local Addresses, similar to ipv4 private addresses
+fd00::/8                Original is FC but 8th bit always set therefore FD
+                        example: fd07:a47c:3742:823e:3b02:76:982b:463/64
+
+fe80::/10               Link-Local Addresses, Routers should not forward these
+                        Actual addresses are fe80::/64 because the next 54 bits are zero
+                        example: fe80::x:x:x:x - fe80 followed by 4 segments
+                        The last 4 segments are derived from MAC address
+
+ff00::/8                Multicast
+ff02::1                 All-Nodes multicast: 
+ff02::2                 All-Routers multicast: 
+
+
+Discover all nodes on the same link (link-local scope):
+ping6 -I eth0 ff02::1
+
+
+ICMPv6 includes:
+    - IGMP : manage multicast group membership
+    - ARP/RARP : convert layer 2 address to IP addresses
+    - ND : Find link layer addresses of neighbors attached to 
+           same link.
+    - IND: Inverse neighbor discovery, is the equivalent of RARP
+           convert link-layer address to IPv6 address.
+
+
+

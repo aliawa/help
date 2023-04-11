@@ -1,0 +1,10 @@
+Operating on a subset of arguments at a time
+--------------------------------------------
+# two arguments at a time, useful for diff
+echo {0..9} | xrgs -n 2
+
+# Each line at a time
+git log --format="%H %P" | xargs -L 1 git diff
+
+
+

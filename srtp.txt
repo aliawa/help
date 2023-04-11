@@ -1,0 +1,217 @@
+RFC 3711: SRTP
+-------------------------------------------------------------------------
+SRTP is a "bump in the stack", it intercepts RTP and forwards an
+equivalient SRTP packet on sending side and intercepts SRTP and passes an
+equivalent RTP on receiving side.
+
+SRTP only encrypts the RTP payload and may add the following fields:
+MKI: master key identifier
+Authentication tag: MAC for the RTP header and encrypted payload.
+
+SRTP uses master key to derive the session keys which are actually used
+in encryption. It derives six session keys: RTP encryption, RTP authen,
+RTCP encrypt, RTCP auth, RTP salt, RTCP salt.
+
+SRTP maintains a 32 bit roll-over-counter ROC for the RTP sequence number, 
+this essntially extends the rtp sequence nr from 16 bits to 48 bits. 
+After 2^48 packets have been processed master key must be changed.
+
+Replay protection by maintaing a replay list.
+
+SRTCP adds the following fields:
+encrypt-flag: Is the packet encrypted
+SRTCP-index: 31 bit counter for SRTCP packets
+authentication-tag: 
+SRTCP MKI: (optional): 
+
+SRTP simply XORs the "keystream segment" with payload therefore the size
+of the encrypted payload is the same as the size of actual payload.
+
+if key derivation rate (r) is specified, SRTP will perform session key
+generation everytime index mod r == 0.
+
+
+
+RFC 3830: MIKEY
+-------------------------------------------------------------------------
+MIKEY can exchage keys securely when the SDP itself is not secured.
+
+MIKEY defines 3 methods for secure key exchange:
+1. Pre-shared key: Initiator and responder know the key through
+   configuration.
+2. Public-key encryption: The initiator encrypts the key using an 
+   envelop key and sends the envelop-key to responder encrypted with the 
+   public key of responder.
+3. Diffie-Hellman key exchange: can only be used for single peer-to-peer
+   key. The initiator selects g and sends g^xi to responder. The responder
+   sends g^xr to initiator, both calculate TGK=g^(xi*xr)
+
+MIKEY message is assembled as
+[Common-Header] [Payload 1] [Payload 2] ... [MAC]
+
+
+
+
+RFC 4567 : Key Management Extension for SDP
+-------------------------------------------------------------------------
+MIKEY is a binary protocol which is base64 encoded and transported
+using SDP offer/answer in a=key-mgmt field. See below an offer with
+session level key-mgmt parameter.
+
+   v=0
+   o=alice 2891092738 2891092738 IN IP4 w-land.example.com
+   s=Cool stuff
+   e=alice@w-land.example.com
+   t=0 0
+   c=IN IP4 w-land.example.com
+   a=key-mgmt:mikey AQAFgM0XflABAAAAAAAAAAAAAAsAyONQ6gAAAAAGEEoo2pee4hp2
+   UaDX8ZE22YwKAAAPZG9uYWxkQGR1Y2suY29tAQAAAAAAAQAk0JKpgaVkDaawi9whVBtBt
+   0KZ14ymNuu62+Nv3ozPLygwK/GbAV9iemnGUIZ19fWQUOSrzKTAv9zV
+   m=audio 49000 RTP/SAVP 98
+   a=rtpmap:98 AMR/8000
+   m=video 52230 RTP/SAVP 31
+   a=rtpmap:31 H261/90000
+
+
+
+
+
+RFC 4568: Security Descriptions for Media Streams
+--------------------------------------------------------------------
+The key is transported in a *media level only* SDP attribute: 
+a=crypto:<tag> <crypto-suite> <key-params> [<session-params>]
+
+tag: an id to distinguish multiple crypto attribs in a media section
+crypto-suite: combination of encryption and authenticate algorithms
+key-param: inline:<the-actual-master-key>
+session-params: for example key-derivation-rate etc.
+
+This attribute can only be used for 2 party unicast media. As a result
+SIP forking is problematic. When forking is detected an UPDATE with
+new key must be sent to each answerer.
+
+This attribute can only be used when sdp is transported securely,
+for example through TLS, SIP S/MIME etc.
+
+Note: media clipping can occur because the offerer will receive 
+srtp packets before the key in the SDP answer. A solution to the 
+clipping problem is rfc 5027: security preconditions. which requires
+the use of PRACK or UPDATE.
+
+Example:
+"inline:" <key||salt> ["|" lifetime] ["|" MKI ":" length]
+
+Offerer sends:
+
+      v=0
+      o=sam 2890844526 2890842807 IN IP4 10.47.16.5
+      s=SRTP Discussion
+      i=A discussion of Secure RTP
+      u=http://www.example.com/seminars/srtp.pdf
+      e=marge@example.com (Marge Simpson)
+      c=IN IP4 168.2.17.12
+      t=2873397496 2873404696
+      m=audio 49170 RTP/SAVP 0
+      a=crypto:1 AES_CM_128_HMAC_SHA1_80
+       inline:WVNfX19zZW1jdGwgKCkgewkyMjA7fQp9CnVubGVz|2^20|1:4
+       FEC_ORDER=FEC_SRTP
+      a=crypto:2 F8_128_HMAC_SHA1_80
+       inline:MTIzNDU2Nzg5QUJDREUwMTIzNDU2Nzg5QUJjZGVm|2^20|1:4;
+       inline:QUJjZGVmMTIzNDU2Nzg5QUJDREUwMTIzNDU2Nzg5|2^20|2:4
+       FEC_ORDER=FEC_SRTP
+
+   Answerer replies:
+
+      v=0
+      o=jill 25690844 8070842634 IN IP4 10.47.16.5
+      s=SRTP Discussion
+      i=A discussion of Secure RTP
+      u=http://www.example.com/seminars/srtp.pdf
+      e=homer@example.com (Homer Simpson)
+      c=IN IP4 168.2.17.11
+      t=2873397526 2873405696
+      m=audio 32640 RTP/SAVP 0
+      a=crypto:1 AES_CM_128_HMAC_SHA1_80
+       inline:PS1uQCVeeCFCanVmcjkpPywjNWhcYD0mXXtxaVBR|2^20|1:4
+
+
+
+RFC 6189: ZRTP
+--------------------------------------------------------------------
+performs its key agreements and key management in a purely 
+peer-to-peer manner over the RTP packet stream.
+
+ZRTP is designed for Point-to-Point topologies only.
+
+ZRTP can be utilized by endpoints that do not have a common
+signaling protocol but both support SRTP and are relying on a
+gateway for conversion.
+
+
+ZRTP endpoint automatically discovers if the other endpoint supports 
+ZRTP
+
+ZRTP endpoints SHOULD include the SDP attribute a=zrtp-hash in offers
+and answers,
+
+ZRTP can be implemented as a "bump in the wire" or as a 
+"bump in the stack" in which RTP sent by the SIP User Agent (UA) is 
+converted to ZRTP.  In these cases, the SIP UA will have no knowledge 
+of ZRTP.
+
+The a=zrtp-hash attribute can only be included in the SDP at the
+media level
+ v=0
+ o=bob 2890844527 2890844527 IN IP4 client.biloxi.example.com
+ s=
+ c=IN IP4 client.biloxi.example.com
+ t=0 0
+ m=audio 3456 RTP/AVP 97 33
+ a=rtpmap:97 iLBC/8000
+ a=rtpmap:33 no-op/8000
+ a=zrtp-hash:1.10 fe30efd02423cb054e50efd0248742ac7a52c8f91bc2
+
+
+
+ When voice is compressed with a VBR codec, the packet lengths vary
+ depending on the types of sounds being compressed.  This leaks a lot
+ of information about the content even if the packets are encrypted,
+ regardless of what encryption protocol is used
+
+Three modes for generating secret for deriving SRTP key:
+Diffie-Hellman Mode
+Preshared Mode
+Multistream mode.
+
+
+
+
+
+
+RFC 5763 DTLS-SRTP Framework
+--------------------------------------------------------------------
+DTLS-SRTP is defined for point-to-point media sessions, in which
+there are exactly two participants
+
+entire authentication and key exchange for securing the
+media traffic is handled in the media path through DTLS.  The
+signaling path is only used to verify the peers' certificate
+fingerprints.
+
+In order to negotiate the use of SRTP data protection, clients
+include an extension of type "use_srtp" in the DTLS extended client
+hello.
+
+m= will use UDP/TLS/RTP/SAVP instead of RTP/AVP
+
+SDP attributes
+client uses a=setup:active in SDP and server uses a=setup:passive or
+setup:active.
+endpoints use a=fingerprint: <fingerprint of DTLS certificate>
+actual configuration attribute (a=acfg)
+potential configuration (a=pcfg)
+transport protocols (a=tcap)
+
+This approach deals with forking and early media without requiring
+support for Provisional Response ACKnowledgement (PRACK) [RFC3262]
+

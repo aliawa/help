@@ -1,0 +1,11 @@
+1. Setup in Vim
+2. Setup for iterm2
+    cd tmp
+    git clone https://github.com/altercation/solarized.git
+    iterm2: preferences > Profiles > load presets > import
+3. Setup for tmux
+4. Setup for directory colors
+    a. download https://github.com/seebi/dircolors-solarized.git
+    b. link ~/.dircolors-solarized --> /path/dircolors.ansi-dark
+    c. in bashrc eval `dircolors /path/to/dircolrsdb`
+5. Setup for bash prompt

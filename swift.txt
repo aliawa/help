@@ -1,0 +1,40 @@
+app, ios
+Core Data is a database
+All projects go in ~/Developer/...
+
+Area on left
+Navigator
+
+Area on rigt
+Previewr
+
+inspector
+
+@main is the main
+
+struct <name of struct> : View {   // behaves like a view
+
+    // view is just a rectangular area
+    // every rectangular area on screen is a view
+
+    // in order to behave like a view the object must
+    // have a body variable
+
+body is usually a combiner view
+
+return is implied in 
+{ 
+    Text("Hello, World!")
+}
+
+
+compiler replaces "some view" with the actual type, text in this case
+
+
+padding does not return Text, it returns some view
+
+argument label
+
+
+
+

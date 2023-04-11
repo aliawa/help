@@ -1,0 +1,12 @@
+output form character position 32 to the end of line
+cut -c 32-
+
+# output field 1, fields are delimited by '#'
+cut -d# -f 1
+
+# get fields
+echo "remotes/origin/zehcen" | cut -d'/' -f1    outputs: remotes
+echo "remotes/origin/zehcen" | cut -d'/' -f2    outputs: origin
+echo "remotes/origin/zehcen" | cut -d'/' -f3    outputs: zechen
+echo "remotes/origin/zehcen" | cut -d'/' -f2-   outputs: origin/zechen
+

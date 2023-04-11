@@ -1,0 +1,183 @@
+*bold*
+_italic_
+*_bold+italic_*
+#Highlighted#
+x^superscript^
+C~subscript~
+'emphasized text'
++monospaced font+
+`monospaced literal text`
+`single qutaion marks'
+``qutaion marks''
+__uconstrained emphasized text__
+**unconstrained strong text**
+++unconstrained monospaced text++
+##unconstrained unquoted text##
+
+
+
+= Document Title (Level 0)
+== Level 1 Section Title
+=== Level 2 Section Title
+==== Level 3 Section Title
+===== Level 4 Section Title
+====== Level 5 Section Title
+
+== Unordered List
+* Level 1 list item
+** Level 2 list item
+*** Level 3 list item
+**** Level 4 list item
+***** Level 5 list item
+* Level 1 list item
+
+== Ordered List
+. Level 1 list item
+.. Level 2 list item
+... Level 3 list item
+.... Level 4 list item
+..... Level 5 list item
+. Level 1 list item
+
+
+== Check List
+* [*] checked
+* [x] also checked
+* [ ] not checked
+* normal list item
+
+
+== Question Answer list
+Question::
+Answer
+
+Have you seen my duck?:: No.
+
+
+
+* Every list item has at least one paragraph of content,
+  which may be wrapped, even using a hanging indent.
++
+Additional paragraphs or blocks are adjoined by putting
+a list continuation on a line adjacent to both blocks.
++
+list continuation:: a plus sign (`{plus}`) on a line by itself
+
+* A literal paragraph does not require a list continuation.
+
+$ cd projects/my-book
+
+* AsciiDoc lists may contain any complex content.
++
+|===
+|Column 1, Header Row |Column 2, Header Row
+
+|Column 1, Row 1
+|Column 2, Row 1
+|===
+
+== Literal text
+`Literal monospace text`
+`code`
+
+Normal line.
+
+ Indent line by one space to create a literal line.
+
+Normal line.
+
+
+.Some Ruby code
+[source,ruby]
+----
+require 'sinatra'
+
+get '/hi' do
+  "Hello World!"
+  end
+----
+
+[source,ruby]
+----
+require 'sinatra' // <1>
+
+get '/hi' do // <2>
+  "Hello World!" // <3>
+end
+----
+<1> Library import
+<2> URL mapping
+<3> HTTP response body
+
+[source,xml]
+<meta name="viewport"
+  content="width=device-width, initial-scale=1.0">
+
+This is normal content.
+
+
+
+== built-in admonition types:
+
+NOTE: An admonition draws the reader's attention to auxiliary information.
+IMPORTANT: Don't forget the children!
+TIP: Look for the warp zone under the bridge.
+CAUTION: Slippery when wet.
+WARNING: The software you're about to use is untested.
+IMPORTANT: Sign off before stepping away from your computer.
+
+====
+Here's a sample AsciiDoc document:
+
+----
+= Title of Document
+Doc Writer
+:toc:
+
+This guide provides...
+----
+
+The document header is useful, but not required.
+====
+
+[quote, Albert Einstein]
+A person who never made a mistake never tried anything new.
+
+____
+A person who never made a mistake never tried anything new.
+____
+
+--
+An open block can be an anonymous container,
+or it can masquerade as any other block.
+--
+
+[source]
+--
+puts "I'm a source block!"
+--
+
+== comments
+
+// A single-line comment
+
+////
+A multi-line comment.
+
+Notice it's a delimited block.
+////
+
+
+== Delimited Blocks
+
+  commentBlock /////////////
+  passthroughBlock ++++++++++++
+  ListingBlock -------------
+  LiteralBlock .............
+  SidebarBlock ***************
+  QuoteBlock: _______________
+  ExampleBlock: ===============
+  OpenBlock: --
+
+
+

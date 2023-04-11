@@ -1,0 +1,108 @@
+
+nullptr is a new keyword. It automatically converts into each pointer 
+type but not to
+any integral type. It has type std::nullptr_t, definedin <cstddef>
+
+
+auto i;          // ERROR: can't deduce the type of i
+auto i = 42;     // GOOD
+
+
+
+std::numeric_limits<short>::max()
+
+
+
+
+Use of member templates
+template <typename T>
+class MyClass {
+  private:
+    T value;
+  public:
+    template <typename X>                  // member template
+    void assign (const MyClass<X>& x) {    // allows different template types
+        value = x.getValue();
+    }
+    T getValue () const {
+        return value;
+    }
+    ...
+};
+void f()
+{
+    MyClass<double> d;
+    MyClass<int> i;
+
+    d.assign(d);   // OK
+    d.assign(i);   // OK (int is assignable to double)
+}
+
+
+
+
+If you use the syntax of an explicit constructor call without arguments, 
+fundamental types are initialized with zero:
+
+int i1;           // undefined value
+int i2 = int();   // initialized with zero
+int i3{};         // initialized with zero (since C++11)
+
+
+
+
+Definition of main.
+Two valid definitions of main() in C++
+
+int main() {
+}
+
+int main(int argc, char* argv[]) {
+}
+
+C++ provides and implicit "return 0" at the end of main if not present.
+
+Avoid "using namespace std" in header files
+You should never use a using directive when the context is not clear, 
+such as in header files.
+
+
+
+
+Callable objects
+--------------------
+void func (int x, int y);
+
+auto l = [] (int x, int y) {
+              ...
+         };
+
+class C {
+  public:
+    void operator () (int x, int y) const;
+    void memfunc (int x, int y) const;
+};
+
+int main()
+{
+    C c;
+    std::shared_ptr<C> sp(new C);
+
+    // bind() uses callable objects to bind arguments:
+    std::bind(func,77,33)();            // calls: func(77,33)
+    std::bind(l,77,33)();               // calls: l(77,33)
+    std::bind(C(),77,33)();             // calls: C::operator()(77,33)
+    std::bind(&C::memfunc,c,77,33)();   // calls: c.memfunc(77,33)
+    std::bind(&C::memfunc,sp,77,33)();  // calls: sp->memfunc(77,33)
+
+    // async() uses callable objects to start (background) tasks:
+    std::async(func,42,77);             // calls: func(42,77)
+    std::async(l,42,77);                // calls: l(42,77)
+    std::async(c,42,77);                // calls: c.operator()(42,77)
+    std::async(&C::memfunc,&c,42,77);   // calls: c.memfunc(42,77)
+    std::async(&C::memfunc,sp,42,77);   // calls: sp->memfunc(42,77)
+}
+
+As you can see, even smart pointers can be used to pass an object a member 
+function is called for. 
+To declare callable objects, in general class std::function<> can be used 

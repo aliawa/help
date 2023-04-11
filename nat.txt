@@ -1,0 +1,26 @@
+The core NAT problem:
+----------------------
+The NAT simplicity works well when the
+applications are limited to a client/server model with the server
+deployed on the public side of the NAT.  For peer-to-peer, multi-
+party, or servers deployed on the private side of the NAT, helper
+technologies must also be deployed.  These helper technologies are
+frequently complex to develop and manage, creating a hidden cost to
+this 'simple gateway'.
+
+
+NATv6
+
+translation function of the network prefix translator
+
+The default NPTv6 address-mapping mechanism is purely algorithmic
+
+These applications currently require
+Application Layer Gateways (ALGs) to work correctly through NAPT44
+devices, and similar ALGs may be required for these applications to
+work through NPTv6 Translators
+
+
+A router that implements an NPTv6 prefix translation
+function is referred to as an NPTv6 Translator.
+

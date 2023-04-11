@@ -1,0 +1,30 @@
+LANs are independent networks that are physically separated from each
+other. Different LANs can be connected to each other through routers.
+
+VLANs on the other hand can create distint networks on the same physical 
+hardware.
+
+At Network Layer (OSI Layer 3), subnets create separater network 
+subnets so that broadcasts in one segment stay within the same subnet. In 
+a similar fashion, VLANs create network segments at Data Link Layer
+(OSI Layer 2) where broadcasts within on segment remain in the same segment.
+
+
+
+VLANs are identified by inserting a 32 bit (4 bytes) field between the 
+source MAC address and EtherType/Length fields of the original 
+ethernet frame.
+The first 16 bits of the 32 bit field are always 0x8100. This value
+indicates that it is a 802.1Q tagged frame. Untagged frames have the 
+EtherType/Length field at the exact same position. 
+
+Normal:
+[Dest 6 bytes] [Src 6 bytes] [Ether Type 2 bytes] [Payload 46-1500 bytes] [CRC]
+
+Taged:
+[Dest 6 bytes] [Src 6 bytes] [802.1Q 4 bytes] [Ether Type 2 bytes] [Payload 42-1500 bytes] [CRC]
+                             ^^^^^^^^^^^^^^^^
+
+
+
+

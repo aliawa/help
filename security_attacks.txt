@@ -1,0 +1,12 @@
+Rainbow table attacks, where hackers leverage pre-computed password hashes
+Collision attacks, due to the mathematics inherent in the birthday problem
+Timing attacks on the string comparison
+Length extension attacks on leaked state of the hash function
+
+
+homomorphic encryption to store and use customer's data.
+
+firesheeping:
+
+
+

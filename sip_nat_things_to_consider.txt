@@ -1,0 +1,10 @@
+1. When the UA reboots a new binding can be created. Creating a new
+Contact entry in the Registrar.
+
+2. DNS SRV can be used for load balancing ??
+
+3. The edge proxy includes a Path header so that when the proxy
+   registrar later forwards a request to this UA, the request is 
+   routed through the edge proxy.
+
+4. 

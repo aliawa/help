@@ -1,0 +1,19 @@
+
+# what shell I am running:
+echo $0
+echo $SHELL
+
+# change shell
+chsh -s /bin/zsh
+
+# installing ohmyzsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# iterm2
+profile > Text > Use built-in Powerline glyphs
+installed Chalk theme
+
+# installed wireshark from website. 
+brew did not work
+
+

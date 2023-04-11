@@ -1,0 +1,98 @@
+NOTES:
+the -k <substring> option should come befero -v and -ra options otherwise it will not work
+
+
+FIXTURE
+fixture is an argument to the test function, that is itself a function, the value 
+of the argument is the return value of the fixture function.
+
+For example: 
+test_myfunc(tmp_path)
+tmp_path is a fixture, pytest will run the tmp_path function and create a temporary directory
+the value of tmp_path inside test_myfunc is what tmp_path retruned which happens to be a 
+pathlib.Path object.
+
+fixtures in conftest.py can be used by all tests
+
+fixtures with before and after actions
+yield returs a value or None
+@pytest.fixture(autouse=True)
+def myfixture():
+    before_action()
+    yield
+    after_action()
+
+
+INVOCATION
+https://docs.pytest.org/en/6.2.x/usage.html#cmdline
+pytest -h
+
+-q  quiet mode
+
+Runs all files of the form test_*.py or *_test.py
+
+assert that some code raises an exception
+def f():
+    raise SystemExit(1)
+def test_mytest():
+    with pytest.raises(SystemExit):
+        f()
+
+
+
+MARKS
+run tests marked with 'database_access'
+pytest -m database_access
+
+run all tests except those that require database access
+pytest -m "not database_access"
+
+built-in marks
+* skip    skips a test unconditionally.
+* skipif  skips a test if the expression passed to it evaluates to True.
+* xfail   indicates that a test is expected to fail, so if the test does fail, the overall suite can still result in a passing status.
+* parametrize (note the spelling)     creates multiple variants of a test with different values as arguments. You’ll learn more about this mark shortly.
+
+
+=== 
+PARAMETRIZE
+
+@pytest.mark.parametrize("<parameter-names>", <parameter-values>)
+
+Example 1:
+@pytest.mark.parametrize("palindrome", [
+    "",
+    "a",
+    "Bob",
+    "Never odd or even",
+    "Do geese see God?",
+])
+def test_is_palindrome(palindrome):
+    assert is_palindrome(palindrome)
+
+@pytest.mark.parametrize("non_palindrome", [
+    "abc",
+    "abab",
+])
+def test_is_palindrome_not_palindrome(non_palindrome):
+    assert not is_palindrome(non_palindrome)
+
+
+Example 2:
+@pytest.mark.parametrize("maybe_palindrome, expected_result", [
+    ("", True),
+    ("a", True),
+    ("Bob", True),
+    ("Never odd or even", True),
+    ("Do geese see God?", True),
+    ("abc", False),
+    ("abab", False),
+])
+def test_is_palindrome(maybe_palindrome, expected_result):
+    assert is_palindrome(maybe_palindrome) == expected_result
+
+===
+
+
+
+

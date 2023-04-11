@@ -1,0 +1,16 @@
+pan 85515
+
+watch point kernel module: pan
+
+debut dataplane mmdbg
+
+mdbase.py
+
+show most recent objects
+/usr/local/bin/panio show top-obj-events num 32
+
+
+show particular wqe
+/usr/local/bin/panio show obj-events obj 0xabc.. num xxx
+
+

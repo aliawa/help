@@ -1,0 +1,98 @@
+# ------ PAN DEV SERVR ONLY ------
+
+# Local Path. Must call before sourcing /usr/local/env/bashrc
+# otherwise usever will overwrite it
+export PATH=$PATH:$HOME/bin:.:$HOME/pan_bin:$HOME/bin/bin
+
+
+# Source global definitions
+# [ -f /etc/bashrc ] && . /etc/bashrc
+# [ -f /usr/local/env/bashrc ] && . /usr/local/env/bashrc
+[ -f $HOME/pan_bin/common.sh ] && . $HOME/pan_bin/common.sh
+
+# Perforce
+export P4DIFF=vimdiff
+export P4EDITOR=vim
+export P4USER=$(whoami)
+
+
+# ------ PRIVATE ------
+
+# Local Env
+#export EDITOR=vimx
+
+# Local alias
+alias ptop='cd $PAN_BUILD_DIR/src'
+alias dtop='cd $PAN_BUILD_DIR/src/libs/dp'
+alias makeUT='make PAN_BUILD_TARGETS=test-vm-ut'
+alias makeUTT='make PAN_BUILD_TARGETS=test-vm-ut BUILD_UNIT_TEST=1'
+alias info='info --vi-keys'
+
+setbranch() {
+    # setting the branch is just cd to the directory attached to the branch
+    # in client specification
+
+    if [[ $# == 0 ]];then
+        echo "usage: setbranch <branch-name>"
+        return
+    fi
+
+    # This script only deals with my default workspace
+    export P4CLIENT=aawais-hqna2
+
+    # check if we are logged in
+    [[ $(p4 login -s) > /dev/null ]] || { echo "$USER not logged in"; return; }
+
+    # parse client-spec given by P4CLIENT
+    IFS='|' read -a res <<< "$(p4 client -o | awk -v pat="/$1/" -f ~/pan_bin/p4_client_parse.awk)"
+
+    if [[ ${res[0]} == "Error" ]]; then 
+        for i in "${res[@]}"; do echo $i; done
+        return
+    else
+        branch=${res[0]}                         # full p4 branch-name
+        PANDIR="${res[2]}"                       # root
+        export PAN_BUILD_DIR="$PANDIR/${res[1]}" # root + /branch-dir
+    fi
+
+    if [ ! -d "$PAN_BUILD_DIR/src" ]; then
+        mkdir -p "$PAN_BUILD_DIR/src"
+        [[ $? != 0 ]] && return
+    fi
+
+    echo "setting branch: $branch"
+
+    #export CSCOPE_DB=$PAN_BUILD_DIR/src/cscope.dp.out
+    #export CSCOPE_DB=$PAN_BUILD_DIR/src/.csdb/cscope.out
+
+    ptop
+    alias p4diff="p4 diff $branch" 
+    alias p4opened="p4 opened $branch"
+
+    if [[ -n "$TMUX" ]]; then
+        tname=$(echo $branch |  awk -F/ '{printf "%s/%s\n", substr($(NF-2),1,1),$(NF-1)}')
+        tmux rename-window -t${TMUX_PANE} $tname
+    fi
+}
+
+
+dev() {
+    export PAN_BUILD_DIR=/home/aawais/pan_git/panos
+    export PANDIR=$HOME/pan_git
+    cd $PAN_BUILD_DIR/src
+    set_tname &
+}
+
+
+bldconfig() {
+    if [ -e $PAN_BUILD_DIR/.bldconfig ]; then
+        $EDITOR $PAN_BUILD_DIR/.bldconfig
+    else
+        cp $PAN_BUILD_DIR/src/mk/templates/bldconfig $PAN_BUILD_DIR/.bldconfig
+        chmod +w $PAN_BUILD_DIR/.bldconfig
+        $EDITOR $PAN_BUILD_DIR/.bldconfig
+    fi
+}
+
+
+alias xsel=$HOME/.junest/bin/xsel

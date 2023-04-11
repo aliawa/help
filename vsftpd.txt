@@ -1,0 +1,17 @@
+#install
+sudo apt-get install vsftpd
+
+# Start and enable the service with the commands:
+sudo systemctl start vsftpd
+sudo systemctl enable vsftpd
+
+# ftp user
+sudo useradd -m ftpuser
+sudo passwd ftpuser     (pass)
+
+# configuration file
+/etc/vsftpd.conf
+
+# Location of files for ftp
+/home/ftpuser
+

@@ -1,0 +1,71 @@
+SIP contact == HTTP Location
+
+RFC 822: Syntax of text messages that are sent among computers
+
+RFC 822 defines the general header field format
+field-name ":" [field-body] CRLF
+
+
+RFC 2822 says that header fields are lines composed of a
+field name followed by a colon, followed by a field body and
+terminated by a CRLF.
+
+According to RFC 2822 the address header should be generally in
+this form:
+
+[display-name] <address>
+
+From and To headers are also defined in RFC 2822
+
+Both HTTP and SIP messages have the same basic format
+start-line, zero or more header fields, an empty line and
+possibly a message body.
+
+
+HTTP request line: Method SP Request-URI SP HTTP-Version CRLF
+SIP request line:  Method SP Request-URI SP SIP-Version CRLF
+
+Shared Header fields:
+Accept
+Accept-Encoding
+Accept-Language
+Authorization
+From
+Max-Forwards
+Proxy-Authorization: Used when a 407 was received
+User-Agent
+
+Response: Both protocols have the same response format
+Status-Line
+headers
+CRLF
+Body
+
+Status-Line:
+HTTP: HTTP-Version SP Status-Code SP Reason-Phrase CRLF
+SIP : SIP-Version SP Status-Code SP Reason-Phrase CRLF
+
+Same status codes but HTTP does not have 6xx
+
+
+Shared Response Header Fields
+Proxy-Authenticate: Used in 407 response
+WWW-Authenticate
+Retry-After
+
+Shared Entity Header Fields
+Allow
+Content-Encoding
+Content-Language
+Content-Length
+Content-Type
+Expires
+
+Shared General Headers
+Warning
+
+
+Shared Methods
+OPTIONS
+
+

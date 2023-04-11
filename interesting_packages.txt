@@ -1,0 +1,30 @@
+Anjuta:
+A GNOME development IDE for C/C++
+
+alleyoop
+Graphical front-end to the Valgrind memory checker for x86
+
+
+binutils.
+A GNU collection of binary utilities
+
+ccache 
+A c/c++ compiler cache
+
+ctemplate
+A simple but powerful template language for c++
+
+ddd
+Gui for several comand ine debuggers
+
+insight 
+graphical user interface for gdb
+
+nemiver
+GNOME C/C++ debugger
+
+tolua
+A tool to integrate c/c++ code with lua
+
+
+

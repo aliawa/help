@@ -1,0 +1,23 @@
+lnav -c cmd
+     -c ':goto 10' foo.log
+     -c '|file' foo.log         this is the same as lnav -f file
+     -c ';<sql-query>' foo.log
+
+
+top status line:
+    last timestamp seen is displayed, the linenumber of where the timestamp was last seen
+    the timestamp changes when the next timestamp becomes the top line
+
+marking
+    Move the start line to top, mark it
+    press J to mark more lines
+    c copy marked lines to clipboard
+    C clear all marked lines
+
+
+display
+    Ctrl-W  toggle word-wrap
+    F2  tobble mouse support
+
+
+

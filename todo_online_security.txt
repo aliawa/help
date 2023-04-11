@@ -1,0 +1,13 @@
+1. green padlock with name means the site has ev certificate:
+example paypal.com apple.com
+2. green padloc without name has DV certificate:
+example amazon.com
+
+3. hn comment.
+You will need an Extended Validation (EV) certificate to get your name in the bar. To get it to go green you "only" need a Domain Validation (DV) certificate.
+In simple terms: DV proves you own your DNS domain and EV proves that your real world entity owns the DNS domain.
+Lets Encrypt will only do DV and quite right too. EV costs a far bit more because it should require some proper checks - for example checking Company's House in the UK for a Limited Company's details and matching them up against real people.
+You can set a flag in Chrom{ium!e} that will put a link to the cert in the menu that drops down when you click on the green bit, saving you a trip to dev tools. Go to chrome://flags and search for "Show certificate link". Don't know why it isn't the default.
+
+
+

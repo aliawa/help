@@ -1,0 +1,20 @@
+install plugins
+curl -Ls https://raw.githubusercontent.com/jarun/nnn/master/plugins/getplugs | sh
+
+h   cd to parent directory
+l   open file, cd to directory
+g   top
+G   bottom
+B   bookmark
+1-4 context
+q   quit
+d   toggle details
+
+f   file details
+^R  rename
+spc toggle mark
+p   copy here
+v   move here
+x   delete
+e   edit file
+

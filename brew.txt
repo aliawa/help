@@ -1,0 +1,23 @@
+brew maintainence
+-----------------
+brew autoremove
+brew cleanup
+brew update
+
+
+Troubleshooting
+-----------------
+brew doctor
+
+
+Info
+-----------------
+brew list       # all installed formulae and casks
+
+
+brew upgrade formula
+
+softwareupdate --all --install --force
+
+
+

@@ -1,0 +1,7 @@
+SPAN:
+    Switch Port Analyzer
+    Similar to TAP (Test Access Point) but requires support in the switch.
+    Copy the activity of one or more switch ports to a mirror port. Therefore
+    also called a mirror port.
+
+

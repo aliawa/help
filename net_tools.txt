@@ -1,0 +1,89 @@
+libcap2-bin                - basic utility programs for using capabilities
+libnet1                    - library for the construction and handling of network packets
+libnet1-dbg                - debugging symbols for libnet
+libnet1-dev                - development files for libnet
+libnet1-doc                - developers documentation files for libnet
+libpcap-dev                - development library for libpcap (transitional package)
+libpcap0.8                 - system interface for user-level packet capture
+libpcap0.8-dbg             - debugging symbols for libpcap0.8
+libpcap0.8-dev             - development library and header files for libpcap0.8
+bittwist                   - libpcap based Ethernet packet generator
+bustle                     - D-Bus activity visualiser
+dns-flood-detector         - detect abusive usage levels on high traffic nameservers
+dsc-statistics-collector   - DNS Statistics Collector - Collector component
+fp-units-net               - Free Pascal - networking units dependency package
+fp-units-net-2.6.2         - Free Pascal - networking units
+fprobe                     - export captured traffic to remote NetFlow Collector
+fprobe-ng                  - export captured traffic to remote NetFlow Collector (meta)
+fwknop-apparmor-profile    - FireWall KNock OPerator - Apparmor profile
+fwknop-client              - FireWall KNock OPerator client side - C version
+fwknop-server              - FireWall KNock OPerator server side - C version
+imsniff                    - Simple program to log Instant Messaging activity on the network
+libdaq-dev                 - Data Acquisition library for packet I/O - development files
+libdaq2                    - Data Acquisition library for packet I/O - shared library
+libdessert0.87             - a simple and extensible routing-framework for testbeds
+libdessert0.87-dev         - header file and documentation for libdessert0.87
+libfko-doc                 - FireWall KNock OPerator - documentation
+libfko-perl                - FireWall KNock OPerator - Perl module
+libfko-python              - FireWall KNock OPerator - Python module
+libfko2                    - FireWall KNock OPerator - shared library
+libfko2-dbg                - FireWall KNock OPerator - debugging symbols
+libfko2-dev                - FireWall KNock OPerator - developpement library
+libghc-pcap-dev            - Haskell wrapper around the C libpcap library
+libghc-pcap-doc            - Haskell wrapper around the C libpcap library; documentation
+libghc-pcap-prof           - Haskell wrapper around the C libpcap library; profiling libraries
+libmlpcap-ocaml            - binding of libpcap for OCaml (runtime package)
+libmlpcap-ocaml-dev        - binding of libpcap for OCaml
+libncap-dev                - static library and header files for libncap
+libncap44                  - network capture library
+libnet-libdnet-perl        - interface to libdumbnet's low-level network functions
+libnet-pcap-perl           - Perl binding to the LBL pcap packet capture library
+libpcapnav0                - wrapper to libpcap
+libpcapnav0-dev            - development files for libpcapnav
+libpoe-component-pcap-perl - POE Interface to Net::Pcap
+libprintsys                - printcap parser, helper for gnulpr's printfilters
+libtrace3-dev              - development headers for the libtrace network processing library
+libtuxcap-dev              - framework for developing 2D games - development files
+libtuxcap4.0               - framework for developing 2D games - runtime libraries
+libtuxcap4.0-dbg           - framework for developing 2D games - debugging symbols
+libwiretap-dev             - network packet capture library -- development files
+libwiretap3                - network packet capture library -- shared library
+natlog                     - Source-natting firewall logging utility
+ncaptool                   - network capture tool
+netdiscover                - active/passive network address scanner using arp requests
+netexpect                  - Network Expect, a framework for manipulating network packets
+netmate                    - netdude clone that shows pcap dump lines in network header style
+netsniff-ng                - packet sniffing beast
+ngrep                      - grep for network traffic
+ntop                       - display network usage in web browser
+ntop-dbg                   - display network usage in web browser (debug symbols)
+ostinato                   - Packet/Traffic Generator and Analyzer
+packeth                    - Ethernet packet generator
+pcapfix                    - repairs broken pcap and pcapng files
+pcaputils                  - specialized libpcap utilities
+python-impacket            - Python module to easily build and dissect network protocols
+python-libpcap             - Python wrapper for libpcap packet capture library
+python-ncap                - Python bindings for libncap
+python-pcapy               - Python interface to the libpcap packet capture library
+python-pcs                 - Packet Construction Set for Python
+python-pypcap              - object-oriented Python interface for libpcap
+ruby-packetfu              - PacketFu is a mid-level packet manipulation library for Ruby
+ruby-pcaprub               - Ruby bindings for LBL Packet Capture library (libpcap)
+sipcrack                   - SIP login dumper/cracker
+snort                      - flexible Network Intrusion Detection System
+snort-common               - flexible Network Intrusion Detection System - common files
+snort-common-libraries     - flexible Network Intrusion Detection System - libraries
+snort-doc                  - flexible Network Intrusion Detection System - documentation
+snort-rules-default        - flexible Network Intrusion Detection System - ruleset
+tcpick                     - TCP stream sniffer and connection tracker
+tcpspy                     - Incoming and Outgoing TCP/IP connections logger
+tcptrace                   - Tool for analyzing tcpdump output
+tcpxtract                  - extracts files from network traffic based on file signatures
+ulogd-pcap                 - transitional dummy package for ulogd2-pcap
+ulogd2                     - Netfilter Userspace Logging Daemon
+ulogd2-dbg                 - Netfilter Userspace Logging Daemon (debug symbols)
+ulogd2-dbi                 - DBI extension to ulogd
+ulogd2-mysql               - MySQL extension to ulogd
+ulogd2-pcap                - pcap extension to ulogd
+ulogd2-pgsql               - PostgreSQL extension to ulogd
+ulogd2-sqlite3             - SQLite 3 extension to ulogd

@@ -1,0 +1,29 @@
+Delay
+-------------------------------------------
+Standard Delay Limits
+ITU G.114
+0   - 150 ms  Acceptable in most cases
+150 - 400 ms  Can be acceptable
+Above 400 ms  Unacceptable.
+
+If delay reises above 250ms, talkers and listners become unsynchronized
+resulting in "talker overlap". Which the users finding anying even
+though the overall voice quality may be acceptable.
+
+Echo cancellers are required when one way delay exceeds 25ms.
+
+
+
+Voice Quality
+-------------------------------------------
+What factors affect voice quiality.
+compression algorithm (codec) used (G.711, G.723 etc.)
+Packet loss
+Echo cancellation.
+Fixed Delay (processing. packetization etc.)
+Variable Delay (Jitter), due to queuing, congestion, path through network.
+
+
+
+
+

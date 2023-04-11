@@ -1,0 +1,6 @@
+pipe to tar
+
+find / -name '*.[ch]' | tar -cf dp.tar -T -
+
+# if filenames have spaces:
+find / -name '*.[ch]' -print0 | tar -cf dp.tar --null -T -  

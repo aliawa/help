@@ -1,0 +1,53 @@
+TRNG: True random number generator.
+
+modulo bias: if you want random numbers in the range 0 - n and your random number
+generator gives random numbers in the range 0 - RAND_MAX then you can take a 
+modulo of the rand() output like this
+
+rand() % n 
+
+however now you have a modulo bias if (RAND_MAX+1) % n != 0 for example if rand() 
+generates numbers from 0 - 5 and you need random numbers from 0 - 2 i.e., 
+your n is 3, then with the above module you will get.
+
+0 -> 0
+1 -> 1
+2 -> 2
+3 -> 0
+4 -> 1
+5 -> 2
+
+now 0 and 1 occur more often the 2
+
+to fix this you should discard numbers that fall outside the range divisible by n
+
+/* LISTING 2 */
+int x;
+int n = 3;
+int rand_limit;
+int rand_excess;
+rand_excess = (RAND_MAX + 1) % n;
+rand_limit = RAND_MAX - rand_excess;
+while (x = rand() > rand_limit) {};
+return x % n;
+
+NOTE in the above RAND_MAX may overflow if it is already INT_MAX
+
+
+weighted random numbers
+if you need weighted random numbers look at c++ std::discrete_distribution<int>
+
+
+or interval based approach
+int biasedRandom(){
+    double i = randomNumber();
+    if(i<= 0.2){return 1;}
+    else if(i <= 0.3){return 2;}
+    else if(i <= 0.7){return 3;}
+    else if(i <= 0.95){return 4;}
+    else{return 5;}
+}
+
+
+
+

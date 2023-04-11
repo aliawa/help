@@ -1,0 +1,22 @@
+
+# get epoch  (linux/mac)
+  date +%s
+
+# epoch to human readable (linux)
+  date -d @1190000000
+  date -ud @1190000000   #in UTC
+
+# human readable to epoch (linux)
+  date +%s -d"Jan 1, 1980 00:00:01"
+
+# human readable to epoch (mac)
+  date -j -f '%a %b %d %H:%M:%S %Y' 'Sun Jul 17 20:28:35 2022'  +%s
+
+# change date format (mac)
+  date -j -f '%Y-%m-%d %H:%M:%S' '2022-07-17 20:28:35' +'%Y-%m-%d %H:%M:%S' 
+  date -j -f '%a %b %d %H:%M:%S %Y' 'Sun Jul 17 20:28:35 2022' +'%Y-%m-%d %H:%M:%S'
+
+# Get date 1 month ago from today. Output in YYYY-MM-DD format
+  date -v -1m +'%Y-%m-%d'
+
+

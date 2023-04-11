@@ -1,0 +1,364 @@
+
+== FIELDS
+
+=== Number of fields
+
+ # print number of fields, first field, last field
+ { print NF, $1, $NF }
+
+=== Set field separator
+
+ Variable |  Meaning                                    | Default
+ ---------+---------------------------------------------+--------
+ FS       |  controls the input field separator         | " "
+ NF       |  number of fields in current record         | -
+ OFS      |  output field separator                     | " "
+
+ # Records are separated by black lines and the field is the whole line
+ BEGIN { RS = ""; FS = "\n" }
+
+=== Loop Through Fields
+
+ for(i=1; i<=NF; i++) {
+     if($i=="dog") 
+         print $0,i
+ }
+
+
+== structure of awk programs
+pattern {action}
+pattern {action}
+...
+every input line is tested against each of the pattern in turn
+
+
+pattern missing -> apply action to every line
+action missing -> apply default action {print $0}
+action must be enclosed in {} in order for it be identified as action
+
+
+== Running awk programs
+awk 'program' files
+awk -f program.awk files
+
+shebang
+#!/usr/bin/env -S gawk -f
+
+
+== Line Numbers
+NR: number of lines read so far
+{ print NR, $0 } # number all lines 
+in 'END' pattern, NR is the total number of lines in the files
+
+
+== Sort output
+awk '{ printf("%6.2f %s\n", $2*$3, $0) }' emp.data | sort
+
+
+== Patterns
+
+  $2 >= 5         print all lines where second field is greater than 5
+  $2*$3 > 50
+  $1 == "Susie"
+
+  /Susie/         print all lines that contain "Susie" anywhere
+  /edu/ && /li/     
+  /edu/ || /li/
+  ! /li/                    records that do not contain 'li'
+
+  $2 >= 4 || $3 >= 20
+  !($2 < 4 && $3 < 20)
+
+  BEGIN           special patern, match before first line of first inpt file
+  END             special pattern, match after last line of last inpt file
+
+
+  $0 ~ /(\+|-)[0-9]+/     match operator, string needs to match literal occurrence of a regex meta-char
+  $0 ~ "(\\+|-)[0-9]+"    match operator, string needs to match literal occurrence of a regex meta-char
+
+== Range patterns
+NR==10, NR==20  tenth to twentieth lines of input inclusive
+
+/Canada/, /USA/ from first line that matches Canada up through next line that matches USA
+/Asia|Europe/   same as /Asia/ || /Europe/
+$1 == "on", $1 == "off"   every record betwee 'on'/'off' pairs inclusive
+
+When start and stop markers are on the same line.
+/^%$/   {skip = ! skip; next}
+skip == 1 { next }   # skip lines with skip set
+
+
+
+== BUILT-IN Variables
+
+---------+---------------------------------------------+--------
+VARIABLE |              MEANING                        |DEFAULT
+---------+---------------------------------------------+-------
+ARGC     |  number of command line arguments           | -
+ARGV     |  array of command-line arguments            | -
+FILENAME |  name of current input file                 | -
+FNR      |  record number in current file              | -
+FS       |  controls the input field separator         | " "
+NF       |  number of fields in current record         | -
+NR       |  number of records read so far              | -
+OFMT     |  output format for numbers                  | "%.6g"
+OFS      |  output field separator                     | " "
+ORS      |  output record separator                    | "\n"
+RLENGTH  |  length of string matched by match function | -
+RS       |  controls the input record separator "\n"   |
+RSTART   |  start of string matched by match function  | -
+SUBSEP   |  subscript separator                        | "\034"
+         |                                             |
+
+
+== STRING FUNCTIONS
+-------------------------+------------------------------------------------------------------
+    FUNCTION             |              DESCRIPTION                                        
+-------------------------+------------------------------------------------------------------
+gsub(r,s)                |  subtitute s for r globally in $0, 
+                         |    return number of substitutions made 
+gsub(r,s,t)              |  substitute s for r globally in string t, 
+                         |    return number of substitutions made
+index(s,t)               |  return first position of string t in s, or 0 if t is not present
+length(s)                |  return number of characters in s
+match(s,r)               |  The pos in s where the regex r occurs. RSTART=pos of matched str 
+                         |      RLENGTH = len of matched str
+split(s,a)               |  split s into array a on 'FS', return number of fields, a[1] has the first field
+split(s,a,fs)            |  split s into array a on regex fs | return number of fields. | a[1] has first field
+                            when fs is 
+                            "." treat as literal "."
+                            ".*" treat as regex
+                            /./ treat as regex
+
+sprintf(fmt,expr-list)   |  return expr-list formatted according to format string fmt
+sub(r,s)                 |  replace first match of regex r in $0 with with s
+sub(r,s,t)               |  replace first match of regex r in string t with s
+substr(s,p)              |  suffix of s starting at position p, counted from 1
+substr(s,p,n)            |  substring of s of length n starting at position p, counted from 1
+                         |                             
+                      
+
+== command line arguments
+ARGC        One more than the number of arguments because "awk" is also counted
+ARGV        starts from ARGV[1] upto ARGV[ARGC-1]
+
+BEGIN {
+    file2 = ARGV[2]
+    ARGV[2] = ""        # set ARGV[2] to null so that awk will not treat it as input file
+}
+
+
+
+== ARRAYS
+# How to initialize an array, 
+# split will create an array of the form: 1:"Jan", 2:"Feb", 3:"Mar" ...
+# we convert it to the form: "Jan":"", "Feb":"", "Mar":"", ...  so that 
+# we may be able to use the "in" operator like "if $i in months"
+split("Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec", months_a, ",")
+for ( i in months_a)
+    months[months_a[i]]
+
+for (var in arr)
+    printf ("%s=%s\n", var, arr[var])
+
+pop[$4] += $3
+
+print input in reverse order:
+    { x[NR] = $0 }
+END { for (i=NR; i>0; i--) print x[i] }
+
+check if subscript in Array:
+if ("Africa" in pop ) ...
+delete array[subscript]
+
+multidimensional arrays:
+for (i =1; i<=10; i++)
+    for (j=1; j<=10; j++)
+        arr[i, j] = 0
+
+if ((i,j) in arr) ...
+to loop over such an array
+for (k in arr)
+    split(k,x,SUBSEP)   access to individual subscript components
+
+
+# reverse - print input in reverse order by line
+    { line[NR] = $0 } # remember each input line
+
+END { i = NR          # print lines in reverse order
+      while (i>0) {
+          print line[i]
+          i=i-1
+      }
+    }
+
+# length of array
+length(arr)
+
+# declare and empty array, so that it does not 
+# become a scalar on first use
+split("", arr)
+
+# sort an array
+n = asorti(arr, dst)
+for (i=1; i<=n; i++) {
+    print ("%s   %s\n", dst[i], arr[dst[i]])
+}
+
+
+
+
+== User defined functions
+function name(parameter-list) {
+    statements
+}
+
+
+
+== Multi-line records
+BEGIN { RS = ""; FS = "\n" }
+sets record separator to one or more blank lines and field separator to 
+a new line.
+
+
+                                                                    
+                               
+== User defined varibles
+$3 > 15 { emp = emp +1 }     # initialization and declaration not required
+END     { print emp, "employee worked more than 15 hours" }
+
+
+== String concatenation
+    { names = names $1 " " }
+END { print names } 
+
+
+
+
+== if-Else statement
+$2 > 6  { n = n+1; pay + $2*$3 }
+END     { if (n>0)
+              print n, "employees, total pay is", pay, "average is" pay/n
+          else
+              print "no employees are paid more than $6/hr"
+        }
+
+if .. then .. else if .. else
+
+
+== while statement
+# compound interest value = amount ( 1 + rate ) ^ years
+# input: amount  rate  years
+{ i = 1
+  while (i <= $3) {
+      printf ("\t%.2f\n", $1 * (1 + $2) ^ i)
+      i = i + 1
+  }
+}
+
+
+== for statement
+# compound interest value = amount ( 1 + rate ) ^ years
+# input: amount  rate  years
+{ for (i = 1; i <= $3; i=i+1) {
+      printf ("\t%.2f\n", $1 * (1 + $2) ^ i)
+}
+
+== time and date
+# output "1660287600"
+tm = mktime("2022 08 12 00 00 00 DST")
+print (tm)  
+
+# output "Fri Aug 12 07:00:00 UTC 2022"
+strftime("%Y-%m-%d", tm, 1)
+strftime("%+", tm, 1)
+
+# output "Thursday"
+strftime("%A", systime())
+
+
+== Idioms
+
+=== SEARCH IN BLOCKS
+
+----
+# mark start of block
+/^packet buffer/{
+    in_block=1 
+    next
+}
+in_block==1 {
+    for (i=1; i<=NF; i++) {
+        if ($i>70) print $0
+    }
+    if (NF<2) {
+        # exit block
+        in_block=0
+    }
+}
+----
+
+=== A row of dashes
+dashes = sprintf("%45s", " ")
+gsub(/ /, "-", dashes)
+
+
+
+== getline (page 62)
+getline                 read next line from current file, sets $0,NF,NR,FNR
+getline var             read next line from current file, sets var,NR,FNR -> no auto splitting the line into fields
+getline < "file"        read input from file
+getline var < "file"    read next line from file in var, no splitting
+"cmd" | getline         read output from "cmd" line by line and set $0,NF
+"cmd" | getline var     read output from "cmd" line by line and set var
+
+=== Get output from shell command
+"date" | getline date       # get output of date command in the variable date
+
+=== Get input from user ( page 117)
+
+----
+ARGV[1] = "-"                       # make awk read stdin
+while ((input = gtline) > 0)
+    if ($0 == n1 + n2) {
+        print "right"
+        break
+    } else if ($0 == "") {
+        print n1 + n2
+        break
+    } else 
+        printf("wrong, try again:")
+
+Read input from a file (page 118)
+while (getline < ARGV[1] > 0 )          # ARGV[1] contains the name of the file
+    qa[++nq] = $0
+
+Get random number from 1 to nq  (page 118)
+int(rand()*nq + 1)
+----
+
+
+
+
+== How to compare dates
+split("Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec", mn, ",")
+for (i in mn)
+    months[mn[i]] = sprintf("%02d",i)
+dte = int("2021"months[$1])
+if (dte >= 202108) {
+    ...
+}
+
+
+
+Send output to files **filename must be quoted**
+print expression > "filename"
+print expression >> "filename"
+print expression | "prog"
+$3 > 100    { print $1, $3 > "bigpop" }
+$3 <= 100    { print $1, $3 > "smallpop" }
+    
+
+Limitations
+User defined function cannot return an array
+no space allowed between function name and "(" when calling, to avoid confution with concatination operator

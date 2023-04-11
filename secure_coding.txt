@@ -1,0 +1,100 @@
+01  void clear(int array[]) {
+02    for (size_t i = 0; i < sizeof(array) / sizeof(array[0]); ++i) {
+03       array[i] = 0;
+04     }
+05  }
+06
+07  void dowork(void) {
+08    int dis[12];
+09
+10    clear(dis);
+11    /* ... */
+12  }
+
+
+Problem: sizeof(array) above is always 4.
+
+
+
+what's wrong with this:
+
+const char s[3] = "abc";
+
+there is no trailing null character.
+
+better:
+const char s[] = "abc";
+
+
+
+char
+unsigned char
+signed char
+are distint types.
+
+
+
+in c
+sizeof 'a' == sizeof int
+but
+char x
+sizeof x is 1.
+
+
+in c++
+sizeof 'a' == 1.
+
+
+Objects of type unsigned char are guaranteed to have no padding bits and
+consequently no trap representation. As a result, non-bit-field objects of any
+type may be copied into an array of unsigned char (for example, via memcpy())
+and have their representation examined 1 byte at a time.
+
+
+correct way to allocate memory for wide characters
+
+01  wchar_t wide_str1[] = L"0123456789";
+02  wchar_t *wide_str2 = (wchar_t *)malloc(
+03    (wcslen(wide_str1) + 1) * sizeof(wchar_t)
+04  );
+05  if (wide_str2 == NULL) {
+06    /* handle error */
+07  }
+08  /* ... */
+09  free(wide_str2);
+10  wide_str2 = NULL;
+
+
+
+wrong:
+1  #include <iostream>
+2
+3  int main(void) {
+4    char buf[12];
+5
+6    std::cin >> buf;
+7    std::cout << "echo: " << buf << '\n';
+8  }
+
+
+good:
+1  #include <iostream>
+2
+3  int main(void) {
+4    char buf[12];
+5
+6    std::cin.width(12);
+7    std::cin >> buf;
+     // width is now reset to 0
+8    std::cout << "echo: " << buf << '\n';
+9  }
+
+
+
+_FORTIFY_SOURCE macro on Linux
+
+strncpy does not null terminate the string if there is no null in 
+the first n characters.
+
+
+

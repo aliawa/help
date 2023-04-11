@@ -1,0 +1,155 @@
+
+polycom device                                                 PA 5220                                                      Cisco webex
+(172.28.200.206)      ------>   (ae1.2200|Z2_CORP_P2P|10.1.202.12) | (ae1.666|Z0_SHAREDGW_P2P|202.50.196.85)               (69.26.185.5)
+                                                                   |
+        [ae1.2200/Zone 9]  vsys 1                                  |   [ae1.666/zone 27]  vsys 21
+                                                                   |
+                                                                   |
+60648   SYN       0    172.28.200.206/3231 --> 69.26.185.5/15513   |   202.50.196.85/48874 --> 69.26.185.5/15513
+        interface 131 vsys 1                                       |
+        131 ae1.2200 (zone 9) --> ae1.666 (zone 27)                |
+        Session setup: vsys 1                                      |
+        Session 130786                                             |
+        H.245 session initiated by client                          |
+                                                                   |
+0       SYN/ACK   0     69.26.185.5/15513--> 202.50.196.85/55229   |
+        interface 128 vsys 21                                      |
+        Session 130786                                             |
+        Route found, interface ae1.2200, zone 9, nexthop 10.1.202.1|
+                                                                   |
+60649   ACK       0     172.28.200.206/3231 --> 69.26.185.5/15513  |   202.50.196.85/55229 --> 69.26.185.5/15513
+        Session 130786                                             |
+        Flow fwd: switch vsys id to 21 for cross vsys sg session   |
+                                                                   |
+                                                                   |
+60656   PSH       39    172.28.200.206/3231 --> 69.26.185.5/15513  |   202.50.196.85/55229 --> 69.26.185.5/15513
+        h245 openLogicalChannel (audio)                            |
+        Session 130786                                             | 
+        Predict :   0.0.0.0(0) ==>172.28.200.206(3258) RTP         |
+        3PARTY -> LOCAL, nat=src                                   |
+                                                                   |
+        Install predict session 2287382                            |
+        0.0.0.0(0)           ==>202.50.196.85(65040) z:27          |
+        172.28.200.206(3258) ==>0.0.0.0(0)           z:9           |
+
+        dst key added - nat:vsys-21:srczone-27:dstzone-9:proto-17:addr-172.28.200.206-3258
+
+
+                                                                   |
+60657   PSH       86    172.28.200.206/3231 --> 69.26.185.5/15513  |   202.50.196.85/55229 --> 69.26.185.5/15513
+        h245 openLogicalChannel (video)                            |
+        Predict :   0.0.0.0(0) ==>172.28.200.206(3260) RTP         |
+        3PARTY -> LOCAL, nat=src                                   |
+                                                                   |
+60658   PSH       86    172.28.200.206/3231 --> 69.26.185.5/15513  |   202.50.196.85/55229 --> 69.26.185.5/15513
+        h245 miscellaneousIndication                               |
+        logicalChannelNumber 1 is inactive                         |
+                                                                   |
+62961   PSH       117   69.26.185.5/15513 --> 202.50.196.85/55229  |
+        h245    openLogicalChannelAck                              |
+        Predict :   0.0.0.0(0) ==>69.26.185.6(38368) RTP           |
+
+        Install predict session 48244
+        Predict Flow C2S: 0.0.0.0(0) ==>69.26.185.6(38368) z:9
+        Predict Flow S2C: 69.26.185.6(38368) ==>0.0.0.0(0) z:27
+
+        Install predict session 3754693
+        Predict Flow C2S: 0.0.0.0(0) ==>69.26.185.6(38369) z:9
+        Predict Flow S2C: 69.26.185.6(38369) ==>0.0.0.0(0) z:27
+
+                                                                    
+62962   PSH       63     69.26.185.5/15513 --> 202.50.196.85/55229      69.26.185.5/15513 --> 172.28.200.206/3231
+        h245    openLogicalChannelAck from server                   
+        Session 130786                                              
+        Predict :   0.0.0.0(0) ==>69.26.185.6(38370) RTP            
+        3PARTY -> 3PARTY                                            
+                                                                    
+        Predict :   0.0.0.0(0) ==>69.26.185.6(38370) RTP            
+        Again because mediaControlChannel also causes RTP predict   
+        dst key added - nat:vsys-21:srczone-9:dstzone-27:proto-17:addr-69.26.185.6-38370       <<<--- note vsys-id is the same for predicts of both directions
+                                                                    
+                                                                    
+62963   PSH       140     69.26.185.5/15513 --> 202.50.196.85/55229     69.26.185.5/15513 --> 172.28.200.206/3231
+        h245    openLogicalChannel from server                      
+        Session 130786                                              
+        Predict :   0.0.0.0(0) ==>69.26.185.6(38368) RTP            
+        3PARTY -> 3PARTY                                            
+
+        Install predict session 255994
+        Predict Flow C2S: 0.0.0.0(0) ==>69.26.185.6(38368) z:9
+        Predict Flow S2C: 69.26.185.6(38368) ==>0.0.0.0(0) z:27     <<--- This should have been skipped because 48244 is already there
+
+        Install predict session 1563172
+        Predict Flow C2S: 0.0.0.0(0) ==>69.26.185.6(38369) z:9
+        Predict Flow S2C: 69.26.185.6(38369) ==>0.0.0.0(0) z:27
+        Skip installing predict:1563172 duplicate:3754693
+
+
+60661   PSH       85    172.28.200.206/3231 --> 69.26.185.5/15513  ||   202.50.196.85/55229 --> 69.26.185.5/15513
+        h245 OpenLogicalChannelAck                                 |
+        Session 130786                                             |
+        Predict :   0.0.0.0(0) ==>172.28.200.206(3258) RTP         |
+        3PARTY -> LOCAL                                            |
+        Predict :   0.0.0.0(0) ==>172.28.200.206(3258) RTP         |
+        3PARTY -> LOCAL                                            |
+                                                                   |
+                                                                   |
+62965   PSH       188     69.26.185.5/15513 --> 202.50.196.85/55229||   69.26.185.5/15513 --> 172.28.200.206/3231
+        h245    openLogicalChannel from server                     |
+        Session (not is packet diag log)                           |
+        Predict :   0.0.0.0(0) ==>69.26.185.6(38370) RTP           |
+                                                                   |
+                                                                   |
+60662   PSH       85    172.28.200.206/3231 --> 69.26.185.5/15513  ||   202.50.196.85/55229 --> 69.26.185.5/15513
+        h245 OpenLogicalChannelAck                                 |
+        Session 130786                                             |
+        Predict :   0.0.0.0(0) ==>172.28.200.206(3260) RTP         |
+        3PARTY -> LOCAL                                            |
+        Predict :   0.0.0.0(0) ==>172.28.200.206(3260) RTP         |
+        3PARTY -> LOCAL                                            |
+                                                                   |
+60666   PSH       85    172.28.200.206/3231 --> 69.26.185.5/15513  ||   202.50.196.85/55229 --> 69.26.185.5/15513
+        h245 OpenLogicalChannel                                    |
+        Session 130786                                             |
+        Predict :   0.0.0.0(0) ==>172.28.200.206(3230) RTP         |
+        3PARTY -> LOCAL                                            |
+                                                                   |
+                                                                   |
+62971   PSH       121     69.26.185.5/15513 --> 202.50.196.85/55229||   69.26.185.5/15513 --> 172.28.200.206/3231
+        h245    openLogicalChannelAck                              |
+        Session 130786                                             |
+        Predict :   0.0.0.0(0) ==>69.26.185.6(38372) RTP           |
+        3PARTY -> 3PARTY                                           |
+        Predict :   0.0.0.0(0) ==>69.26.185.6(38372) RTP           |
+        3PARTY -> 3PARTY                                           |
+                                                                   |
+                                                                   |
+13493   UDP     180     172.28.200.206/3258 --> 69.26.185.6/38368  |
+        NAT (lookup 1 policylookup 0 policyparent 0) src(mapped 0 wildcard 0)
+        convert predict session 48244 app 891 s2c                  |
+        session[3290575] linked to parent:130786
+                                                                   |
+                                                                   |
+30015   PSH     988     69.26.185.4/1720 --> 202.50.196.85/8550    |
+        H.225 Connect                                              |
+        Predict :   172.20.4.210(0) ==>69.26.185.4(15510)  for H.24|
+        3PARTY -> LOCAL nat=src                                    |
+                                                                   |
+        Installed as:                                              |
+        Predict Flow  : 172.20.4.210(0) ==>69.26.185.4(15510)      |
+        Predict Flow 2: 69.26.185.4(15510) ==>172.20.4.210(0)      | <<<--- should 172.20.4.210 be translated
+                                                                    
+                                                                    
+42493   UDP     218     69.26.185.7/37946 --> 202.50.196.85/64024   
+        Session 2099553                                             
+        DP0:69.26.185.7[37946]-->202.50.196.85[64024] - zone 27 - Predict not Found
+                                                                                   
+                                                                                   
+                                                                                   
+                                                                                   
+                                                                                   
+                                                                                   
+                                                                                   
+                                                                                   
+                                                                                   
+                                                                                   

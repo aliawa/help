@@ -1,0 +1,15 @@
+3 ways of traversing:
+
+Differ on when the parent note is visited: 
+1. Parent node visited before children -> pre-order
+2. Parent node visited after children -> post-order
+3. Parent node visited in-between children -> in-order
+
+These three correspond to infix, Polish and Reverse Polish notation:
+
+1. 1 + 2 * 3  // Infix expression; in-order traversal.
+2. + 1 * 2 3  // Polish (prefix) expression; pre-order traversal.
+3. 1 2 3 * +  // Reverse Polish (postfix) expression; post-order traversal.
+
+
+

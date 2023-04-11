@@ -1,0 +1,5 @@
+/zoom
+Start or join a Zoom meeting 
+
+/zoom call [@contact/phone number]
+Start a phone call 

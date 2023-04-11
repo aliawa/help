@@ -1,0 +1,26 @@
+ESXi host
+
+
+vCenter Server
+    Manage virtual machines deployments across a large collection of host servers
+
+vSphere Client
+    command line interface for VM management
+
+
+
+
+                            
+ +----------+  +----------+ +----------+
+ | Guest OS |  | Guest OS | | Guest OS |
+ +----------+  +----------+ +----------+
+ +------------------------------+
+ |         Hypervisor           |           Vmware ESXi type 1 hypervisor
+ +------------------------------+
+ +------------------------------+
+ | The phyical computer (host)  |           ESXi host
+ +------------------------------+
+
+
+
+

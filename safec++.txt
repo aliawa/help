@@ -1,0 +1,117 @@
+so it’s advisable to declare all constructors that could be called with one
+argument with keyword explicit.
+
+
+Prefer a conversion function over conversion operator:
+Bad:
+class Apple {
+  public:
+   // constructors and other code …
+   operator Orange () const;
+};
+
+Good:
+class Apple {
+ public:
+  // constructors and other code …
+  Orange AsOrange() const;
+};
+
+
+Bad:
+enum { SUN, MON, TUE, WED, THU, FRI, SAT };
+enum { JAN=1, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC };
+
+FunctionExpectingDayOfWeek(JAN);
+
+Good:
+typedef enum { SUN, MON, TUE, WED, THU, FRI, SAT } DayOfWeek;
+typedef enum { JAN=1, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC } Month;
+
+void FunctionExpectingDayOfWeek(DayOfWeek day_of_week);
+
+
+
+
+Providing a "<<" operator in a classs
+class MyClass {
+ public:
+  // Returns true if the object is in OK state.
+  bool IsValid() const;
+
+  // Allow this function access to the private data of this class
+  friend std::ostream& operator <<(std::ostream& os, const MyClass& obj);
+};
+
+inline std::ostream& operator <<(std::ostream& os, const MyClass& obj) {
+  // Do something in here to show the state of the object in
+  // a human-readable form.
+  return os;
+}
+
+
+
+
+What's wrong with this code?
+  vector<int> v;
+
+  for(int i=0; i<10; ++i)
+    v.push_back(i);
+
+  vector<int>::const_iterator old_begin = v.begin();
+
+  cout << "Adding more elements … "<< endl;
+
+  for(int i=0; i<100; ++i)
+    v.push_back(i*10);
+
+  vector<int>::const_iterator new_begin = v.begin();
+  if(old_begin == new_begin)
+    cout << "Begin-s are the same." << endl;
+  else
+    cout << "Begin-s are DIFFERENT." << endl;
+
+
+
+hash_set and hash_map, 
+behave the same way as STL containers: 
+the iterators become invalid after modifying a container. 
+
+Rule:
+do not force the programmer to remember things
+
+
+Throwing exception from a constructor.
+So we see that throwing an exception from a constructor is a potentially 
+dangerous business: the corresponding destructor will not be called, 
+and we might have a problem—unless the destructor is empty.
+
+
+Throwing exception from a destructor.
+It is widely accepted in the C++ literature that throwing exceptions from 
+a destructor is a bad idea. This is because destructors are often called 
+when an exception is already thrown, and throwing a second one during this 
+process would lead to the termination (or crash) of your program, which is
+probably not your intention. Therefore, in some classes, destructors are 
+declared as follows (this example comes from the file scpp_assert.hpp):
+        virtual ~ScppAssertFailedException() throw () {}
+which means that we promise not to throw an exception from this destructor.
+
+
+Instead of strcat() or strncat(), use either:
+#include <sstream> // ostringstream
+#include <string>
+
+  ostringsream buffer;
+  buffer << first_string;
+  buffer << additional_string;
+  string result = buffer.str();
+
+or, even shorter:
+#include <string>
+
+  string result = first_string;
+  result += additional_string;
+
+
+

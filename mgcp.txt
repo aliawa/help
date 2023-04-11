@@ -1,0 +1,21 @@
+The origin of digit map or dialplan
+-----------------------------------
+The origin of digit map is in MGCP.
+
+This digit map is expressed using a syntax derived from the Unix system
+command, egrep.  For example, the dial plan described above results
+in the following digit map:
+
+(0T|00T|[1-7]xxx|8xxxxxxx|#xxxxxxx|*xx|91xxxxxxxxxx|9011x.T)
+
+The formal syntax of the digit map is described by the DigitMap rule
+in the formal syntax description of the protocol (see Appendix A) -
+
+
+What is an MGCP package
+----------------------------
+This is achieved by the concept of packages, which are
+simply well-defined groupings of extensions.
+
+
+

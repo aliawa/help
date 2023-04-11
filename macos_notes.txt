@@ -1,0 +1,18 @@
+Versions:
+10.9.5  Mavericks
+10.13.x High Sierra
+
+
+Go to recovery mode
+Cmd + R + Turn on the computer
+Opt + Cmd + R + Turn on the computer
+
+
+Reset SMC:
+Left Shift + Ctrl + Opt + Power on
+
+
+Reset:
+Cmd + Option + P + R + Power on
+
+

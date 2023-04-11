@@ -1,0 +1,275 @@
+# information about database
+----------------------------------------
+.schema
+.tables
+
+
+# Output format
+----------------------------------------
+.mode column
+.headers on
+
+
+# Redirect output
+----------------------------------------
+# send output to files
+.output test_file.txt
+
+# send outpt to file for single command
+.once file_name
+
+# open results in text editor (macvim)
+.once -e
+
+# open result in csv format in spreadsheet program (Numbers)
+.once -x
+.excel  
+
+
+# Read SQL from file
+----------------------------------------
+.read myscript.sql
+
+
+
+# multiple columns as primary key
+----------------------------------------
+CREATE TABLE artist_tag (
+    artist_id INTEGER,
+    tag       VARCHAR(16),
+    PRIMARY KEY (artist_id, tag)
+);
+
+
+# Data definition language
+----------------------------------------
+CREATE TABLE parts
+(
+    part_id    INTEGER   PRIMARY KEY,
+    stock      INTEGER   DEFAULT 0   NOT NULL,
+    desc       TEXT      CHECK( desc != '' )    -- empty strings not allowed
+);
+
+DROP TABLE table_name
+
+CREATE [TEMP] VIEW view_name AS SELECT query_statement
+DROP VIEW view_name
+
+# index
+----------------------------------------
+CREATE [UNIQUE] INDEX index_name ON table_name ( column_name [, ...]);
+DROP INDEX index_name;
+
+
+manipulate rows of a table
+----------------------------------------
+INSERT INTO table_name (column_name [, ...]) VALUES (new_value [, ...]);
+INSERT INTO parts ( name, stock, status ) VALUES ( 'Widget', 17, 'IN STOCK' );
+INSERT INTO table_name (column_name, [...]) SELECT query_statement;
+UPDATE parts SET price = 4.25, stock = 75 WHERE part_id = 454;
+
+DELETE FROM parts WHERE part_id = 385;
+DELETE FROM parts WHERE part_id >= 43 AND part_id <= 246;
+
+== Insert multiple rows
+
+INSERT INTO table1 (column1,column2 ,..)
+VALUES 
+   (value1,value2 ,...),
+   (value1,value2 ,...),
+    ...
+   (value1,value2 ,...);
+
+== constraints and checks
+
+=== column level constraint
+CREATE TABLE table_name(
+    ...,
+    column_name data_type CHECK(expression),
+    ...
+);
+
+=== table level constraint
+CREATE TABLE table_name(
+    ...,
+    CHECK(expression)
+);
+
+
+select
+-------------------------------
+SELECT * FROM tbl WHERE id = 2;
+
+
+
+string functions
+-------------------------------
+SELECT SUBSTR('SQLite String Functions', 1, 6); ==> "SQLite"
+
+
+
+Saved queries
+--------------------------------
+# List table of bugs
+SELECT
+    bugs.id, 
+    substr(Timestamp,1,10) as time, 
+    Platform, 
+    substr(Customer, 1, 15) as cust, 
+    Severity, 
+    substr(Summary, 1, 30) as summary 
+FROM 
+    bugs;
+
+
+# Check tags on the bugs
+SELECT 
+    bug_id, 
+    GROUP_CONCAT(name) AS tags, 
+    substr(Summary, 1, 80) as summary 
+FROM 
+    bugs 
+JOIN bug_tags ON bug_id = bugs.id
+JOIN tags ON tag_id = tags.id
+GROUP BY bugs.id LIMIT 10;
+
+
+### Two ways to create a listing similar to info.txt file
+# =1=
+SELECT DISTINCT
+    bugs.id,
+    SUBSTR(bugs.summary, 1,10) "summary",
+    GROUP_CONCAT(DISTINCT tags.name) as tags, 
+    GROUP_CONCAT(DISTINCT substr(counters.name,1,5)) as counters,
+    (select name from resolutions where id = bugs.Res_id) "res",
+    Timestamp
+FROM 
+    bugs 
+LEFT OUTER JOIN 
+    bug_tags ON bugs.id = bug_tags.bug_id 
+LEFT OUTER JOIN 
+    tags ON bug_tags.tag_id = tags.id 
+LEFT OUTER JOIN 
+    bug_counters ON bug_counters.bug_id = bugs.id 
+LEFT OUTER JOIN 
+    counters ON counters.id = bug_counters.counter_id 
+WHERE
+    date(Timestamp) > date('2022-08-01')
+GROUP BY 
+    bugs.id;
+
+
+# =2=
+SELECT
+    bugs.id,
+    SUBSTR(bugs.summary, 1,10) "summary",
+    GROUP_CONCAT(DISTINCT (SELECT tags.name from tags where tags.id = tag_id)) "tags",
+    GROUP_CONCAT(DISTINCT (SELECT counters.name from counters where counters.id = tag_id)) "counters",
+    (select name from resolutions where id = bugs.Res_id) "res",
+    Timestamp
+FROM 
+    bugs 
+LEFT OUTER JOIN 
+    bug_tags ON bugs.id = bug_tags.bug_id 
+LEFT OUTER JOIN 
+    bug_counters ON bugs.id = bug_counters.bug_id 
+WHERE
+    date(Timestamp) > date('2022-08-01')
+GROUP BY 
+    bugs.id;
+
+
+
+
+# apply tag to a bug
+INSERT INTO bug_tags (bug_id,tag_id) VALUES ( 'PAN-203003', (SELECT id FROM tags WHERE name='natting' ));
+
+# check if tag was applied
+SELECT bugs.id, GROUP_CONCAT(tags.name) "tags" FROM bugs JOIN bug_tags ON bug_id = bugs.id JOIN tags on tag_id = tags.id WHERE bugs.id = 'PAN-203003' GROUP BY bugs.id;
+
+# get all bugs with a particular tag
+SELECT bugs.id, Summary, Note,tag_id  
+FROM bugs 
+JOIN bug_tags ON bug_id = bugs.id 
+WHERE tag_id = (select id FROM tags WHERE name = 'policy') AND Duplicate = '';
+
+sqlite3 bugs.db ".mode line" "select bugs.id, Summary, Note, tag_id  from bugs join bug_tags on bug_id = bugs.id where tag_id = (select id from tags where name = 'policy') and Duplicate = '';" | less
+
+# get all bugs with any of a  set of tags
+select bugs.id, substr(Summary,1,45), tag_id  from bugs join bug_tags on bug_id = bugs.id where tag_id in (select id from tags where name in ( 'policy','sip')) and Duplicate = '';
+
+
+
+# After a certain date
+select id, substr(Summary, 1, 35) as summary, Timestamp from bugs where date(Timestamp) > date('2022-01-01');
+
+
+# Do this before backporting to learn possible regressions introduced by this bug.
+SELECT
+    bugs.id,
+    SUBSTR(bugs.summary, 1,100) "summary",
+    GROUP_CONCAT(DISTINCT (SELECT tags.name from tags where tags.id = tag_id)) "tags",
+    GROUP_CONCAT(DISTINCT (SELECT counters.name from counters where counters.id = tag_id)) "counters",
+    GROUP_CONCAT(DISTINCT regression_id) "regressions",
+    (select name from resolutions where id = bugs.Res_id) "res",
+    Timestamp
+FROM 
+    bugs 
+LEFT OUTER JOIN 
+    bug_tags ON bugs.id = bug_tags.bug_id 
+LEFT OUTER JOIN 
+    regressions ON bugs.id = regressions.bug_id 
+LEFT OUTER JOIN 
+    bug_counters ON bugs.id = bug_counters.bug_id 
+WHERE
+    bugs.id = 'PAN-203767'
+GROUP BY 
+    bugs.id;
+
+
+
+
+SELECT
+    dm.bugs.id,
+    SUBSTR(dm.bugs.summary, 1,100) "summary",
+    GROUP_CONCAT(DISTINCT (SELECT dm.tags.name from dm.tags where dm.tags.id = tag_id)) "dm.tags",
+    GROUP_CONCAT(DISTINCT (SELECT dm.counters.name from dm.counters where dm.counters.id = tag_id)) "dm.counters",
+    (select name from dm.resolutions where id = dm.bugs.Res_id) "res",
+    Timestamp,
+    Note
+FROM 
+    dm.bugs 
+LEFT OUTER JOIN 
+    dm.bug_tags ON dm.bugs.id = dm.bug_tags.bug_id 
+LEFT OUTER JOIN 
+    dm.bug_counters ON dm.bugs.id = dm.bug_counters.bug_id 
+WHERE
+    date(Timestamp) > date('2022-09-23')
+GROUP BY 
+    dm.bugs.id;
+
+
+# --------------------------------------
+#   GIT
+# --------------------------------------
+1. add to .gitattributes
+*.db diff=sqlite3
+
+2. add to .git/config
+[diff "sqlite3"]
+    textconv = "f() { sqlite3 \"$1\" .dump; }; f"
+
+3. Automate the above steps 1-2
+git config diff.sqlite3.textconv '"f() { sqlite3 \"$1\" .dump; }; f"'
+echo '*.db diff=sqlite3' >> $(git rev-parse --show-toplevel)/.gitattributes
+
+4. Use smudge filter to automatically convert to binary when pulled to working directory
+git config --global filter.sqlite3tosql.smudge "sqlite3 %f"
+
+5. Use clean filter to check in as text
+git config --global filter.sqlite3tosql.clean "sqlite3 %f .dump"
+
+
+comment in sql file
+-- this is a comment
+

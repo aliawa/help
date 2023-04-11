@@ -1,0 +1,12 @@
+
+
+protocol.DatagramProtocol
+    Base
+        Proxy
+            RegisterProxy
+
+
+Proxy.handle_request
+delegates to handle_<name>_request
+
+

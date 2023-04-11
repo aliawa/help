@@ -1,0 +1,162 @@
+variables
+----------------------------
+v:name  predefined by vim
+g:name  global
+w:name  window local
+b:name  buffer local
+s:name  script local
+a:name  function argument
+
+assignment
+let s:myvar = 1
+let s:myvar += 1
+
+free variable resources
+:unlet s:myvar
+
+check if variable is defined. Note when script finishes the local vars are not freed
+if !exists("s:myvar")
+    let s:myvar = 0
+
+
+
+Special Variables
+---------------------------
+$NAME       environment variable
+&name       option
+@r          register
+
+:echo "The value of tabstop:" &ts
+:echo "Your home dir:" $HOME
+:if @a > 5
+
+
+
+Strings
+------------------------------
+concatination
+echo "foo" . "bar"
+
+matches with
+a =~ b   matches with
+a !~ b   does not match
+
+:if str =~ " "
+:   echo  "str contains space"
+:endif
+
+
+a ==? b     ignore case
+a !~# b     case sensitive
+
+
+Conditional
+------------------------------
+
+:if {cond}
+:    {statements}
+:else
+:    {statements}
+:endif
+
+:if {cond}
+:    {statements}
+:elseif {cond}
+:    {statements}
+:endif
+
+
+
+Build and Execute command
+------------------------------
+execute colon command
+:execute "tag" . t_name     executes :tag get_cmd if t_name contains get_cmd
+
+execute normal mode command
+:normal gg=G
+
+build and execute a normal mode command
+:execute "normal Inew text \<Esc>"      insert "new text" at the begining of line
+
+get value of expression
+:let optname = "path"
+:let optval = eval('&' . optname)
+
+
+
+Functions
+--------------------------------
+Functions
+:function {name}({var1}, {var2}, ...)
+:  {body}
+:endfunction
+
+run a function
+:call fn()
+
+Funciton with range
+
+:function Count_words() range
+:  let lnum = a:firstline
+:  let n = 0
+:  while lnum <= a:lastline
+:    let n = n + len(split(getline(lnum)))
+:    let lnum = lnum + 1
+:  endwhile
+:  echo "found " . n . " words"
+:endfunction
+
+10,30call Count_Words()
+
+variable number of args
+:function Show(start, ...)
+a:1 first optional arg
+a:2 second optional arg
+
+
+remove a function
+:delfunction Show
+
+function reference
+Afunc = function('SomeFunc')
+
+
+
+Loop
+--------------------------------------
+:let alist = ['one', 'two', 'three']
+:for n in alist
+:  echo n
+:endfor
+   
+
+
+List and Dictionary
+--------------------------------------
+let lst = ['aa', 'bb', 'cc']
+let lst = []
+call add(lst, 'ff']
+lst + ['gg', 'ee']
+
+
+Debug
+--------------------------------------
+:augroup        all autocommand groups
+:command        all user commands
+:nmap           all normal mode key-mappings
+:verbose nmap   list of where was the mapping last defined
+
+
+Examples
+--------------------------------------
+:let start = line('.')              start contains line number of current line
+:let end = search("^$")             end contains line number of next empty line
+:let lines = getline(start,end)     lines is a list containing all lines from start to end, including start and end
+
+:let w=split(getline('.'),'\W\+')   words is a list of words in currnet line
+:let n=strlen("abc")                n is number of bytes in string
+:s/\d\+/\=submatch(0) + 1/          add one to first number in line
+:echo substitute(text, '\d\+', '\=submatch(0) + 1', '')
+                                    add 1 to number in the variable "text"
+let endpos = search('^-\+$')        endpos is the line nr of the search term and cursur is on that line
+

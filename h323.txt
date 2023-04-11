@@ -1,0 +1,241 @@
+Since H.323 is designed to work on any LAN protocol, therefore it calls port, by 
+a generic name TSAP, because port is specific to UDP/TCP
+
+
+Fast Connect:
+The endpoint prepares several variants of the h.245 request openLogicalChannel, based
+on how many codecs it supports.
+
+After that, the endpoint encodes each variant of the message to the binary form
+and the resulting array of binary strings is inserted into a H.225.0/Q.931 
+message (usually the Setup message)
+
+The called party will pick one of the variants and confirm it back in the next 
+H.225.0/Q.931 message, together with its own list of logical channel variants.
+
+H.245 tunneling
+To avoid the need to open a second TCP/IP channel for H.245, H.323 version 2
+and above support the tunneling of H.245 messages. The H.245 message is encoded
+to the binary form (using ASN.1 PER) and the resulting string of bytes is
+inserted to any Q.931/H.225.0 message that is currently being sent. If there is
+no available message, the endpoint uses the Facility message instead. 
+
+
+
+
+
+RAS Messages:
+---------------------------------------------------------------------------------------------
+Gatekeeper discovery:
+  GRQ (Gatekeeper_Request)   always sent to multicast group 224.0.1.41 port 1718
+  GCF (Gatekeeper_Confirmation) 
+  GRJ (Gatekeeper_Reject)
+
+Endpoint Registraion
+  RRQ (Registration_Request)Sent from an endpoint to a gatekeeper RAS channel address.
+  RCF (Registration_Confirm)A reply from the gatekeeper that confirms endpoint registration.
+  RRJ (Registration_Reject) A reply from the gatekeeper that rejects endpoint registration.
+  URQ (Unregister_Request) 	Sent from endpoint or gatekeeper to cancel registration.
+  UCF (Unregister_Confirm) 	Sent from endpoint or gatekeeper to confirm an unregistration.
+  URJ (Unregister_Reject) 	Indicates that the endpoint was not preregistered with the gatekeeper.
+ 
+Admission:
+  ARQ (Admission_Request) 	An attempt by an endpoint to initiate a call.
+  ACF (Admission_Confirm) 	An authorization by the gatekeeper to admit the call. 
+                            This message contains the IP address of the terminating gateway or gatekeeper and 
+                            enables the original gateway to initiate call control signaling procedures.
+  ARJ (Admission_Reject) 	Denies the request of the endpoint to gain access to the network for this 
+                            particular call.
+
+Endpoint Location:
+  LRQ (Location_Request)    Sent to request the gatekeeper contact information for one or more E.164 addresses.
+  LCF (Location_Confirm)    Sent by the gatekeeper and contains the call signaling channel or RAS channel 
+                            address of itself or the requested endpoint. LCF uses its own address when GKRCS is 
+                            used. LCF uses the requested endpoint address when Directed Endpoint Call 
+                            Signaling is used.
+  LRJ (Location_Reject) 	Sent by gatekeepers that received an LRQ for which the requested endpoint is not 
+                            registered or has unavailable resources.
+
+Information Request:
+  IRQ (Information_Request) A status request sent from gatekeeper to endpoint.
+  IRR (Information_Request_Response)  
+                            Sent from endpoint to gatekeeper in response to IRQ. This message is 
+                            also sent from endpoint to gatekeeper if the gatekeeper requests 
+                            periodic status updates. The IRR is used by gateways to inform the 
+                            gatekeeper about the active calls.
+  IACK (Info_Request_Acknowledge) 	  
+                            Used by the gatekeeper in order to respond to IRR messages.
+  INACK (Info_Request_Neg_Acknowledge)
+                            Used by the gatekeeper in order to respond to IRR messages.
+
+
+
+
+H.323 call setup
+------------------------------------------
+Step 0: RAS Signalling
+Endpoint discovers GK by multicasting GRQ, gets GRJ or GCF from GK containg Transport Address of GK RAS channel
+Enpoint registers with GK, to inform GK of its alias address and Transport address
+
+Step 1:  RAS Signalling
+This step is skipped if there is no Gatekeeper
+Terminal sends RAS messages to the address and the well known TSAP identifier (aka port) of GK RAS channel
+Possibly send LRQ to GK to translate destination alias to Transport address
+Send ARQ Admission request message to GK, UDP destination port: 1719
+Receive ACF from GK with Call Signalling Transport address of GK or other EP
+
+
+Step 2: 
+exchange of call signalling messages on a Call Signalling channel
+Call signalling messages on H.225 channel (TCP/Dynamic port or 1720)
+Receive Connect message containing H.245 control channel address, H.245 address can also come
+in Alerting, Call Proceeding and Setup messages
+
+Step 3:
+Establish H.245 Control Channel (TCP/Dynamic port)
+
+Step 4:
+RTP/RTCP
+
+
+    
+
+H.225 RAS: (Registration/Admission/Status) (on wireshark RAS:..)
+-----------------------------------------------------------------
+UDP, ports(or TSAP identifier):[unicast 1719, multicast 1718]
+RAS is the signaling protocol used between gateways(endpoints) and gatekeepers.
+- gatekeeper discovery
+- endpoint registration
+Important fields:
+    callReferenceValue: which call does this message belong to
+    conferenceID: 
+    callIdentifier: Associate RAS and Q.931 for a call
+    
+    LCF
+    callSignalAddress: The transport address to which to send H.225.0 call signalling; 
+    uses the reliable well known or dynamic port, 
+    but may be an endpoint or gatekeeper address depending on the call model in use.
+
+    rasAddress – Registration, admissions, and status address for the located endpoint.
+
+
+H.225 (modified Q.931 signalling) (on wireshark CS:..)
+------------------------------------------------------
+
+TCP, Endpoint to Endpoint port 1720, GK dynamic port
+Important fields:
+    h245Address – This is a specific transport address on which the called endpoint or 
+    gatekeeper handling the call would like to establish H.245 signalling. 
+    This address may also be sent in Call Proceeding, Progress, Connect, or Facility.
+
+    fastStart – Used only in the fast connect procedure, fastStart supports
+    the signalling needed to open a logical channel. This uses the
+    OpenLogicalChannel structure defined in ITU-T Rec. H.245, but the sender
+    of this indicates the modes it prefers to receive and transmit, and the
+    transport addresses where it expects to receive media streams.
+    callReferenceValue: which call does this message belong to
+
+    destCallSignalAddress – Needed to inform the gatekeeper of the destination
+    terminal's call signalling transport address; redundant in the direct
+    terminal-to-terminal case. In all cases where the information is available to
+    the sender of the Setup message, this field shall be filled in.
+
+
+H.245
+------------------------------------------
+TCP, Dynamic port
+Used to start and stop video, audio, and data protocol.
+
+Step 1: Determine master slave
+SessionID: 1=audio 2=video 3=data
+
+• MasterSlaveDetermination (MSD). used to prevent conflicts between two terminals.
+
+• TerminalCapabilitySet (TCS). Message capabilities supported by the terminals that take part in a call
+
+• OpenLogicalChannel (OLC). Message to open the logical channel 
+
+• CloseLogicalChannel (CLC). Message to close the information logical channel.
+
+How both sides get each others mediaChannel ip/port. Four messages are required
+
+   Master                   Slave
+   ----------- OLC ---------->
+   forwardLogicalChannelNumber:2
+   dataType: videoData
+   dynamicRTPpayloadType: 97
+   mediaControlChannel: ip/port
+
+   <---------- OLC Ack -------             
+   forwardLogicalChannelNumber:2
+   mediaChannel: ip/port
+   mediaControlChannel: ip/port
+
+   <---------- OLC -----------
+   forwardLogicalChannelNumber:3
+   dataType: videoData
+   dynamicRTPpayloadType: 97
+   mediaControlChannel: ip/port
+
+   ----------- OLC Ack -------->             
+   forwardLogicalChannelNumber:3
+   mediaChannel: ip/port
+   mediaControlChannel: ip/port
+
+
+              
+H.225 Fields
+------------------------------------------
+Call Reference Value (CRV):
+Associate call signalling or RAS messages between 2 entities within the same call
+A value of zero is global-call-reference-value, meaning message is not related to a call
+Associate message with a call
+
+Call-Id
+Associate all messages between all entities within the same call
+
+Conference Id (CID):
+Associate all messages between all entities within all calls in the same conference
+
+
+
+Wireshark
+------------
+Filter all "OpenLogicalChannels":  h225.facility_element
+in description h225 ras is shown as RAS: gatekeeperRequest
+h225 call signalling is shown as CS: facility OpenLogicalChannel
+
+
+H225 Messages
+------------
+Uses aligned PER encoding
+There shall be no fragmentaion of H.245 messages across transport PDUs, this PDU is defined by TPKT
+
+sessionID:
+    1   primary audio
+    2   primary video
+    3   data
+
+mediaControlChannel RTCP
+
+forwardLogicalChannelParameters     sender's source address
+reverseLogicalChannelParameters     sender's destination address
+
+
+Call Signalling     section 7 in H.323
+
+There are three types of channels
+    1 RAS channel, UDP destination port 1719 
+    2 Call signalling channel, TCP destination port 1720
+    3 Logical channels, dynamic port
+
+Endpoint has
+    Call Signalling Channel Address
+
+
+There are three ways to exchange h.245
+    1   Fast connect
+    2   H.245 encapsulation
+    3   H.245 connection
+
+
