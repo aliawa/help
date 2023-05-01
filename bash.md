@@ -1,6 +1,6 @@
 # Variables 
   pattern here means globbing pattern
-${#string}                      # String Length
+${#var}                         # strlen(var)
 
 ${string:pos}                   # Extracts substring starting at pos.(pos starts at 0)
 ${string:pos:length}            # Extracts length characters starting at pos.
