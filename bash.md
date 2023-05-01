@@ -367,16 +367,33 @@ with "shopt -s extglob"
 
 
 ## getopts
-
-while getopts d:o:f:r:l: option $TST_CMD
+while getopts vkm:l:w:h option
 do
-    case "$option" in
-        d) input="$input$OPTARG\n";;
-        o) output="$output$OPTARG\n";;
-        l) output="$output$OPTARG\n";;
-        *) ;;
+    case "$option"
+        in
+        m) MAND_OPTS=$OPTARG;;
+        k) KDEV=TRUE;;
+        l) LANPCAP=$OPTARG;;
+        w) WANPCAP=$OPTARG;;
+        v) USEVALGRIND=TRUE;;
+        h) usage; exit;;
+       \?) echo -en "\nUsage:"; usage; exit 1;;
+
     esac
 done
+
+# the last argument should be the directory
+if [ "$OPTIND" -gt "$#" ]
+then
+    echo
+    echo "Missing directory!"
+    usage
+    exit 2
+fi
+
+# get the last argument now
+shift $((OPTIND - 1))
+DHOME=$1
 
 
 # Other

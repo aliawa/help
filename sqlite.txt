@@ -55,6 +55,20 @@ DROP TABLE table_name
 CREATE [TEMP] VIEW view_name AS SELECT query_statement
 DROP VIEW view_name
 
+
+CREATE TABLE regressions 
+(
+    bug_id      TEXT NOT NULL,
+    regression_id  TEXT NOT NULL,
+    FOREIGN KEY (regression_id)
+        REFERENCES bugs(id)
+    FOREIGN KEY (bug_id)
+        REFERENCES bugs(id)
+    UNIQUE(bug_id, regression_id)
+);
+
+
+
 # index
 ----------------------------------------
 CREATE [UNIQUE] INDEX index_name ON table_name ( column_name [, ...]);

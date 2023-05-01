@@ -1,0 +1,620 @@
+= PYTHON NOTES
+
+== Four ways to import something
+import math
+import math as mt
+form math import sqrt, pi
+from math import sqrt as sq
+
+
+== Condition
+if expression1:
+   statement(s)
+elif expression2:
+   statement(s)
+else:
+   statement(s)
+
+# Ternary operator
+state = "good" if is_good else "bad"
+
+
+== List
+lst[2:5]            # index 2 to 4 ('start' to 'end-1')
+lst[:4]             # 0 to 3
+lst[-1]             # last element
+lst[-5:-1]          # 5th element counting from end to last (not no n-1 this time)
+lst[0:6:2]          # index 0 to index 5, every 2nd element
+lst[6:0:-2]         # index 6 to index 1, every 2nd element
+lst[::-1]           # same as [last_index::-1], reverses the list
+lst[:]              # same as [0:last_index+1]
+
+del lst[0:5]        # remove index 0 to index 4
+lst[0:5] = []       # delete 5 elements (0 -> 4) from list
+lst[1:6] = ['B']    # replace idx 1 -> 6, 5 elements with a single element
+lst[2:2] = [1,2,3]  # insert new list at index 2
+lst + [4,5,6]       # concatination, iterates and appends each item of the iterable
+lst * 2             # replicate
+
+len(lst)
+min(lst)
+max(lst)
+
+lst.upper()
+lst.append(3)       # appends as a single element, even when obj is iterable, unlike + operator and extend
+lst.extend('42')    # add '4' and '2' to lst as separate elements; takes iterable
+lst.insert(1,'g')   # insert 'g' and index 1
+lst.remove('baz')   # remove 'baz' from list if present, raise exception otherwise
+lst.pop(0)          # removes item at index and returns the removed item. 
+lst.count('2')      # count string '2' in lst
+lst.sort()          # sort list in-place. doesn't return new list, as opposed to sorted
+
+sorted(lst)         # takes any iterable, return a sorted list
+set(lst)            # return set, eliminates duplicates
+
+lst1 == lst2        # true if equal: same elements at same positions, same size
+Deepdiff(lst1, lst2, ignore_order=True)         # compare by ignoring order of elements
+Deepdiff(lst1, lst2, ignore_string_case=True)   # compare lst of strings case-insensitive
+
+
+ways to reverse a list
+nums[::-1]          # slicing syntax
+nums.reverse()      # in-place reverse method
+
+# zipping and unzipping
+zipped = list(zip(lst_1, lst_2))      # takes multiple lists, outputs list of tupels
+zip(*zipped)                          # takes list of tupels and returns lists, The * removes the list
+
+
+
+== Dictionary
+d={'a':10, 'b':20, 'c':30}
+d=dict(a=10, b=20, c=30)
+d=dict([('a',10), ('b',20), ('c',30)])
+
+'key' in dict                  # retruns True False
+len(dict)                      # length
+
+d.pop('bar', default)          # remove key 'bar' and return its value or optional default
+d.popitem()                    # remove last item from d and return a tuple
+d.clear()                      # empty dictionary
+d.get('key', default)          # get key's value, with optional default
+d.items()                      # list of key,value tuples
+d.keys()                       # list of keys
+d.values()                     # list of values
+d.update({'e':40, 'f':50})     # merge given dictionary with d
+d.update([('e',40), ('f',50)]) # merge list of tuples to d
+d.update(e=40, f=50)           # merge keyword args
+
+func(**mydict)                 # Expand the dictionary
+
+for k in mydict:
+    print (k, ':', mydict[k])
+
+for k in sorted(mydict):
+    print (k, ':', mydict[k])
+
+for k,v in mydict.items():
+    print (k, ':', v)
+
+
+== Tuple 
+# tuple is hashable so can be used as dict key, but list is not hashable
+one_tuple = ('item', )        # tuple with one item, note the extra ','
+t = ('Kumquat', '2', 'cups')  # create
+>>> len(t)                    # length
+>>> t.count('2')              # how many times '2' appears in the tuple
+>>> t.index('cups')           # index of 'cups'; starting at 0
+>>> t.index('Rice')           # Non existent, Throws exception
+>>> t[2]                      # get item at index 2
+
+
+
+== Set
+set.difference                # intersection
+set.symmetric_difference      # union
+
+== Looping
+Looping over two lists at the same time
+for color, ratio in zip(colors, ratios):
+    print (color, ratio)
+
+zip can take any number of lists sets etc.
+
+looping over dict only prints keys
+animals = {'birds':3, 'cats':2, 'dogs':1}
+for item in animals:
+    print (f"I have {item}")
+
+To print both keys and values
+for item in animals:
+    print (f"I have {animals[item]} {item}")
+
+Better way to get both key and value in dict
+for animal, count in animals.items():
+    print (f"I have {count} {animal}")
+
+
+colors = [red, blue, green]
+ratios = [0.2, 0.3, 0.1]
+Get and index for a list
+for i, color in enumerate(colors):
+    print(color, ratios[i])
+
+
+
+== Built in functions for iterables list, dict, tuple, generator etc
+sum([2,1,3,4,7])    # return 17
+min([2,1,3,4,7])    # return 1
+max([2,1,3,4,7])    # return 7
+
+# check if seq is palindromic
+all( n == m for n, m in zip(seq, reversed(seq)))
+not any( n != m for n, m in zip(seq, reversed(seq))
+
+Counter(iterable)
+
+
+
+== Built in functions for Numbers
+bin
+oct
+hex
+abs
+round
+divmod   # floor division and modulo at the same time
+
+
+
+== String
+word[::-1]                   # reverse a word
+
+# f string
+f'{num:10}'     Field width
+f'{num:>10}'    right justify
+s[start:end]                # get slice of s from start to end-1
+
+# search
+"bed" in s                          # returns True or False
+s.find('bed')                       # returns index of 'bed' in s
+s.find('bed', 1, 10)                # look in substring starting from 1, and ending in 9
+s.index('bed',start, end+1)         # like find but raises ValueError
+s.startswith('bed',start, end+1)    # like find but raises ValueError
+
+import re
+re.findall("bed", s)        # returns a list with all occurances
+re.search("bed", s)         # returns index of start and end of bed in s
+
+=== Multiline strings
+print("""\
+Usage: thingy [OPTIONS]
+      -h            Display this usage message
+      -H hostname   Hostname to connect
+""")
+
+# Long strings on multiple lines
+text = ('Put several strings within parentheses '
+    ' to have them joined together')
+
+
+
+
+== Getting Info
+dir(obj)                        show all attributes of the object
+dir()                           all the names in current namespace
+id(obj)                         memory address of the object
+type(obj)                       same as obj.__class__ 
+globals()
+locals()
+hassattr(obj, name)             is 'name' an attribute of obj
+help(obj)                       help on module, function, class, method, keyword
+help()                          start interactive help
+issubclass(class, classinfo)    is 'class' subclass of 'classinfo'
+vars(obj)                       returns __dict__ of obj
+
+check if two objects are same   print(hex(id(A))); print(hex(id(A_copy)))
+
+
+
+== Venv
+# create:
+python3 -m venv parts_venv
+
+# activate:
+source ~/my_python3/bin/activate
+
+# install a package from local directory in venv
+cd ~
+git clone https://github.com/secdev/scapy.git
+pip install ~/scapy
+
+
+# deactivate:
+deactivate
+rm -rf parts_venv
+
+# show info about venv
+printenv
+
+# all dependencies of venv
+pip list
+pip freeze # this output can go in requirements.txt
+
+# if you get the error "no module named pip"
+python -m ensurepip
+
+
+
+
+== python shell startup
+export PYTHONSTARTUP=~/.pystartup
+
+to enable autocompletion put this in the pystartup file
+
+import rlcompleter
+import readline
+readline.parse_and_bind("tab: complete")
+
+
+
+== Installing python modules
+# install pip itself:
+python -m ensurepip --default-pip
+
+# install pip on Ubuntu 20.04
+apt install python3-pip
+
+# List installed packages
+pip list
+
+# install / upgrade package
+python -m pip install SomePackage
+python -m pip install --upgrade SomePackage
+
+# where are my system libraries installed
+>>> import sys
+>>> sys.prefix
+
+# where are third party packages installed
+>>> import site
+>>> site.getsitepackages()
+
+# info about certain package
+pip show partsfwk
+
+# search for available packages
+pip install pip_search
+python -m pip_search yaml
+
+# install using package manager
+sudo apt-get install python-scapy
+
+# setup replay_data on a new vm
+requires python 3.6.9 or later because of f-strings
+requires scapy 2.4.3 because of AsyncSniffer
+only ubuntu 16 and 18 do not statisfy above requirements
+sudo apt instal python3-scapy
+sudo apt install python-yaml
+
+
+
+
+== Exceptions
+programmers are encouraged to derive new exceptions from the Exception class
+or one of its subclasses
+try:
+    # run code
+except Except as err:
+    print (err)
+finally:
+    # Always run this code exception or no-exception
+
+
+try:
+    item = next(iterator)
+except StopIteration:
+    done_looping = True
+else:
+    action_to_do(item)
+
+
+
+
+
+== regex
+res = re.match(r"(\w+) (\w+)", "Isaac Newton")  # match at the begining of string
+res = re.search(r"..", string)                  # matches a single occurance of regex in stirng
+res = re.search(r"\[hello\]", "[hello] there")  # backslash a metacharacter to match them literally
+
+res.start()                                     # start index of match
+res.end()                                       # end index of match
+res.group()                                     # The whole matched string
+res.group(1)                                    # matched group one 
+re.split(r',\s*', row)                       
+
+* = {0,}
++ = {1,}
+? = {0,1}
+
+regex broken into multiple lines for readablity using re.VERBOSE
+re.search(r'''
+        ^[a-f\d]{8}     # 8 hex digits
+        -[a-f\d]{4}     # 4 hex digits
+        -[a-f\d]{4}     # 4 hex digits
+        -[a-f\d]{4}     # 4 hex digits
+        -[a-f\d]{12}$''', re.VERBOSE)
+
+re.finditer     # return match objects
+re.findall      # return matched strings
+
+(?: )           # non-capturing group
+
+
+
+
+
+
+
+
+
+
+== Python Data classes
+from dataclasses import dataclass
+
+@dataclass              #decorator
+class Color:
+    hue: int
+    saturation: float
+    lightness: float = 0.5
+
+
+# by default data classes are not frozen, meaning mutable, therefore cannot be
+# used in dicts
+# also by default not orderable
+@dataclass (order=True, frozen=True)
+class Color:
+    hue: int
+    saturation: float
+    lightness: float = 0.5
+
+from pprint import pprint
+colors = [Color(33,1.0),
+          Color(66,0.75),
+          Color(99,0.5),
+          Color(66,0.75)]
+
+pprint (sorted(colors))
+    [Color(hue=33, saturation=1.0, lightness=0.5),
+    [Color(hue=33, saturation=0.75, lightness=0.5),
+    [Color(hue=33, saturation=0.75, lightness=0.5),
+    [Color(hue=33, saturation=0.5 lightness=0.5)]
+
+pprint (set(colors))
+    [Color(hue=33, saturation=1.0, lightness=0.5),
+    [Color(hue=33, saturation=0.75, lightness=0.5),
+    [Color(hue=33, saturation=0.5 lightness=0.5)]
+
+
+
+
+
+
+== Context managers
+context manager
+used to execute entry and exit actions
+
+from contextlib import contextmanager
+
+@contextmanager
+def feature_flag(name, on=True):
+    old_value = feature_flags.is_on(name)
+    feature_flags.toggle(name, on)  # behavior of __enter__()
+    yield
+    feature_flags.toggle(name, old_value)  # behavior of __exit__()
+
+
+# using a context manager
+# with statement will properly cleanup the resource.
+with open ('dictionary.txt') as dictionary_file:
+
+
+
+
+== Functions
+functions have 2 kinds of arguments
+. positional args
+. kwargs or key word arguments
+
+def f(*a) ::   accepts any number of positional args. Stored in tuple called 'a'
+def f(**a)::   accepts any number of keyword args. Stored in dictinary 'a'
+f(**items)::   python unpacks dictionary 'items' into keyword args of f
+
+
+=== Dunder methods
+dunder aka Magic methods, make objects behave like built ins: list, dict etc
+they are similar to operator overloading in C++
+Examples::
+  __add__ = obj + obj
+  __get_item__ = obj[]
+  __len__ = len(obj)
+
+make class iterable::
+  __iter__() must return iterator
+  __next__() retun StopIteration when done
+
+=== lambda functions
+c_to_f = lambda data: (data[0], (9/5)*data[1]+32)
+input of above lambda func: data
+output: a tuple (data[0], (9/5)*data[1]+32)
+
+=== variable number of args
+def myFn1(*args):
+    for arg in args:
+        print (arg)
+
+def myFn2(**kwargs):
+    for arg, val in kwargs.items():
+        print (f"({arg} = {val}))
+
+myFn1('a','b', 'c', 'e')
+myFn2(a='1', b='2', c='3')
+
+
+
+== Generators
+How to create a generator
+my_gen = (num for num in range(1))
+next(my_gen)   # automatically provides a next method so this is an iterator
+
+generators are like list comprehensions but they don't take the memory of the
+list. They are lazy iterables. They are promise that sometime in future if 
+you start looping over me, I am going to give you items back.
+It you try to loop over a generator second time they don't give you anything
+they are exhausted
+generator is a form of iterator
+numbers = [1, 2, 3, 5, 7]
+squares = (n**2 for n in numbers)       # squares is a generator and also an iterator
+next(squares)                           # get next item from generator
+for n in numbers:                       # Loop over generator
+    print(n)
+min(numbers)
+max(numbers)
+all([1, "hello", True, 0])  -> true only if all elements are truthy
+any([1, "hello", True, 0])  -> true if any element is truthy
+
+condition = any (n>1 for n in numbers)
+condition = any ((n>1 for n in numbers))
+both of above statements are equivalent
+
+consider using generator when you are looping over a list once
+
+# yield
+The presence of yield in function makes it a generator function
+it returns a generator
+yield is like a return but it maintains state, when we
+return to function we can start where we left off
+
+
+# Iterate over multiple iterables at the same time, The 2 approaches below are equivalent
+
+def all_together(*iterables):
+    for iterable in iterables:
+        for x in iterable:
+            yield x
+
+def all_together(*iterables):
+    retrun ( x for iterable in iterables for x in iterable )
+
+
+# some built-in generators
+from itertools import count, dropwhile, takewhile, zip_longest
+for x in count():
+    print x
+
+
+
+
+    
+== Comprehensions
+
+----
+# Basic list comprehension example
+squares = [x**2 for x in range(10) ]
+----
+
+advantage of list comprehension over for loop
+list comprehension:: a new list is being built from another list
+for loop:: something more complex than building a list is happening
+
+[source,python]
+----
+[n*2 for n in nums if n%2 ==1 ]
+#----------------  ----------
+# mapping portion   filter
+----
+
+list comprehension with nested loops
+
+
+[source,python]
+----
+matrix = [[row * 3 + incr for incr in range(1, 4)] for row in range(4)]
+flattened_matrix = [ item for row in matrix for item in row ]
+#                        ----------------  ---------------
+#                          outer loop        inner loop
+----
+NOTE: this is not the way we will say it in english. for item in row for row in matrix
+
+transpose a matrix
+list(zip(*matrix))
+
+
+# set comprehension
+{ word[::-1] for word in words_over_five_letters }
+
+dict() constructor accepts a list of tuples 
+dict([(2,3), (4,5)])
+
+dictionary comprehension
+from string import ascii_lowercase
+letters = { letter: n+1 for n, letter in enumerate(ascii_lowercase) }
+
+
+
+
+== class
+class Dog:
+    kind = 'canine'         # class variable shared by all instances
+    def __init__(self, name):
+        self.name = name    # instance variable unique to each instance
+
+
+# instantiate
+d = Dog('Fido')
+e = Dog('Buddy')
+
+# add attributes at runtime
+class Employee:
+    pass
+john = Employee() #create an empty employee record
+# Fill in the fields of the record
+john.name = 'John Doe'
+john.dept = 'computer lab'
+john.salary = 1000
+
+# delete class attribute
+del john.name
+
+
+# A class that supports iterator protocol
+class Reverse:
+    """Iterator for looping over a sequence backwards."""
+        def __init__(self, data):
+    self.data = data
+    self.index = len(data)
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.index == 0:
+        raise StopIteration
+        self.index = self.index - 1
+        return self.data[self.index]
+
+
+
+print (a, b, sep='||', end='!')
+for i in range(3): print(i)
+
+
+== unpacking
+def myfunc(x,y,z)
+    print (x,y,z)
+
+tuple_vec = (1,0,1)
+dict_vec = {'x':1, 'y':0, 'z':1}
+
+myfunc(*tuple_vec)          # Unpack a tuple
+myfunc(**dict_vec)          # Unpack a dictionary, assigns dictionary keys to func args
+

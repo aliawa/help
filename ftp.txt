@@ -1,0 +1,15 @@
+FTP:
+- Defualt server_control_port is 21
+
+- Default client side data port is (server_control_port -1). 
+  Client can change this port through PORT request
+
+- Default server side data port is (server_control_port -1). 
+  Client can request server to identify a non-default server side data port
+  with the PASV command
+
+- The data connection should be closed when
+  * server receives ABORT command
+  * new PORT command from client
+  * control connection is closed.
+

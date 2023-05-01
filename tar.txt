@@ -4,3 +4,7 @@ find / -name '*.[ch]' | tar -cf dp.tar -T -
 
 # if filenames have spaces:
 find / -name '*.[ch]' -print0 | tar -cf dp.tar --null -T -  
+
+
+# include absolute path when creating tar file
+tar -Pcvf fl.tar dir1 dir2 dir3

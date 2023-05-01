@@ -34,6 +34,11 @@ expr { -3 * 4 + 5}
 expr { "9" eq "9.0"}
 expr { $x>0? ($x+1) : ($x-1) }
 
+    set b "blue"
+    string match {b*} $b  => true 
+
+    regexp -- {^-[0-9]$} "-22"   => True 
+
 
 
 ## functions

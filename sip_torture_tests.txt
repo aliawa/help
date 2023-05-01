@@ -2,7 +2,7 @@
 
 #
 # running nightly sip tourture test
-# 
+# protos sip test suite 
 
 # mand configurtion (Registrar mode)
 mandconfig

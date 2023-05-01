@@ -1,10 +1,10 @@
 DNS query types
 -------------------------------------------------------------------
-  A         IPv4    
-  AAAA      IPv6    
-  SRV       Service Locator
-  NAPTR     Naming Authority Pointer
-  NS 
+A         IPv4    
+AAAA      IPv6    
+SRV       Service Locator
+NAPTR     Naming Authority Pointer
+NS 
 
 
 host

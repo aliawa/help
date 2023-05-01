@@ -1,17 +1,26 @@
 LUA
 ----------------------------------------------------------------------
-
-Location of init.lua
-/Applications/Wireshark.app/Contents/Resources/share/wireshark
-
+Wireshark will run files ending in .lua from the global plugin directory
 Location of plugin folder
 /Applications/Wireshark.app/Contents/PlugIns/wireshark
 
 Load lua script file.lua from command line
 wireshark -X lua_script:file.lua
 
+Lua can be used to write dissectors, post-dissectors and taps.
 
-DISPLAY FILTER
+Post-dissectors:: are dissectors meant to run after every other dissector has run. 
+They can add items the dissection tree so they can be used to create your own extensions 
+to the filtering mechanism.
+
+Taps:: are used to collect information after the packet has been dissected.
+
+To disable Lua scripts, set the enable_lua variable to false in init.lua
+init.lua is loaded before any other lua scripts
+Location of init.lua::/Applications/Wireshark.app/Contents/Resources/share/wireshark
+
+
+Saved display filters
 ----------------------------------------------------------------------
 Check if there is segmentation
 - With tcp reassembly: tcp.reassembled.length && sip

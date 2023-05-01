@@ -253,3 +253,17 @@ bash_var=$(tmux split-window -P -F "#{pane_id}")
 
 print window name on console
 tmux display-message -p '#{window_name}
+
+
+A script for inspiration
+----------------------------------------------------------------------
+#!/bin/sh
+SESSION=$1
+set -- $(stty size) # $1 = rows $2 = columns
+tmux -2 new-session -d -s "$SESSION" -x "$2" -y "$(($1 - 1))"
+tmux split-window -v
+tmux resize-pane -D 15
+tmux -2 attach-session -d
+
+
+

@@ -1,3 +1,10 @@
+Get Info
+----------------------------------------------------------------------
+:set runtimepath?    what is my runtime path
+:version             what vimrc files are loaded
+vim -u {vimrc}       load specific vimrc file
+vim -u NONE          Dont load any vimrc file
+
 
 Multiple files
 -----------------------
@@ -74,14 +81,18 @@ s/\d\+/\=submatch(0) + 1/      Alter sequence number in a numbered list
 \d\+                           search a digit sequence
 \=submatch(0) + 1              get the matched pattern and add 1 to it.
 \=<expression>                 Replace with the result of the expression
-:s/pat/\=expand("%:p")/        The expression can be quiet complex for example: \="\n  " . substitute(submatch(1), "}", "\n}", "")/g
-                            
+:s/pat/\=expand("%:p")/        The expression can be quiet complex for example: 
+                                  \="\n  " . substitute(submatch(1), "}", "\n}", "")/g
+                                  \=@a  - replace with content of register 'a'
+\_s                            "space including new line
+
 
 :.,$ g/FINDME/p                "search from cursor to end of file
-
 :'<,'>s/\%Vabc/efg/            "search and replace in visual selection
 
-\_s                            "space including new line
+/\%V
+search inside the visually selected area :'<,'>s/\%V(/#/g
+
 
 
 " ---- multiple files search ----
@@ -303,6 +314,10 @@ zM -- close all folds
 Visible screen actions
 ----------------------
 dL - Delete to end of page, in other words, everything visible.
+:qa
+
+jk
+
 
 
 tricks
@@ -636,25 +651,25 @@ git clone https://github.com/scrooloose/nerdtree.git
 "                            Info
 " -------------------------------------------------------------
 
-:scriptname         # All loaded scripts
-:set runtimepath    # All directory to look for stuff
-:set filetype?      # which plugin is highlighting the file
+:scriptname              # All loaded scripts
 
-:e $MYVIMRC         # open vimrc from within vim
-:verbose set foldcolumn?   # which script set foldcolumn option
+Note: set command has three variants "set", "setlocal" and "setglobal"
+:set <option> ?          # check current value of any option
+:set runtimepath         # All directories to look for stuff
+:set filetype?           # which plugin is highlighting the file
+:setlocal syntax?        # syntax file being used
+:verbose set ft ?        # current filetype and who set it
+:verbose set foldcolumn? # which script set foldcolumn option
 
+:e $MYVIMRC              # open vimrc from within vim
 
 Ctrl-g                  relative path of current file
 1 Ctrl-g                full path of current file
-:setlocal syntax?       # syntax file being used
-:verbose set ft ?       # current filetype and who set it
-:scriptnames            # all loaded scripts
 
 :echo expand('#')       alternate file, see help _#
 :echo expand('%')       current file, see help _%
 :echo has('clipboard')  check vim compile time options
 
-:set <option> ?         check current value of any option
 
 
 
@@ -682,17 +697,20 @@ vim -S ~/.vim_sessions/mysession.vim
 " -------------------------------------------------------------
 "                          Register
 " -------------------------------------------------------------
-" copy from register in insert mode
-Ctrl-a                  insert content of register "."
-Ctrl-r {reg}            followed by name of register
-Ctrl-r Ctrl-r {reg}     don't interpret control characters in register
+" copy from register to the command line 
+Ctrl-a                  insert the word under cursor in command line,
+Ctrl-r {reg}            insert content of register. If text has control characters this may have unexpected effect.
+Ctrl-r Ctrl-r {reg}     don't interpret control characters in register when pasting to cmd line
 
 
-" show content of registers
-: reg
+:reg              " show content of all registers
+:reg a b c        " show content of registers a,b and c
 
-Example: assign "the" to the search register "/"
-:let @/ = "the"
+Manually change the value of a register
+:let @/="the"
+
+".  dot register stores the last inserted text, you can use it to insert the
+    same text again
 
 
 " -------------------------------------------------------------
@@ -733,6 +751,7 @@ d5j         delete to 5 lines downwards
 df'         delete to first occurance of ' including the character itself
 dt'         delete to first occurance of ' not including the character itself
 
+
 useful operators
 
 c   change
@@ -747,13 +766,16 @@ gu  make lowercase
 <   shift left
 gq  format lines
 
+Note: In visual mode the operator just operates on the selected text. We can think of the selected
+text as the text-object
+
 
 " -------------------------------------------------------------
 "                          text objects
 " -------------------------------------------------------------
 {i|a}{text-object-id}
-a  all or around
-i  inner
+a  all or around - include boundary which could be space, quote, brackets etc 
+i  inner - without surrounding space, bracket etc that create the text-object
 
 some text object identifiers
 
@@ -1026,22 +1048,31 @@ Ctrl+w  w           going in and out of terminal
 " Explore
 " -------------------------------------------------------------
 Lexplore
+enter           open file in preview window
 -               up directory
 qb              List bookmarked directories (query bookmark)
 qf              quick info about the file
-mf              mark file
+mf              mark file / Unmark file
 :MF *c          mark a group of files
+mF              Unmark all marked files
 :MT [dir]       set move/copy target directory
 gb              go back to previous directory
 gn              go to directory under cursor
 :NTree [dir]    like cd
 gh              show / hide files starting with '.'
 D               delete file
+X               run file
+md              diff marked files
 
 copy file:
 mt <target-dir>
 mf <file-to-copy>
 mc
+
+move file:
+mt <target-dir>
+mf <file-to-move>
+mm
 
 :Rexplore       return to explorer from editing
 

@@ -1,0 +1,71 @@
+== auto use fixture.
+* does not need to be requested will be automatically run 
+@pytest.fixture
+def order():
+    return []
+
+@pytest.fixture(autouse=True)
+def myfixture(order):
+    order.append("1")
+
+def test_a1(order):
+    assert order == ["1"]
+
+def test_a2(order):
+    assert order == ["1"]
+
+== fixtur scope
+scope="function"
+scope="class"
+scope="module"
+scope="session"
+scope="package"
+scope=<callable>
+
+== teardown
+* put cleanup code after yield
+@pytest.fixture
+def sending_user(mail_admin):
+    user = mail_admin.create_user()
+    yield user
+    mail_admin.delete_user(user)
+
+
+== Parameterizing Fixtures
+* fixture can access the parameter value using request.params
+* all tests using the fixture will run for each parameter.
+* run 'pytest --collect-only to see the resulting test ids
+* individual tests can be select using the -k command line arg.
+@pytest.fixture(scope="module", params=["smtp.gmail.com", "mail.python.org"])
+def smtp_connection(request):
+    smtp_connection = smtplib.SMTP(request.param, 587, timeout=5)
+    yield smtp_connection
+    print("finalizing {}".format(smtp_connection))
+    smtp_connection.close()
+
+
+=== custom test ids
+* using the ids keyword arg
+@pytest.fixture(params=[0, 1], ids=["spam", "ham"])
+def a(request):
+    return request.param
+
+def test_a(a):
+    pass
+
+
+
+
+=== run fixture before every test
+* cleandir fixture is defined in a different file
+@pytest.mark.usefixtures("cleandir")
+class TestDirectoryInit:
+    def test_cwd_starts_empty(self):
+        assert os.listdir(os.getcwd()) == []
+        with open("myfile", "w") as f:
+            f.write("hello")
+
+    def test_cwd_again_starts_empty(self):
+        assert os.listdir(os.getcwd()) == []
+
+

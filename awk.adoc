@@ -1,5 +1,10 @@
 
 == FIELDS
+field definition:
+field is either “anything that is not a comma,” or “a double quote, 
+anything that is not a double quote, and a closing double quote.” 
+FPAT = "([^,]*)|(\"[^\"]+\")"
+
 
 === Number of fields
 
@@ -142,8 +147,24 @@ substr(s,p,n)            |  substring of s of length n starting at position p, c
 ARGC        One more than the number of arguments because "awk" is also counted
 ARGV        starts from ARGV[1] upto ARGV[ARGC-1]
 
+echo a.awk
+{
+    for (i=0; i<ARGC; i++) {
+        print "ARGUMENT " i " is " ARGV[i];
+    }
+
+}
+awk -f a.awk a1 a2                                                                aawais@M-C02ZQK5CMD6M
+
+ARGUMENT 0 is awk
+ARGUMENT 1 is a1
+ARGUMENT 2 is a2
+
+Note: all command line arguments must be files that exist. Use the below trick to 
+pass arbitrary arguments
+
 BEGIN {
-    file2 = ARGV[2]
+    arg2 = ARGV[2]
     ARGV[2] = ""        # set ARGV[2] to null so that awk will not treat it as input file
 }
 
@@ -172,11 +193,12 @@ if ("Africa" in pop ) ...
 delete array[subscript]
 
 multidimensional arrays:
-for (i =1; i<=10; i++)
-    for (j=1; j<=10; j++)
-        arr[i, j] = 0
+   for (i =1; i<=10; i++)
+        for (j=1; j<=10; j++)
+            arr[i, j] = 0
 
-if ((i,j) in arr) ...
+    if ((i,j) in arr) ...
+
 to loop over such an array
 for (k in arr)
     split(k,x,SUBSEP)   access to individual subscript components
@@ -281,84 +303,105 @@ strftime("%A", systime())
 
 === SEARCH IN BLOCKS
 
-----
-# mark start of block
-/^packet buffer/{
-    in_block=1 
-    next
-}
-in_block==1 {
-    for (i=1; i<=NF; i++) {
-        if ($i>70) print $0
+    # mark start of block
+    /^packet buffer/{
+        in_block=1 
+        next
     }
-    if (NF<2) {
-        # exit block
-        in_block=0
+    in_block==1 {
+        for (i=1; i<=NF; i++) {
+            if ($i>70) print $0
+        }
+        if (NF<2) {
+            # exit block
+            in_block=0
+        }
     }
-}
-----
 
 === A row of dashes
-dashes = sprintf("%45s", " ")
-gsub(/ /, "-", dashes)
 
-
+    dashes = sprintf("%45s", " ")
+    gsub(/ /, "-", dashes)
 
 == getline (page 62)
-getline                 read next line from current file, sets $0,NF,NR,FNR
-getline var             read next line from current file, sets var,NR,FNR -> no auto splitting the line into fields
-getline < "file"        read input from file
-getline var < "file"    read next line from file in var, no splitting
-"cmd" | getline         read output from "cmd" line by line and set $0,NF
-"cmd" | getline var     read output from "cmd" line by line and set var
+
+    getline                 read next line from current file, sets $0,NF,NR,FNR
+    getline var             read next line from current file, sets var,NR,FNR -> no auto splitting the line into fields
+    getline < "file"        read input from file
+    getline var < "file"    read next line from file in var, no splitting
+    "cmd" | getline         read output from "cmd" line by line and set $0,NF
+    "cmd" | getline var     read output from "cmd" line by line and set var
 
 === Get output from shell command
-"date" | getline date       # get output of date command in the variable date
+
+    "date" | getline date       # get output of date command in the variable date
 
 === Get input from user ( page 117)
 
-----
-ARGV[1] = "-"                       # make awk read stdin
-while ((input = gtline) > 0)
-    if ($0 == n1 + n2) {
-        print "right"
-        break
-    } else if ($0 == "") {
-        print n1 + n2
-        break
-    } else 
-        printf("wrong, try again:")
+    ARGV[1] = "-"                       # make awk read stdin
+    while ((input = gtline) > 0)
+        if ($0 == n1 + n2) {
+            print "right"
+            break
+        } else if ($0 == "") {
+            print n1 + n2
+            break
+        } else 
+            printf("wrong, try again:")
 
 Read input from a file (page 118)
-while (getline < ARGV[1] > 0 )          # ARGV[1] contains the name of the file
-    qa[++nq] = $0
+
+    while (getline < ARGV[1] > 0 )          # ARGV[1] contains the name of the file
+        qa[++nq] = $0
 
 Get random number from 1 to nq  (page 118)
-int(rand()*nq + 1)
-----
 
-
+    int(rand()*nq + 1)
 
 
 == How to compare dates
-split("Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec", mn, ",")
-for (i in mn)
-    months[mn[i]] = sprintf("%02d",i)
-dte = int("2021"months[$1])
-if (dte >= 202108) {
-    ...
-}
+
+    split("Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec", mn, ",")
+    for (i in mn)
+        months[mn[i]] = sprintf("%02d",i)
+    dte = int("2021"months[$1])
+    if (dte >= 202108) {
+        ...
+    }
 
 
+= File Input and output
+any print statement can be written to a file using the redirection (>) operator 
+(which destroys any previous contents of the file) or concatenated onto the end 
+of an existing file using the concatenation (>>) operator.
 
-Send output to files **filename must be quoted**
-print expression > "filename"
-print expression >> "filename"
-print expression | "prog"
-$3 > 100    { print $1, $3 > "bigpop" }
-$3 <= 100    { print $1, $3 > "smallpop" }
-    
+    print expression > "file1"
+    print expression > "file1"
 
-Limitations
+== send output to external tool
+the first two prints send output to the same instance of "tail -n 1". The third
+print after close sends output to a new instance of "tail -n 1"
+
+    print "This is a test." | "tail -n 1";
+    print "This is only a test." | "tail -n 1";
+    close("tail -n 1");
+    print "Yikes!" | "tail -n 1";
+
+
+== read input from file
+
+    getline < "/tmp/testfile-awk";
+    print "The record was " $0;
+
+== read input from external tool
+The external command needs to be enclosed in quotes
+
+    "echo 'This is a test line'" | getline
+    print "The second record was " $0;
+
+
+= AWK Limitations
 User defined function cannot return an array
-no space allowed between function name and "(" when calling, to avoid confution with concatination operator
+no space allowed between function name and "(" when calling, to avoid confusion with 
+concatination operator
+

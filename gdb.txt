@@ -159,4 +159,20 @@ Shared Library
 if shared library is not found look at LD_LIBRARY_PATH
 
 
+gdb with c source
+----------------------------------------------------------------------
+On the Dev server:
+- Tar up the directories you need
+tar -Pczvf ~/tmp/code.tar.gz /home/aawais/pan_git/panos/src/libs/dp/{flow/src,flow/include,detector/src,detector/include,ctd/src,ctd/include}
+- copy archive to target:
+fw_copy_scripts.sh ~/tmp/code.tar.gz
+
+On the FW device:
+- untar on root
+cd /
+tar -xzvf /tmp/code.tar.gz
+
+- Other options
+set directories
+set substitute-path
 

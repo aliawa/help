@@ -22,9 +22,6 @@ mail command line
     send mail to  receipient@domin from sender@domain
     mail -r sender@domain -s "Subject of email" receipient@domain
 
-create a link
-    ln -s <existing-file-path> <new-link-path> 
-
 
 # SHOW AND KILL PROCESSES THAT ARE USING A DEVICE:
 fuser -m /dev/sdb1
@@ -219,5 +216,33 @@ od -c file
 output:
 0000000   w   h   a   t       i   s   g   o   i   n   g   o   n  \r  \n
 0000020
+
+
+
+# --------------------------------------------------------
+# Misc tools
+# --------------------------------------------------------
+
+ufw         program for managing a Netfilter firewall
+xz-utils    XZ-format compression utilities
+
+# Network
+wireplay    reads pcap but only uses the payload to replay.
+ssmping     check your multicast connectivity
+
+# Conversions
+pandoc      All text format conversion needs
+sox         Swiss army knife of sound processing
+
+# Network statistics
+ipt-netflow + flowd
+ipt-netflow + flow-tools
+fprobe + ntop
+
+bpython:    a better python interpretter
+videotop    download youtube videos
+hachoir     examine binary files
+pudb        python debugger
+midnight commander
 
 
