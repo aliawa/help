@@ -62,6 +62,7 @@ pkt[ICMP].type
 pkt[ICMP].code
 
 # Layers
+# A layer is just a list of fields. Layers can be accessed by it name.
 pkt[TCP]                    gets TCP and lower layers same as pkt.getLayer(TCP)
 pkt.underlayer              returns IP layer and following layers
 pkt.payload                 returns payload of TCP 

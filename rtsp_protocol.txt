@@ -119,6 +119,23 @@ Transport: RTP/AVP/TCP;interleaved=0-1
 means channel 0 and 1 are interleaved
 
 
+More than one Request in the same connection
+----------------------------------------------------------------------
+9.1 Pipelining
+   A client that supports persistent connections or connectionless mode
+   MAY "pipeline" its requests (i.e., send multiple requests without
+   waiting for each response). A server MUST send its responses to those
+   requests in the same order that the requests were received.12.37 Session
+
+
+Session identifier
+----------------------------------------------------------------------
+From 12.37 Session
+   The session identifier is needed to distinguish several delivery
+   requests for the same URL coming from the same client.
+
+
+
 Transport examples from pcaps
 -------------------------------
 C->S Transport: RTP/GNSS;unicast;client_port=64190

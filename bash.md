@@ -27,7 +27,9 @@ ${VAR:-}                        # if VAR not set use empty string. this avoids '
 --> see man zshexpn
 
 # Regular expressions
-## Does START_ADDR match a hexadecimal number
+----------------------------------------------------------------------
+
+## match a hexadecimal number
 `
 [[ ! "$START_ADDR" =~ ^[0]?[xX]?[0-9A-Fa-f][0-9A-Fa-f]*$ ]]
 `
@@ -58,14 +60,15 @@ fi
 
 
 # Passing args to commands
+----------------------------------------------------------------------
 
-## using input by lines
+## read input by lines
 ls -F | while read i; do ...; done
 
 ##  First arg of command is variable
 git ls-files --others --exclude-standard | while read -r i; do cp --parents $i ~/tmp; done
 
-## using xagrs with initial argumenst
+## using xagrs with any argument
 git ls-files --others --exclude-standard | xargs -I{} cp --parents {} ~/tmp
 
 ##  read formated string
@@ -418,6 +421,7 @@ ${#VAR}
     echo ${myarray[-1]}                 # retrieve last element
     echo ${myarray[$i]}                 # $i contains index of element to retrieve
     echo ${myarray[@]}                  # retrieve ALL elements
+    echo ${myarray[*]}                  # retrieve ALL elements
 
     echo "array size: ${#myarray[@]}    # size
 
@@ -454,4 +458,24 @@ ${#VAR}
 
     # zsh
     for ((i=1;i<=10;i++)); do echo $RANDOM; done
+
+
+# Tricks
+    
+The following will print an error message for all entries that are not existing in the filesystem, and return a nonzero value.
+echo -n $PATH | xargs -d: stat -c %n
+To simply check whether all elements are paths and get a return code, you can also use test:
+echo -n $PATH | xargs -d: -n1 test -d
+
+# OS specific actions in bashrc
+case "$OSTYPE" in
+     darwin*)
+            echo "macos" ;;
+      linux*)
+            echo "linux" ;;
+      cygwin) ;; # Windows
+        bsd*) ;; # BSD
+           *) ;; # Unknown
+esac
+
 

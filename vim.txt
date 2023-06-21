@@ -108,12 +108,12 @@ search inside the visually selected area :'<,'>s/\%V(/#/g
 
 
 " Search and replace in all files in arglist. 
-:arg *.cpp      " All *.cpp files in current directory.
+:arg *.cpp      " All *.cpp files in current directory (:pwd)
 :argadd *.h     " And all *.h files.
 :arg            " Optional: Display the current arglist.
 :argdo %s/pattern/replace/ge | update     
 
-:arg **/*.cpp   " All *.cpp files in and below current directory.
+:arg **/*.cpp   " All *.cpp files in and below current directory (:pwd)
 :argadd **/*.h  " And all *.h files.
 
 
@@ -904,7 +904,9 @@ append, write selection to file
 " sort
 " -------------------------------------------------------------
 :sort u                 uniq
+:sort /[^,]*,/          sort on what comes after the pattern, here the first comma separated field
 :sort /\a\a\a/ r        sort on pattern. first 3 letters of line
+! reverse sort order
 
 
 
@@ -1058,6 +1060,7 @@ mF              Unmark all marked files
 :MT [dir]       set move/copy target directory
 gb              go back to previous directory
 gn              go to directory under cursor
+gx              go to URL under cursor
 :NTree [dir]    like cd
 gh              show / hide files starting with '.'
 D               delete file
@@ -1140,4 +1143,11 @@ J                   down within same col
 :SmplVarCol                                 Sample variance
 :PopStdCol                                  population standard deviation
 :SmplStdCol                                 Sample standard deviation
+:SearchInColumn [<nr>] /{pat}/
+
+
+
+DrawIt
+----------------------------------------------------------------------
+<space>         toggle draw/erase
 

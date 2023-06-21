@@ -259,3 +259,19 @@ openssl s_client -connect lin.ewn:443
 
 openssl rand -base64 12
 
+
+
+# --------------------------------------------------------------
+# openssl commands from panos docs
+# --------------------------------------------------------------
+
+openssl s_client -connect <IP_ADDR>:443 –showcerts will use TLS to connect to the device  and show the certificates exchanged at the start of the connection. NOTE: 443 is the port number for HTTPS.
+openssl s_client -connect <IP_ADDR>:443 --CAfile <certificate_chain_file> is required to connect to a server which issues a certificate that is added as a trusted certificate inside the certificate chain file. NOTE: We need to add all the certificates in the certificate chain which are marked as "Certificate authority". Typically only the leaf node will not be marked as "Certificate authority". So that could be ignored.
+openssl s_client -connect <IP_ADDR>:443 -sigalgs "RSA+SHA256"  → The option -sigalgs tells which signature algorithms should be used for negotiation with the openssl server.
+openssl s_client -connect 10.4.109.122:443 -msg -debug → The option shows all protocol messages with hex dump. Very useful for debugging
+openssl req -newkey rsa:2048 -keyout key -out out -batch → Creates a new RSA key and outputs a digital signature certificate signed with that rsa key and the rsa key is by default encrypted (default encryption algo is generally 3DES).
+openssl req -verify -in out -key key → This is useful for verifying the password used for creating the above RSA key in the above -newkey command
+openssl req -text -noout -verify -in out → This is useful to print the generated certificate as part of the above -newkey command.
+openssl version -d → This gives the path to the openssl config. See example below:
+openssl s_server -cert /opt/pancfg/mgmt/factory/server.crt -key /opt/pancfg/mgmt/factory/server.key.pem -WWW -port 12345  -Verify 1 -msg -debug → Use this command to create an openSSL server which would try to verify the client certificate (NOTE the -Verify option).
+Setting up simple openssl server from command line. Might be useful for testing openssl server functionality https://help.mulesoft.com/s/article/How-to-set-up-a-minimal-SSL-TLS-server-from-the-command-line

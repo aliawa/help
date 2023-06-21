@@ -22,7 +22,7 @@ default_style
     "'"             all strings enclosed in ''
     '"'             all strings enclosed in ""
     '|'             keep newlines in the text
-    '>'             smush text into a single line
+    '>'             each line-break is converted to a space, unless it ends an empty or more indented line
 
 # dump keys in order
 with open(CaseFile, 'w') as f:

@@ -287,3 +287,28 @@ git config --global filter.sqlite3tosql.clean "sqlite3 %f .dump"
 comment in sql file
 -- this is a comment
 
+
+
+# --------------------------------------
+# SORT 
+# --------------------------------------
+SELECT
+	name,
+	milliseconds, 
+	albumid
+FROM
+	tracks
+ORDER BY
+	albumid ASC,
+    milliseconds DESC;
+
+
+SELECT
+	name,
+	milliseconds, 
+	albumid
+FROM
+	tracks
+ORDER BY
+	 3,2;
+

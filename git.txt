@@ -1,6 +1,9 @@
 #!/bin/sh
 
 
+#---------------------------------------------------------
+#                        Ref
+#---------------------------------------------------------
 ref:
  * ref is anything pointing to a commit, 
    for example branches aka heads, tags, remote branches
@@ -8,12 +11,39 @@ ref:
    You can think of it as a user-friendly alias for a commit hash
  * Refs are stored as normal text files in the .git/refs directory
 
-convert a commit id to ref: 
+convert a commit hash to reference: 
     git show 0c708f
-convert a ref to commit id: 
+
+convert a reference to commit hash: 
     git rev-parse main
 
- 
+convert long commit hash to short form
+    git rev-parse --short <long commit hash>
+
+convert short hash to full SHA-1 reference
+    git rev-parse <short hash>
+
+
+#---------------------------------------------------------
+#                    commit references
+#---------------------------------------------------------
+HEAD     : last commit
+HEAD^    : parent of HEAD. same as HEAD~
+HEAD~3   : The fourth last commit. same as HEAD^^^
+ORIG_HEAD: The position of HEAD just before "pull" or 
+           "merge"
+^refC    : not refC: e.g. all commits reachable from refB
+           but not from refC "git log ^refA refB"
+
+
+#---------------------------------------------------------
+#                    TODO
+#---------------------------------------------------------
+reflog syntax 
+    stash@{0} most recently created stash
+    stash@{0} the one before stash@{0}
+    stash@{2.hours.ago}
+   
 
 #---------------------------------------------------------
 #                         init
@@ -84,7 +114,7 @@ git log --simplify-by-decoration master..ver_11_6_4_br
 git log --author=aawais         # by user
 git log --name-status           # show only files that have changed
 
-# Get the patch for a particular bug fix.
+# search in log messages
 git log --grep='Bug.*11197'
 
 # show information about a commit
@@ -232,11 +262,16 @@ git diff > ~/tmp/mypatch
 
 # Apply a patch using git (Atomic, handles file rename, delete etc.)
 git apply ~/tmp/mypatch
+git apply -v ~/tmp/mypath   # to check why a patch failed
 
+# Remove a patch ie undo change
+git apply -R <patch>
+
+# create patch from single commit
+git show -p 06b6f75e > ~/tmp/a.patch
 
 # patch from single commit
 git format-patch -1 3c2ab26f8ae --stdout
-
 
 
 #---------------------------------------------------------
@@ -279,7 +314,7 @@ git rebase -i HEAD~2
 #---------------------------------------------------------
 
 git tag -l                            # show all tags
-git tag v1.8.5*                       # list pattern
+git tag -l v1.8.5*                       # list pattern
 git tag -a v1.4 -m 'my version 1.4'   # create anotated
 git show v1.4                         # see tag data
 git tag v1.4-lw                       # create lightweigt
@@ -287,17 +322,6 @@ git tag -a v1.2 9fceb02               # tag a commit
 git push origin v1.5                  # sharing tag
 git checkout -b version2 v2.0.0       # checkout tag
 
-
-#---------------------------------------------------------
-#                    commit references
-#---------------------------------------------------------
-HEAD     : last commit
-HEAD^    : parent of HEAD. same as HEAD~
-HEAD~3   : The fourth last commit. same as HEAD^^^
-ORIG_HEAD: The position of HEAD just before "pull" or 
-           "merge"
-^refA    : not refC: e.g. all commits reachable from refB
-           but not from refC "git log ^refA refB"
 
 
 
@@ -418,7 +442,7 @@ git bisect run ./test
 #                       On Line Help
 #---------------------------------------------------------
 git cheat sheet
-http://ndpsoftware.com/git-cheatsheet.html#loc=stash;
+http://ndpsoftware.com/git-cheatsheet.html
 escape a git mess
 http://justinhileman.info/article/git-pretty/git-pretty.png
 
@@ -490,7 +514,7 @@ to the latest child commit in order to reach the older commits on a branch.
 
 
 #---------------------------------------------------------
-#                       git reset
+#                       git reset / git restore
 #---------------------------------------------------------
 
 git reset [<mode>] [<commit>]
@@ -512,6 +536,7 @@ mode can have one of five values
 --mixed : [default mode] move the HEAD, change index to match it but leave working dir unchanged
         so if you do "git reset --mixed HEAD" or just "git reset" this will practically
         unstage any staged changes.
+        this is similar to "git restore --staged ./*"
 --merge and --keep : 
         They are similar to hard in that they both update the index and working tree to match
         the new HEAD. Differ as follows
@@ -521,6 +546,10 @@ mode can have one of five values
         staged changes but merge will discard the staged changes
         
         see manual for more.
+
+git restore .
+git restore /path/to/file/to/revert
+       discard unstaged changes. Do not touch index 
 
 
 #---------------------------------------------------------
@@ -544,5 +573,4 @@ git switch -c foo -m <start-pt>         # same as above but also merge local cha
 git switch <branch-name>                # switch to branch
 git switch --discard-changes <branch>   # swith to branch and discard all local changes
 git switch --detach <commitish>         # where committish is tag name or commit number
-
 

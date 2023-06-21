@@ -141,6 +141,11 @@ lst + ['gg', 'ee']
 
 Debug
 --------------------------------------
+dump dictionary:
+echo plugs
+check return value of function
+echo has_key(plugs, 'gtags.vim')
+
 :augroup        all autocommand groups
 :command        all user commands
 :nmap           all normal mode key-mappings
