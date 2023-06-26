@@ -1,5 +1,0 @@
-Name: Dell Laser Printer 1710
-IP: 10.10.10.94
-Port: 9100
-Driver: HP LaserJet 6 (Foomatic + hpijs)
-

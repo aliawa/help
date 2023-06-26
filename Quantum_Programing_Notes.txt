@@ -1,5 +1,6 @@
 
-1. Current state is represented as a pointer to state handler method, which is a member of QFsm class
+1. Current state is represented as a pointer to state handler method, which is
+   a member of QFsm class
 
 2. When a state handler cannot handle an event it returns its super state
 
@@ -7,8 +8,10 @@
 3. State handler returns 0 if it was able to handle the event.
 
 
-4. Entry, exit, initialization actions are performed by handling Q_ENTRY_SIG, Q_EXIT_SIG and Q_INIT_SIG
+4. Entry, exit, initialization actions are performed by handling Q_ENTRY_SIG,
+   Q_EXIT_SIG and Q_INIT_SIG
 
 
-5. Every state machine derived from QHsm must have "initial" state handler that puts the state machine in its inital state.
+5. Every state machine derived from QHsm must have "initial" state handler
+   that puts the state machine in its inital state.
 

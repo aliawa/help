@@ -84,7 +84,7 @@ IFS=:; read state val <<< $A
 
 
 
-# ANSI Escape Sequences for writing text in "BOLD" and "UNDERLINE" . 
+# ANSI Escape Sequences for text format and color
 ## Bold
 echo -e "\033[1mThis is a BOLD line\033[0m"
 ## Underline
@@ -97,10 +97,13 @@ tput sgr0; echo "normal text" # reset to normal
 http://ascii-table.com/ansi-escape-sequences-vt-100.php
 
 ## readable format
-bold=`tput bold`
-normal=`tput sgr0`
-echo "this is ${bold}bold${normal} but this isn't"
-
+bold_on=`tput bold` 
+bold_off=`tput sgr0`
+hl_on=`tput smso`       # Highlight (reverse video)
+hl_off=`tput rmso`      # Highlight (reverse video)
+ul_on=`tput smul`       # Underline
+ul_off=`tput rmul`      # Underline off
+echo "this is ${bold_on}bold${bold_off} but this isn't"
 
 
 # here-is document
