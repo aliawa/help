@@ -13,8 +13,13 @@
   date -j -f '%a %b %d %H:%M:%S %Y' 'Sun Jul 17 20:28:35 2022'  +%s
 
 # change date format (mac)
+  date -j -f <input-format> <input-date> <output-format>
   date -j -f '%Y-%m-%d %H:%M:%S' '2022-07-17 20:28:35' +'%Y-%m-%d %H:%M:%S' 
   date -j -f '%a %b %d %H:%M:%S %Y' 'Sun Jul 17 20:28:35 2022' +'%Y-%m-%d %H:%M:%S'
+
+  # Wireshark format to panos format found in dp-monitor and "show session id"
+  TZ=UTC date -d"<date>" +"%Y-%m-%d %H:%M:%S"
+  
 
 # Get date 1 month ago from today. Output in YYYY-MM-DD format
   date -v -1m +'%Y-%m-%d'

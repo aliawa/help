@@ -264,14 +264,93 @@ openssl rand -base64 12
 # --------------------------------------------------------------
 # openssl commands from panos docs
 # --------------------------------------------------------------
+→ use TLS to connect to the device  and show the certificates exchanged at the start of the
+connection. NOTE: 443 is the port number for HTTPS.
+openssl s_client -connect <IP_ADDR>:443 –showcerts 
 
-openssl s_client -connect <IP_ADDR>:443 –showcerts will use TLS to connect to the device  and show the certificates exchanged at the start of the connection. NOTE: 443 is the port number for HTTPS.
-openssl s_client -connect <IP_ADDR>:443 --CAfile <certificate_chain_file> is required to connect to a server which issues a certificate that is added as a trusted certificate inside the certificate chain file. NOTE: We need to add all the certificates in the certificate chain which are marked as "Certificate authority". Typically only the leaf node will not be marked as "Certificate authority". So that could be ignored.
-openssl s_client -connect <IP_ADDR>:443 -sigalgs "RSA+SHA256"  → The option -sigalgs tells which signature algorithms should be used for negotiation with the openssl server.
-openssl s_client -connect 10.4.109.122:443 -msg -debug → The option shows all protocol messages with hex dump. Very useful for debugging
-openssl req -newkey rsa:2048 -keyout key -out out -batch → Creates a new RSA key and outputs a digital signature certificate signed with that rsa key and the rsa key is by default encrypted (default encryption algo is generally 3DES).
-openssl req -verify -in out -key key → This is useful for verifying the password used for creating the above RSA key in the above -newkey command
-openssl req -text -noout -verify -in out → This is useful to print the generated certificate as part of the above -newkey command.
-openssl version -d → This gives the path to the openssl config. See example below:
+→ is required to connect to a server which issues a certificate that is added as a trusted
+certificate inside the certificate chain file. NOTE: We need to add all the certificates
+in the certificate chain which are marked as "Certificate authority". Typically only the
+leaf node will not be marked as "Certificate authority". So that could be ignored.
+openssl s_client -connect <IP_ADDR>:443 --CAfile <certificate_chain_file>
+
+→ The option -sigalgs tells which signature algorithms should be used for negotiation with
+the openssl server.
+openssl s_client -connect <IP_ADDR>:443 -sigalgs "RSA+SHA256"  
+
+→ The option shows all protocol messages with hex dump. Very useful for debugging
+openssl s_client -connect 10.4.109.122:443 -msg -debug 
+
+→ Creates a new RSA key and outputs a digital signature certificate signed with that rsa
+key and the rsa key is by default encrypted (default encryption algo is generally 3DES).
+openssl req -newkey rsa:2048 -keyout key -out out -batch 
+
+→ This is useful for verifying the password used for creating the above RSA key in the
+above -newkey command
+openssl req -verify -in out -key key 
+
+→ This is useful to print the generated certificate as part of the above -newkey command.
+openssl req -text -noout -verify -in out 
+
+→ This gives the path to the openssl config. See example below:
+openssl version -d 
+
 openssl s_server -cert /opt/pancfg/mgmt/factory/server.crt -key /opt/pancfg/mgmt/factory/server.key.pem -WWW -port 12345  -Verify 1 -msg -debug → Use this command to create an openSSL server which would try to verify the client certificate (NOTE the -Verify option).
-Setting up simple openssl server from command line. Might be useful for testing openssl server functionality https://help.mulesoft.com/s/article/How-to-set-up-a-minimal-SSL-TLS-server-from-the-command-line
+→ Setting up simple openssl server from command line. Might be useful for testing openssl
+server functionality
+https://help.mulesoft.com/s/article/How-to-set-up-a-minimal-SSL-TLS-server-from-the-command-line
+
+
+
+# --------------------------------------------------------------
+# Subject alt-name extension
+# --------------------------------------------------------------
+
+# Specify the section of config file that contains extensions
+openssl x509 -extensions <section>
+
+
+Subject Alternative Name.
+
+The subject alternative name extension allows various literal values 
+to be included in the configuration file. These include email 
+(an email address) URI a uniform resource indicator, 
+DNS (a DNS domain name), RID (a registered ID: OBJECT IDENTIFIER), 
+    IP (an IP address), dirName (a distinguished name) and otherName.
+
+The email option include a special 'copy' value. This will automatically
+include and email addresses contained in the certificate subject name in the
+extension.
+
+The IP address used in the IP options can be in either IPv4 or IPv6 
+format.
+
+The value of dirName should point to a section containing the distinguished
+name to use as a set of name value pairs. Multi values AVAs can be formed by
+preceeding the name with a + character.
+
+otherName can include arbitrary data associated with an OID: the value should
+be the OID followed by a semicolon and the content in standard
+ASN1_generate_nconf(3) format.
+
+Examples:
+
+subjectAltName=email:copy,email:my@other.address,URI:http://my.url.here/
+subjectAltName=IP:192.168.7.1
+subjectAltName=IP:13::17
+subjectAltName=email:my@other.address,RID:1.2.3.4
+subjectAltName=otherName:1.2.3.4;UTF8:some other identifier
+
+subjectAltName=dirName:dir_sect
+
+[dir_sect]
+C=UK
+O=My Organization
+OU=My Unit
+CN=My Name
+
+from http://www.openssl.org/docs/apps/x509v3_config.html
+
+
+
+

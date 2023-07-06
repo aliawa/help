@@ -18,3 +18,16 @@ v   move here
 x   delete
 e   edit file
 
+/   search or filter
+
+;p  run plugnin assigned to p
+
+
+# Bookmark
+b <bookmark key>
+
+# Search
+/ <filter pattern>
+Esc             browse filtered files
+Ctrl-N Ctrl-N   Exit filtered files view
+' <character>   Jump to first file starting with character

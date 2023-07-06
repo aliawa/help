@@ -49,6 +49,9 @@ awk -f program.awk files
 shebang
 #!/usr/bin/env -S gawk -f
 
+shebang absolute path
+#!/usr/local/bin/awk -f
+
 
 == Line Numbers
 NR: number of lines read so far
