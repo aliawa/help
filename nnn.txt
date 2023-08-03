@@ -31,3 +31,11 @@ b <bookmark key>
 Esc             browse filtered files
 Ctrl-N Ctrl-N   Exit filtered files view
 ' <character>   Jump to first file starting with character
+
+
+# Sorting
+t t              sort by date
+t s              sort by size, biggest at top
+t r              sort by size, smallest at top
+t e              sort by extension
+t c              sort by name
