@@ -339,12 +339,8 @@ esc, esc
 Ctrl-A and Ctrl-X [vim.org] find the next number on the line starting at the
 cursor, and then increment or decrement it respectively.
 
-1. Tags. No learning curve. Generate tags with !ctags -R *.c *.h (if you are
-looking at a C code base). Ctrl-] on any function name, structure name/field,
-etc. to jump to the declaration point. Ctrl-T to come back. Tag stack is
-maintained. Then, :ta to jump to the tag. Auto completion for the tag name
-makes it a breeze. Ctrl-], Ctrl-T, and :ta are enough to save 50% of your
-time.
+
+
 
 2. Ctrl-P and Ctrl-N for very smart auto-completion can save another 30-50% of
 your time.
@@ -382,14 +378,36 @@ set cursorline
 hi cursorcolumn ctermbg=red
 
 
-
-
-Ctrl-C instead of Esc for switching from insert mode into command mode
-Ctrl-[, which does exactly the same as Escape, and Ctrl-C
-
 To view man page of a word under curser, type K(shift+K)
 
 
+# --------------------
+# Alternative Esc
+#--------------------
+Ctrl-C instead of Esc for switching from insert mode into command mode
+Ctrl-[, which does exactly the same as Escape, and Ctrl-C
+
+
+
+
+# --------------------
+# Tags
+#--------------------
+
+- generate tags
+    cd src/ 
+    ctags -R            (Recursive)
+    ctags *             (all files in this dir)
+    ctags . ../libewn   (multiple directories)
+    :!ctags -R *.c *.h  (from within vi)
+
+- set tag files
+    :set tags=./tags,tags./home/aawais/commontags
+
+    Ctrl-] on any function name, structure name/field, etc. to jump to the declaration point
+    Ctrl-T to come back
+    Ctrl-], Ctrl-T  Auto completion for the tag name
+    :ta   jump to tag
 
 
 
@@ -438,9 +456,18 @@ common commands in syntax files:
 colorschemes are stored in:
   ~/.vim/colors  OR $VIMRUNTIME/colors
 
-set default colorscheme in .vimrc
+what is my current color scheme
+  :colorscheme <enter>
+see all color schemes
+  :colorscheme <space><tab>  [press Ctrl-d to exit]
+change colorscheme
   colorscheme aawais
 
+highlight some colums, example: highlight Columns 13 and 80 with hl-ColorColumn
+  set colorColumn=13,80
+
+change color of numbers column
+  :highlight LineNr ctermbg=0
 
 
 

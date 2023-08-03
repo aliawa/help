@@ -1,0 +1,8 @@
+Switch Remote URLs from Https to SSH
+----------------------------------------------------------------------
+git remote -v
+origin  https://github.com/aliawa/bin.git (fetch)
+origin  https://github.com/aliawa/bin.git (push)
+
+git remote set-url origin git@github.com:aliawa/bin.git
+

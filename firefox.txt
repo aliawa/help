@@ -31,7 +31,7 @@ Shockwave Flash = "Ask to activate"
 
 # Multiple instances with Profile manager
 # -------------------------------------------------------
-/Applications/Firefox.app/Contents/MacOS/firefox-bin -P --no-remote
+/Applications/Firefox.app/Contents/MacOS/firefox-bin --no-remote -P "<profile name>" &
 
 
 
