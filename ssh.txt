@@ -265,4 +265,12 @@ ssh -MS ~/.ssh/controlmasters/%r@%h:%p user@remote.server
 ssh -O stop -S ~/.ssh/controlmasters/%C user@remote.server
 
 
+# -----------------------------------------------
+#  Enable ssh rsa in macOS
+# -----------------------------------------------
+Scroll all the way to the bottom of the /etc/ssh/ssh_config file and then 
+add the following lines to the bottom of ssh_config:
+
+HostkeyAlgorithms +ssh-rsa
+PubkeyAcceptedAlgorithms +ssh-rsa
 

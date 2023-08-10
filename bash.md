@@ -482,3 +482,28 @@ case "$OSTYPE" in
 esac
 
 
+# ---------------------------------------
+# symbols
+# ---------------------------------------
+
+$# : number of arguments passed to the command
+`$*` : All the arguments passed to the program
+
+Example
+`echo $# arguments passed
+ echo they are :$*:`
+
+
+$? : Exit status of the last command
+$1 - $9: Arguments 1 to 9 passed to the program
+
+${10}: Argument number 10 passed to the program
+
+[ expr ] : return 0 if expr is true and 1 if it is not
+$ [ "$x1" = 5 ]
+$ echo $?
+0
+
+
+
+
