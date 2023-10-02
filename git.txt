@@ -8,7 +8,7 @@ ref:
  * ref is anything pointing to a commit, 
    for example branches aka heads, tags, remote branches
  * An indirect way of referring to a commit. 
-   You can think of it as a user-friendly alias for a commit hash
+   A human readable name for a commit hash
  * Refs are stored as normal text files in the .git/refs directory
 
 convert a commit hash to reference: 
@@ -117,12 +117,13 @@ git log --name-status           # show only files that have changed
 # search in log messages
 git log --grep='Bug.*11197'
 
-# show information about a commit
-git show 09ce34b9
 
 # match by author and grep (all-match: match all conditions)
 git log --author=aawais --grep=time_t --all-match
 
+--abbrev-commit     the commit id is shortened
+-p                  show diff output
+--output=<file>     send log output to a file
 
 
 #---------------------------------------------------------
@@ -437,6 +438,11 @@ git bisect start <known-bad-commt> <known-good-commit>
 git bisect run ./test
 
 
+# Resolving merge conflicts
+git mergetool -t vimdiff
+git mergetool -t diffconflicts      #<< this one is nicer
+
+
 
 #---------------------------------------------------------
 #                       On Line Help
@@ -573,4 +579,20 @@ git switch -c foo -m <start-pt>         # same as above but also merge local cha
 git switch <branch-name>                # switch to branch
 git switch --discard-changes <branch>   # swith to branch and discard all local changes
 git switch --detach <commitish>         # where committish is tag name or commit number
+
+
+
+
+# show author, commit message,  changed files and diff in a commit
+git show 09ce34b9
+
+# show files changed in a commit
+git show --pretty="" --name-only head~8
+
+
+
+git revisions
+----------------------------------------------------------------------
+^r1 r2      not reachable from r1 but reachable from r2, i.e., all commits from r1 (not including r1) to r2
+r1..r2      same as ^r1 r2
 

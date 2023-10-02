@@ -6,3 +6,9 @@ tput smcup; tmp=$(python -c 'import sys; print repr(sys.stdin.read(20))'); tput 
 # Put window back in split pane
 Right Click -> "Move Session to split pane"
 
+
+
+# Use Right-option key as meta
+# to use bash command line editing for example M-b shortcut to move back one word
+Settings > Profiles > Keys > "Left Option Key" = Esc+
+

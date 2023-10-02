@@ -22,7 +22,7 @@ header
 .
 .
 Empty Line
-Message Body
+Message Body    <<< note: content-length includes the 2 bytes of empty line
 
 
 

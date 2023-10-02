@@ -1,3 +1,9 @@
+Bypass vimrc or load alternate vimrc
+----------------------------------------------------------------------
+" vim -u NONE
+" vim -u ~/vimrc-alternate
+
+
 Get Info
 ----------------------------------------------------------------------
 :set runtimepath?    what is my runtime path
@@ -120,39 +126,6 @@ search inside the visually selected area :'<,'>s/\%V(/#/g
 
 
 
-
-# Fast cursor movement
-# -------------------
-H     # top of screen
-M     # middle of screen
-L     # bottom of screen
-
-89G   # Go to line 89
-30|   # Jump to column 30
-`.    # move to last edit position
-
-^E - scroll the view-port down
-^Y - scroll the view-port up 
-^F - scroll down one page
-^B - scroll one page up
-
-Fast text Movement
-------------------
-zt or zENTER: make the line with the cursor the top line of the screen.
-zz or z.    : center
-zb or z-    : bottom
-zs and ze   : move document like the hand tool in acrobat zs moves rigth
-              and ze moves left
-zh and zl   : scroll right,left by character
-zH and zL   : scroll right, left by half a screen
-Note        : use g^ and g$ instead of ^ and $ when the document is scrolled
-
-
-
-
-Matching Bracket
------------------
-%
 
 
 
@@ -454,7 +427,7 @@ common commands in syntax files:
   :highlight def link <my-group> <built-in-group>
 
 colorschemes are stored in:
-  ~/.vim/colors  OR $VIMRUNTIME/colors
+  ~/.vim/colors  OR $VIMRUNTIME/colors  (:echo $VIMRUNTIME)
 
 what is my current color scheme
   :colorscheme <enter>
@@ -468,6 +441,9 @@ highlight some colums, example: highlight Columns 13 and 80 with hl-ColorColumn
 
 change color of numbers column
   :highlight LineNr ctermbg=0
+
+Good colorscheme for diff
+1. morning
 
 
 
@@ -725,7 +701,7 @@ vim -S ~/.vim_sessions/mysession.vim
 "                          Register
 " -------------------------------------------------------------
 " copy from register to the command line 
-Ctrl-a                  insert the word under cursor in command line,
+Ctrl-r Ctrl-w                 insert the word under cursor in command line,
 Ctrl-r {reg}            insert content of register. If text has control characters this may have unexpected effect.
 Ctrl-r Ctrl-r {reg}     don't interpret control characters in register when pasting to cmd line
 
@@ -845,15 +821,38 @@ space - show prototype in command line
 " -------------------------------------------------------------
 "                      Movements
 " -------------------------------------------------------------
-[{      jump to { at start of block
-
-" quickly change a few words
-*       find next occurance
-cw      change the word
-n       find next
-.       repeat the cw command
-
+[{      jump to { at start of block     ( [ + Shift [ )
 [I:     prototype of the function in the included header files
+
+# Fast cursor movement
+# -------------------
+H     # top of screen
+M     # middle of screen
+L     # bottom of screen
+
+89G   # Go to line 89
+30|   # Jump to column 30
+`.    # move to last edit position
+
+^E - scroll the view-port down
+^Y - scroll the view-port up 
+^F - scroll down one page
+^B - scroll one page up
+
+Fast text Movement
+------------------
+zt or zENTER: make the line with the cursor the top line of the screen.
+zz or z.    : center
+zb or z-    : bottom
+zs and ze   : move document like the hand tool in acrobat zs moves rigth
+              and ze moves left
+zh and zl   : scroll right,left by character
+zH and zL   : scroll right, left by half a screen
+Note        : use g^ and g$ instead of ^ and $ when the document is scrolled
+
+Matching Bracket
+-----------------
+%
 
 
 
@@ -1178,3 +1177,27 @@ DrawIt
 ----------------------------------------------------------------------
 <space>         toggle draw/erase
 
+
+modeline
+another way to load initialization
+
+gi — Move to the last insert you did and enter Insert mode.
+gv — Start visual mode and use the previous selection made.
+gI — Start inserting at the beginning of the line no matter 
+
+
+" -------------------------------------------------------------
+"                    FUGITIVE
+" -------------------------------------------------------------
+:Git -p                     force pagination for git output
+:Git blame [file]           
+:Gedit HEAD~3:%             loads the current file as it existed 3 commits ago.
+:Gvdiffsplit                brings up the staged version of the file side by side with the working tree version
+:Gread                      variant of git checkout -- filename, can be undone with u
+:Gwrite                     git add with working tree file. git checkout with index file
+
+dv  Perform :Gvdiffsplit on the file under cursor
+dq  Close all but one diff buffer, and :diffoff! the last one
+d?  Show help
+go  open file in vertical split
+)   jump to next file, huk, revision
