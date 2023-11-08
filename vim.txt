@@ -805,13 +805,6 @@ vip         select to next blank line (v {inside}{paragraph}
 
 
 " -------------------------------------------------------------
-"                      Tagbar
-" -------------------------------------------------------------
-s     - change sort order
-space - show prototype in command line
-
-
-" -------------------------------------------------------------
 "                      Installing Plugins 
 " -------------------------------------------------------------
 :helptags ~/.vim/doc
@@ -857,9 +850,11 @@ Matching Bracket
 
 
 " -------------------------------------------------------------
-"     Power of g  [https://vim.fandom.com/wiki/Power_of_g]
+" g global  [https://vim.fandom.com/wiki/Power_of_g]
 " -------------------------------------------------------------
-:[range]g/pattern/cmd   # cmd is ex command use ":" to search e.g. help :d
+:g/pattern/cmd          Execute Ex command cmd on lines matching pattern
+:g!/pattern/cmd         Execute Ex command cmd on lines *not* matching pattern
+
 :g/pattern/z#.5         # display 5 context lines
 :g/pattern/z#.5|echo "========"
 :g/pattern/d            # delete all lines with pattern
@@ -881,15 +876,6 @@ Matching Bracket
 :%s/^\_s\+$/\r/g         # another way to collapse empty lines
 
 
-Executing commands (v and g)
------------------------------
-:[range]g/{pattern}/[cmd]
-             Execute Ex command [cmd] (default: ":p") on the lines
-                within [range] where {pattern} matches.
-:[range]g!/{pattern}/[cmd]     or    :[range]v/{pattern}/[cmd]
-             Execute Ex command [cmd] (default: ":p") on the lines
-                within [range] where {pattern} does NOT match.
-Examples:
 :%g/^a/-1join     join lines starting with character 'a' to previous line
 :%g/^ *$/d        delete empty lines
 :g/^$/d           delete all blank lines
@@ -898,16 +884,18 @@ Examples:
 :%v/vim/m 1       move lines not matching the word 'vim' to line 1
 :%g/^a/+1d        delete lines after the ones starting with character 'a'
 
-
-
-
-" -------------------------------------------------------------
-"                            help
-" -------------------------------------------------------------
+HELP
 :help ex-cmd-index      # list of ex commands useful for :g
 :help 10.4              # :g or :global command
 :help multi-repeat      # :g and :v commands
-:helpgrep               # use \c to ignore case, :cn next :cp previous
+
+
+
+" -------------------------------------------------------------
+" Using help
+" -------------------------------------------------------------
+:helpgrep {pattern}     # use \c to ignore case, :cn next :cp previous
+    then navigate using :cn :cp :cwindow
 
 
 
@@ -1068,7 +1056,11 @@ example: run x.py and insert its output at cursor location
 :sh                 a shell inside vim
 :terminal           or :term, new terminal as a horizontal split
 :vert :terminal     terminal as vertical split
-Ctrl+w  w           going in and out of terminal
+Ctrl+w  N           terminal-normal-mode
+Ctrl+w  :           terminal-command-mode
+Ctrl+w  ""          paste
+Ctrl_w  "{reg}      paste register
+Ctrl+w  :display    see all available registers
 
 
 
@@ -1192,12 +1184,75 @@ gI — Start inserting at the beginning of the line no matter
 :Git -p                     force pagination for git output
 :Git blame [file]           
 :Gedit HEAD~3:%             loads the current file as it existed 3 commits ago.
-:Gvdiffsplit                brings up the staged version of the file side by side with the working tree version
+:Gedit main:file2           load file2 from branch main
+:Gvdiffsplit                diff with staged version of the file
+:Gvdiffsplit main           diff with branch main
 :Gread                      variant of git checkout -- filename, can be undone with u
 :Gwrite                     git add with working tree file. git checkout with index file
 
+:G                          status page
+:G difftool -y              open all changed file in different tabs
+:tabo                       close all other tabs
+
+Things to do in :G 
+=   toggle inline diff
 dv  Perform :Gvdiffsplit on the file under cursor
 dq  Close all but one diff buffer, and :diffoff! the last one
 d?  Show help
+g?  show help
 go  open file in vertical split
 )   jump to next file, huk, revision
+
+
+In file with merge conflicts
+Gvdiffsplit!
+d2o     take change from left window
+d3o     take change from right window
+only    close diff
+
+
+" -------------------------------------------------------------
+"                    TAGBAR
+" -------------------------------------------------------------
+s     - change sort order
+space - show prototype in command line
+
+Add new filetype:
+1. Create a parser definition for ctags:
+   Edit file ~/.ctags.d/myhelp.ctags
+
+  --langdef=myhelp
+  --map-myhelp=.mhlp
+
+  --kinddef-myhelp=s,section,section
+  --mline-regex-myhelp=/(^[a-zA-Z0-9 ]+)\s*-+$/\1/s,section/{mgroup=1}
+
+2. Check parser is working using this command
+   ctags -f - --format=2 --excmd=pattern --extras= --fields=nksaSmt my.mhlp
+   Heading1        my.mhlp /^Heading1$/;"  s       line:1
+   Heading2        my.mhlp /^Heading2$/;"  s       line:8
+
+3. Edit .vimrc file 
+   let g:tagbar_type_myhelp = {
+       \ 'ctagstype' : 'myhelp',
+       \ 'kinds' : [
+           \ 's:section'
+       \ ],
+       \ 'sort' : 0
+   \ }
+
+4. Open myhelp file and set filetype.
+   :set filetype=myhelp
+
+5. tagbar should work now
+
+6. debugging:
+   what parser will be used for a given file
+   ctags --print-language srtp.txt
+
+   mapping of file extenstions to language
+   ctags --list-maps
+   
+   languages understood by ctags
+   ctags --list-languages
+

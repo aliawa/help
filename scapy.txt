@@ -70,6 +70,8 @@ pkt.payload                 returns payload of TCP
                             !! always check "if Raw in pkt:"
 pkt.load.decode('utf8')     payload as normal string
 
+print(raw(pkt))
+
 # Check presense of layer
 if IP in pkt
 if TFTP_DATA in pkt
@@ -319,6 +321,15 @@ TCP flags
 if (pkt[TCP].flags & 0x02): pass    checking for SYN
 if (pkt[TCP].flags.S): pass         another check for SYN
 print(pkt.sprintf('%TCP.flags%'))   print the packet flags
+
+
+New protocol
+
+get layer under current layer
+p.underlayer
+
+get layer above current layer
+p.payload
 
 
 

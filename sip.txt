@@ -22,7 +22,8 @@ header
 .
 .
 Empty Line
-Message Body    <<< note: content-length includes the 2 bytes of empty line
+Message Body    <<< note: does not include the CRLF separating header fields
+                    and body (RFC 3261, 20.14)
 
 
 

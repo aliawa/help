@@ -506,4 +506,25 @@ $ echo $?
 
 
 
+# Types of shell
+
+if [ "$PS1" ]; then
+    # We are in interactive shell
+fi
+
+if shopt -q login_shell; then
+    # We are in login shell
+fi
+
+
+# Configuration
+
+When loging in through ssh, .bashrc is nor sourced. You must put this in .bash_profile
+if [ -f ~/.bashrc ]; then
+  . ~/.bashrc
+fi
+
+
+
+
 

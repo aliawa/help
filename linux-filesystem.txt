@@ -131,7 +131,7 @@ sudo fuser -k abc.pcap
 # ---------------------------------------------
 dd : copy and convert disk data
    : http://www.softpanorama.org/Tools/dd.shtml
-   :  http://www.linuxquestions.org/questions/linux-newbie-8/learn-the-dd-command-362506/
+   : http://www.linuxquestions.org/questions/linux-newbie-8/learn-the-dd-command-362506/
 
 df : disk space usage
      http://www.linfo.org/df.html
