@@ -12,7 +12,45 @@ tshark -r bug91836_merged.pcap -e frame.number -e ip.src -e ip.dst \
 
 
 -Y Display filter.
+-R Read filter, must be used with -2
+-f capture filter: man 7 pcap-filter
+
 -e <field> -e <field> ... -T fields -E header=yes
+
+
+
+
+
+
+Gather pcap info
+----------------------------------------------------------------------
+
+# All invites
+tshark -r a.pcap -Y "sip.Method == INVITE"
+
+# All 200 OK
+tshark -r a.pcap -Y "sip.Status-Code == 200"
+
+# show the info field
+tshark -r a.pcap -T fields -e _ws.col.info
+
+# sip statistics
+tshark -r a.pcap -z sip,stat    -q
+tshark -r a.pcap -z rtp,streams -q
+
+#conversations
+tshark -r a.pcap -z conv,udp -q
+tshark -r a.pcap -z conv,tcp -q
+
+# get the timerange of pcap
+tshark -r a.pcap -u hms
+
+
+
+SSL
+----------------------------------------------------------------------
+# Print X.509 certificates in a pcap
+tshark -r alexa-top-50.pcap -T fields -R “ssl.handshake.certificate” -e x509sat.printableString -2
 
 
 

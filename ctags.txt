@@ -1,0 +1,49 @@
+show supported languages
+ctags --list-languages
+
+show kinds of tags
+ctags --list-kinds
+ctags --list-kinds-full
+ctags --list-roles
+ctags --list-extras
+ctags --list-fields
+
+
+show parser selection for the given file
+ctags --print-language my.txt
+
+
+
+kind:
+    function
+    variable
+    class
+    package
+    etc.
+
+roles:
+    def
+    imported
+    local       local header file
+    system      system header file
+
+
+Tag file format
+----------------------------------------------------------------------
+one line for each tag
+    {tag_name}<TAB>{file_name}<TAB>{ex_cmd};"<TAB>{extension_fields}
+
+{tagname}
+    Any identifier, not containing white space..
+
+{ex_cmd}
+    Supported Ex commands
+     89             a line number
+     /^int c;$/     a pattern
+
+{extension_fields}
+    The have the format name:value
+        class:PipeBuf   
+        kind:f                        function or method name   
+        function:/func1/func2         nested functions
+

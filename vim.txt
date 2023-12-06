@@ -714,6 +714,11 @@ Manually change the value of a register
 
 ".  dot register stores the last inserted text, you can use it to insert the
     same text again
+=
+    evaluate an expression and insert the result at cursor
+    INSERT mode: CTRL-R =<expression> <CR>
+    NORMAL mode: "=<expression> p  
+
 
 
 " -------------------------------------------------------------
@@ -850,7 +855,7 @@ Matching Bracket
 
 
 " -------------------------------------------------------------
-" g global  [https://vim.fandom.com/wiki/Power_of_g]
+" Global  [https://vim.fandom.com/wiki/Power_of_g]
 " -------------------------------------------------------------
 :g/pattern/cmd          Execute Ex command cmd on lines matching pattern
 :g!/pattern/cmd         Execute Ex command cmd on lines *not* matching pattern

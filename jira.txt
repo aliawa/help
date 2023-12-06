@@ -78,4 +78,6 @@ assignee = currrentUser() and "Explain Root Cause" ~ "sequence"
 # Search Regression bugs from a given bug id
 "Perforce ID/Feature/Bug related to DEV Root Cause" ~ PAN-160387
 
+# branch
+"Branch Selection - PANOS" ~ 11.1-cosmos
 

@@ -300,11 +300,15 @@ sudo apt install python-yaml
 
 
 == Exceptions
-programmers are encouraged to derive new exceptions from the Exception class
-or one of its subclasses
+tags: throw catch raise except
+
+Step 1: derive a class from Exception class or one of its subclasses
+class myExcept(Exception):
+    pass
+
 try:
-    # run code
-except Except as err:
+    raise myExcept("bad action")
+except myExcept as err:
     print (err)
 finally:
     # Always run this code exception or no-exception
@@ -315,6 +319,7 @@ try:
 except StopIteration:
     done_looping = True
 else:
+    # no exception was raised in try block
     action_to_do(item)
 
 
@@ -366,6 +371,25 @@ class Color:
     hue: int
     saturation: float
     lightness: float = 0.5
+
+
+InitVar:
+    pseudo-field that is only visible in __post_init__() function. Otherwise it is not
+    part of class instance. Used to initiate other fields of the class.
+
+    @dataclass
+    class DataClass(DataClassDictMixin):
+        x: InitVar[int] = None
+        y: int = None
+
+        def __post_init__(self, x: int):
+            if self.y is None and x is not None:
+                self.y = x
+
+    assert DataClass().to_dict() == {'y': None}
+    assert DataClass(x=1).to_dict() == {'y': 1}
+    assert DataClass.from_dict({}) == DataClass()
+    assert DataClass.from_dict({'x': 1}) == DataClass()
 
 
 # by default data classes are not frozen, meaning mutable, therefore cannot be

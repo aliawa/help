@@ -316,6 +316,7 @@ logging.getLogger("scapy").setLevel(logging.CRITICAL)
 # turn off "Sent 1 packets." output from "sendp"
 conf.verb=0
 
+
 TCP flags
 -------------------
 if (pkt[TCP].flags & 0x02): pass    checking for SYN
@@ -324,7 +325,7 @@ print(pkt.sprintf('%TCP.flags%'))   print the packet flags
 
 
 New protocol
-
+----------------------------------------------------------------------
 get layer under current layer
 p.underlayer
 

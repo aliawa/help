@@ -1,0 +1,34 @@
+Structured text tools
+----------------------------------------------------------------------
+
+yq 
+   https://gruchalski.com/posts/2023-07-10-yq-the-yaml-power-tool/
+   yaml, xml, json
+
+gron
+    make json greppable
+    https://github.com/tomnomnom/gron
+
+https://fx.wtf
+https://jless.io/
+    interactive json navigation
+
+yq -o=props my-file.yaml 
+    make yaml greppable
+
+miller
+    https://github.com/johnkerl/miller
+    csv
+
+textql
+    csv
+
+Jaq
+    jq clone
+
+DuckDB
+    csv
+
+select
+    https://murex.rocks/optional/select.html
+    csv

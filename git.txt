@@ -596,3 +596,20 @@ git revisions
 ^r1 r2      not reachable from r1 but reachable from r2, i.e., all commits from r1 (not including r1) to r2
 r1..r2      same as ^r1 r2
 
+
+#---------------------------------------------------------
+#                        Worktree
+#---------------------------------------------------------
+
+# new worktree with existing branch
+git worktree add <path to folder> <existing branch name>
+
+# new worktree with new branch
+git worktree add <path to folder> <existing-branch-name> -b <new-branch-name>
+
+# remove worktree
+git worktree remove <path to folder>
+git worktree remove --force <path to folder>         # loose uncommitted changes
+
+
+
