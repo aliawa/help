@@ -8,7 +8,7 @@ C header files
 
     int main() {
       unsigned x = 7;
-      if (-1 > x) { 
+      if (-1 > x) {
           printf("-1 is greater\n");
       } else {
           printf ("-1 is smaller\n");
@@ -21,19 +21,20 @@ C header files
   (int)log(n) + 1
   log(8) = 3    => 8 = 1000 => 4 bits
   log(7) = 2.8  => 7 = 111  => 3 bits
-   
+
 
 
 * What does x-1 do:
-  it flips all the bits upto and including the rightmost set bit.
+  it flips all the bits starting from left upto and including the
+  rightmost set bit.
   This property is very useful in counting the set bits so
   x & (x-1) will unset the rightmost set bit.
 
-  1101000 - 1 = 1100111 
+  1101000 - 1 = 1100111
   101 - 1 = 100
 
 
-* Don't initialize a variable inside switch block. 
+* Don't initialize a variable inside switch block.
   the code will directly jump to the case label and the initialization
   will be skipped.
 
@@ -69,20 +70,20 @@ C header files
   %f    float
   %lf   double
   %Lf   long double
- 
+
 * storage class:
   determines: scope, visibility and life-time.
-  - auto: default class in C for all variables declared inside function or 
+  - auto: default class in C for all variables declared inside function or
     a block.
-  - extern: variable is defined elsewhere and not within the same block where 
-    it is used  
+  - extern: variable is defined elsewhere and not within the same block where
+    it is used
   - static: preserve their value even after they are out of their scope.
   - register: same as auto but may be stored in a register, if available.
     Cannot obtain address of register variable using pointers.
-    Only storgage class that 
+    Only storgage class that
   - typedef: considered as storage class to make sure that we don't have it
     together with the obvious storage class specifier.
- 
+
 * linkage:
     external: One definition in the whole program but many declarations.
     internal: when the storage class is static
@@ -98,21 +99,21 @@ C header files
 
 * pointer to const int and const pointer to int
   int * const ptr = &x;
-  ptr is a constant pointer: You can change the value at the location 
-  pointed by pointer p, but you can not change p to point to other 
+  ptr is a constant pointer: You can change the value at the location
+  pointed by pointer p, but you can not change p to point to other
   location
 
   int const* ptr = &x;
-  ptr is a pointer to a constant. You can change ptr to point to other 
+  ptr is a pointer to a constant. You can change ptr to point to other
   variable. But you cannot change the value pointed by ptr.
 
 * double and float
-  double and float are floating point types. They are both signed, so 
-  "unsigned double" is incorrect. 
+  double and float are floating point types. They are both signed, so
+  "unsigned double" is incorrect.
   float: single precision floating point
   double: double precision floating point
 
-  
+
 
 pointer to function
 -----------------------
@@ -123,7 +124,7 @@ char* compStr(char* a, char* b, int(*cmp) (const char*, const char*))   // cmpSt
 typedef (*stringcomp_t)(const char*, const char*);   // stringcomp_t is now a type
 
 // Dispatch table
-// For such similar~return~type~and~argument operations you can create an array 
+// For such similar~return~type~and~argument operations you can create an array
 // of function pointers and select a proper function by its index rather than its name
 typedef int (*functionPtr)(int, int);
 functionPtr arrayFp[4] = {getSum, getDifference, getProduct, getDivision};
@@ -154,3 +155,20 @@ Variables
 global: accessible by the entire program
 local: accessible only by the function
 static: intermediate, in-between global and local.
+
+
+
+
+Array initialization
+-------------------------------------------------------
+
+intitialize to zero only works for '0'
+int z[4] = {1}; // z has type int[4] and holds 1,0,0,0
+int w[3] = {0}; // w has type int[3] and holds all zeroes
+
+since c 2d arrays are actally 1d arrays. The number of coulums
+must be specified because the compiler must know the size of each
+entry.
+int A[][2] = { {1,3}, {4,5}};
+
+

@@ -42,7 +42,7 @@ gt gT            (next prev tab)
 
 *        "search the string under cursor
 #        "search the string under cursor backwards
-[I       "Show all lines containing word under cursor 
+[I       "Show all lines containing word under cursor
 
 case
 \c<pattern>  ignore case
@@ -65,11 +65,11 @@ Escape in regular expression
 /\<the\>                search for the word 'the' exactly
 /\%>9l\%<21lgreen       Search in lines 10 to 20 inclusive
 /\%>'a\%<'bgreen        Search between marks a and b
-/^"INVITE\_.\{-}Cont    Search for INVITE at begining of line followed by Cont somewhere in text 
+/^"INVITE\_.\{-}Cont    Search for INVITE at begining of line followed by Cont somewhere in text
 \{-}                    0 or more but as few as possible.
 \_.                     any char or end-of-line :h ordinay-atom
 \=                      zero or one occurance of previous atom
-/^\w\+\ze(/j            Search for functions 
+/^\w\+\ze(/j            Search for functions
 :s/CTRL-v CTRL-m//g     search and replace new lines (windows)"
 :s/\(^\s\+\)/\1\/\//    comment out lines (comment characters placed after the initial space)
 
@@ -86,8 +86,11 @@ Escape in regular expression
 s/\d\+/\=submatch(0) + 1/      Alter sequence number in a numbered list
 \d\+                           search a digit sequence
 \=submatch(0) + 1              get the matched pattern and add 1 to it.
+\=line('.')%10
+:s@\d@\=line('.')%10@          divide is a little complicated
+\=submatch(0) + 1              get the matched pattern and add 1 to it.
 \=<expression>                 Replace with the result of the expression
-:s/pat/\=expand("%:p")/        The expression can be quiet complex for example: 
+:s/pat/\=expand("%:p")/        The expression can be quiet complex for example:
                                   \="\n  " . substitute(submatch(1), "}", "\n}", "")/g
                                   \=@a  - replace with content of register 'a'
 \_s                            "space including new line
@@ -110,14 +113,14 @@ search inside the visually selected area :'<,'>s/\%V(/#/g
 :argsdelete *                          clear args list
 :bufdo :argadd %                       Populate args list, same as ':args ## %'
 :args                                  check args list
-:bufdo :vimgrep /blah/ ##              search in all files in args list 
+:bufdo :vimgrep /blah/ ##              search in all files in args list
 
 
-" Search and replace in all files in arglist. 
+" Search and replace in all files in arglist.
 :arg *.cpp      " All *.cpp files in current directory (:pwd)
 :argadd *.h     " And all *.h files.
 :arg            " Optional: Display the current arglist.
-:argdo %s/pattern/replace/ge | update     
+:argdo %s/pattern/replace/ge | update
 
 :arg **/*.cpp   " All *.cpp files in and below current directory (:pwd)
 :argadd **/*.h  " And all *.h files.
@@ -125,7 +128,38 @@ search inside the visually selected area :'<,'>s/\%V(/#/g
 
 
 
+# Fast cursor movement
+# -------------------
+H     # top of screen
+M     # middle of screen
+L     # bottom of screen
 
+89G   # Go to line 89
+30|   # Jump to column 30
+`.    # move to last edit position
+
+^E - scroll the view-port down
+^Y - scroll the view-port up
+^F - scroll down one page
+^B - scroll one page up
+
+Fast text Movement
+------------------
+zt or zENTER: make the line with the cursor the top line of the screen.
+zz or z.    : center
+zb or z-    : bottom
+zs and ze   : move document like the hand tool in acrobat zs moves rigth
+              and ze moves left
+zh and zl   : scroll right,left by character
+zH and zL   : scroll right, left by half a screen
+Note        : use g^ and g$ instead of ^ and $ when the document is scrolled
+
+
+
+
+Matching Bracket
+-----------------
+%
 
 
 
@@ -181,13 +215,13 @@ dd
 . (press dot)
 . (press dot again)
 
-di) 
+di)
     delete everything between parenthesis
-di} 
+di}
     delete everything between curly brackets
-d/regex 
+d/regex
     delete until regex match
-:g/pattern/d 
+:g/pattern/d
     delete all line matching pattern
 
 
@@ -216,7 +250,7 @@ switch esc and caps lock
 - create .Xmodmap
   keycode 9=Caps_Lock
   keycode 66=Escape
-  
+
 
 
 marks
@@ -237,10 +271,10 @@ marks
 
   Examples:
   -----------
-  :'g,'k d   
+  :'g,'k d
     delete lines between mark g and k
-  
-  :'s,. w ~/tmp/file.txt 
+
+  :'s,. w ~/tmp/file.txt
     write text between mark s and current cursor position to ~/tmp/file.txt
 
 
@@ -264,14 +298,14 @@ Folds
 :set foldmethod=indent
 ' then use zm and zr
 
-zo -- open one fold level under cursor 
+zo -- open one fold level under cursor
 zc -- close one fold level under cursor
 
 zr -- reduce folding by one level (open one more level)
 zm -- fold more by one level
 
 zR -- open all folds  (R for Reduce)
-zM -- close all folds 
+zM -- close all folds
 
 
 :set foldmethod=marker
@@ -299,7 +333,7 @@ imap <M-f> <E
 visual mode selection followed by !sort is really useful for sorting lines
 C - Often overlooked: chop off end of line and go into insert mode.
 c/"[enter] Great for modifying things in quotes:
-Much easier is to use :a! (or :i!), paste your text and then end the paste 
+Much easier is to use :a! (or :i!), paste your text and then end the paste
     with a line containing just .
 :sp to split the screen er ctrl-w-w
 gF: Open the file under the cursor,
@@ -331,7 +365,7 @@ Or right in VIM - :E - would list files in :pwd.
 :sh works well when you don't know root, but have sudo privs.
 
 
-These make it so when a line has wrapped, jk navigation moves one line on the 
+These make it so when a line has wrapped, jk navigation moves one line on the
 screen, instead of one line in the file
 nnoremap j gj
 nnoremap k gk
@@ -344,7 +378,7 @@ vnoremap <Up> gk
 inoremap <Down> <C-o>gj
 inoremap <Up> <C-o>gk
 
-this gives you a current-row and current-column highlight, so you never lose 
+this gives you a current-row and current-column highlight, so you never lose
 your cursor
 set cursorcolumn
 set cursorline
@@ -368,7 +402,7 @@ Ctrl-[, which does exactly the same as Escape, and Ctrl-C
 #--------------------
 
 - generate tags
-    cd src/ 
+    cd src/
     ctags -R            (Recursive)
     ctags *             (all files in this dir)
     ctags . ../libewn   (multiple directories)
@@ -398,7 +432,7 @@ vi -b file.bin
 
 # save
 :!%xxd -r             # revert to normal view (must do before saving)
-:set binary 
+:set binary
 :wq
 
 
@@ -410,7 +444,7 @@ bless
 # ----------------------------------
 # Syntax files and color schemes
 # ----------------------------------
-custom syntax files location. If the directory does not exist, 
+custom syntax files location. If the directory does not exist,
 create it and put your custom syntax file there
     ~/.vim/syntax/mlg.vim
     ~/.vim/syntax/panlog.vim
@@ -458,7 +492,7 @@ windows (^ means Ctrl )
 ^W>: increase width by 1
 ^W<: decrease width by 1
 ^w=: makes all panes the same size.
-^W_: maximize current window 
+^W_: maximize current window
 ^W<direction_key>: to move between windows; direction key relative horizontal or vertical split
 ^Wx: swap windows
 ^W_: Maximize height
@@ -501,7 +535,7 @@ copy to X11 clipboard
 "*p:    paste text form X11 mouse select clipboard.
 
 "+yy:   copy to copy/paste (ctrl-c/ctrl-v) clipboard
-"+p:    paste from X11 copy/paste clipboard 
+"+p:    paste from X11 copy/paste clipboard
 
 To make clipboard work through ssh:
 ssh -Y aawais@terbium
@@ -554,7 +588,7 @@ gd jump from use of variable to its local declaration.
 
 
 # Encrypted file
-:X 
+:X
 :set viminfo=
 :set local cm=blowfish
 
@@ -584,7 +618,7 @@ sudo yum install fontforge
 # 5. Patch font
 cd ~/tmp/vim-powerline/fontpatcher
 cp /usr/share/fonts/liberation/LiberationMono-Regular.ttf .
-fontpatcher LiberationMono-Regular.ttf 
+fontpatcher LiberationMono-Regular.ttf
 cp LiberationMono-Regular-Powerline.ttf ~/.fonts/
 sudo fc-cache -vf ~/.fonts/
 
@@ -642,7 +676,7 @@ note   : note taking
 
 
 " -------------------------------------------------------------
-"                           Nerd Tree 
+"                           Nerd Tree
 " -------------------------------------------------------------
 git clone https://github.com/scrooloose/nerdtree.git
 
@@ -677,12 +711,12 @@ Ctrl-g                  relative path of current file
 
 
 " -------------------------------------------------------------
-"                   Create your own syntax file                 
+"                   Create your own syntax file
 " -------------------------------------------------------------
 1. Create file ~/.vim/bundle/hlp.vim/ftdetect/hlp.vim
     au BufRead,BufNewFile *.hlp set filetype=hlp
 2. Create file ~/.vim/bundle/hlp.vim/syntax/hlp.vim
-    
+
 
 " -------------------------------------------------------------
 "                          Sessions
@@ -700,7 +734,7 @@ vim -S ~/.vim_sessions/mysession.vim
 " -------------------------------------------------------------
 "                          Register
 " -------------------------------------------------------------
-" copy from register to the command line 
+" copy from register to the command line
 Ctrl-r Ctrl-w                 insert the word under cursor in command line,
 Ctrl-r {reg}            insert content of register. If text has control characters this may have unexpected effect.
 Ctrl-r Ctrl-r {reg}     don't interpret control characters in register when pasting to cmd line
@@ -717,7 +751,7 @@ Manually change the value of a register
 =
     evaluate an expression and insert the result at cursor
     INSERT mode: CTRL-R =<expression> <CR>
-    NORMAL mode: "=<expression> p  
+    NORMAL mode: "=<expression> p
 
 
 
@@ -726,10 +760,10 @@ Manually change the value of a register
 " -------------------------------------------------------------
 %  relative path of current file
    %:t      name of current file
-   %:p:h    directory of current file 
-   
+   %:p:h    directory of current file
 
-  
+
+
 " -------------------------------------------------------------
 "              Working with external commands
 " -------------------------------------------------------------
@@ -737,7 +771,7 @@ Run external command
 :! wc %         run external command on file (%)
 
 Read command output
-:r ! ls         
+:r ! ls
 
 Filter text through external command
 :.!wc           filter current line through external command
@@ -782,7 +816,7 @@ text as the text-object
 "                          text objects
 " -------------------------------------------------------------
 {i|a}{text-object-id}
-a  all or around - include boundary which could be space, quote, brackets etc 
+a  all or around - include boundary which could be space, quote, brackets etc
 i  inner - without surrounding space, bracket etc that create the text-object
 
 some text object identifiers
@@ -801,7 +835,7 @@ da"         delete something in double quotes, including the double quote
 di"         delete something in double quotes, not including the double quote
 da}         delete block surrounded by { }
 da{
-daB   
+daB
 dat         delete entire HTML/XML text including start and end tags
 cit         change text inside HTML tags
 vit         or vat, select inside html/xml tags. Use o to jump between ends of selection
@@ -810,7 +844,14 @@ vip         select to next blank line (v {inside}{paragraph}
 
 
 " -------------------------------------------------------------
-"                      Installing Plugins 
+"                      Tagbar
+" -------------------------------------------------------------
+s     - change sort order
+space - show prototype in command line
+
+
+" -------------------------------------------------------------
+"                      Installing Plugins
 " -------------------------------------------------------------
 :helptags ~/.vim/doc
 
@@ -833,7 +874,7 @@ L     # bottom of screen
 `.    # move to last edit position
 
 ^E - scroll the view-port down
-^Y - scroll the view-port up 
+^Y - scroll the view-port up
 ^F - scroll down one page
 ^B - scroll one page up
 
@@ -866,12 +907,12 @@ Matching Bracket
 :g!/pattern/d           # delete all lines that do not match pattern
 :v/pattern/d            # delete all lines that do not match pattern
 :g/^\s*$/d              # delete all blank lines
-:g/^/put =\"\n\"        # double space file 
+:g/^/put =\"\n\"        # double space file
 :g/^/put _              # double space file, put blackhole register
 :g/pattern/t$           # copy lines matching pattern to end of file
 :g/pattern/m$           # move all lines matching pattern to end of file
 :g/pattern/y A          # copy matching lines to register A
-:.,$g/^\d/exe "normal! \<C-A>" 
+:.,$g/^\d/exe "normal! \<C-A>"
                         # Increment each number at the start of line
 :g/^pattern/s/$/mytext  # Add text to end of line that begins with pattern
 :g/pattern/nomal @q     # run macro q on each matching line
@@ -941,7 +982,7 @@ add, subract, multiply
 echo 0x10 + 3
 
 get hex code of character under cursor in normal mode
-g8  
+g8
 
 
 " -------------------------------------------------------------
@@ -956,10 +997,10 @@ g8
 " -------------------------------------------------------------
 " Vim 8 native plugin manager
 " -------------------------------------------------------------
-~/.vim/pack/plugins/start       " loaded at startup, the name 'plugins' can be anything, only 
+~/.vim/pack/plugins/start       " loaded at startup, the name 'plugins' can be anything, only
                                 " > 'start' directory is important
 ~/.vim/pack/plugins/opt         " loaded with 'packadd' e.g: :packadd DrawIt
-~/.vim/pack/themes/opt          " themes, such as vim-colors-solarized, the name 'themes' is 
+~/.vim/pack/themes/opt          " themes, such as vim-colors-solarized, the name 'themes' is
                                   > for user, vim only looks at the 'opt' directory
 ~/.vim/pack/syntax/start        " syntax files, could be under plugins, but just for organization
 
@@ -1119,7 +1160,7 @@ gH      line wise select
 "                    XML / HTML files
 " -------------------------------------------------------------
 " enable matchit.vim in .vimrc
-packadd! matchit 
+packadd! matchit
 
 " use text objects
 dat   delete entire HTML/XML text including start and end tags
@@ -1128,7 +1169,7 @@ vit   or vat, select inside html/xml tags. Use o to jump between ends of selecti
 
 " pass through external tidy filters
 :% ! xmllint --format --noblanks -
-:% ! tidy -xml -iq -w 90 -raw 
+:% ! tidy -xml -iq -w 90 -raw
 
 
 
@@ -1136,9 +1177,9 @@ vit   or vat, select inside html/xml tags. Use o to jump between ends of selecti
 "                    CSV VIM
 " -------------------------------------------------------------
 :WhatColumn         in which column is the cursor
-:NrColumns          how many columns are there 
+:NrColumns          how many columns are there
 :ArrangeColumn
-:DeleteColumn 2 
+:DeleteColumn 2
 :Header 2           Fix first two rows as column heading. default is first row
 :Header!            Hide header lines
 :Sort 3             Sort on column 3
@@ -1180,14 +1221,14 @@ another way to load initialization
 
 gi — Move to the last insert you did and enter Insert mode.
 gv — Start visual mode and use the previous selection made.
-gI — Start inserting at the beginning of the line no matter 
+gI — Start inserting at the beginning of the line no matter
 
 
 " -------------------------------------------------------------
 "                    FUGITIVE
 " -------------------------------------------------------------
 :Git -p                     force pagination for git output
-:Git blame [file]           
+:Git blame [file]
 :Gedit HEAD~3:%             loads the current file as it existed 3 commits ago.
 :Gedit main:file2           load file2 from branch main
 :Gvdiffsplit                diff with staged version of the file
@@ -1199,7 +1240,7 @@ gI — Start inserting at the beginning of the line no matter
 :G difftool -y              open all changed file in different tabs
 :tabo                       close all other tabs
 
-Things to do in :G 
+Things to do in :G
 =   toggle inline diff
 dv  Perform :Gvdiffsplit on the file under cursor
 dq  Close all but one diff buffer, and :diffoff! the last one
@@ -1237,7 +1278,7 @@ Add new filetype:
    Heading1        my.mhlp /^Heading1$/;"  s       line:1
    Heading2        my.mhlp /^Heading2$/;"  s       line:8
 
-3. Edit .vimrc file 
+3. Edit .vimrc file
    let g:tagbar_type_myhelp = {
        \ 'ctagstype' : 'myhelp',
        \ 'kinds' : [
@@ -1257,7 +1298,7 @@ Add new filetype:
 
    mapping of file extenstions to language
    ctags --list-maps
-   
+
    languages understood by ctags
    ctags --list-languages
 
