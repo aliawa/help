@@ -536,6 +536,10 @@ fi
 
 # bash completion
 
+## procedure
+create file _replay_data.sh
+source _replay_data.sh; PATH=$PATH:.
+
 ## complete
 -W <words>
 complete -W 'hello none what' replay_data.py 
