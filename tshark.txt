@@ -45,6 +45,9 @@ tshark -r a.pcap -z conv,tcp -q
 # get the timerange of pcap
 tshark -r a.pcap -u hms
 
+# summary of destination ips and ports
+ tshark -r rx_dipp_2.pcap -z dests,tree -q
+
 
 
 SSL

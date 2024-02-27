@@ -150,8 +150,8 @@ cd blah && echo "success" || echo "fail"
 [ -z $A ] && echo "zero" || echo "non-zero"
 
 # Command line actions
-ctrl k      delete to end of line
 ctrl u      delete to begining of line
+ctrl k      delete to end of line
 ctrl p      backwards in history, same as up-arrow
 ctrl n      forward in history, same as down-arrow
 
@@ -166,6 +166,10 @@ C-o    operate-and-get-next
        Accept the current line for execution and fetch the next line relative to the current line from 
        the history for editing.  Any argument is ignored. 
 
+C-d    delete under cursor
+C-_    undo last delete
+option b    back one word
+option f    forward one word
 
 # see all bash defines
 bash -v
@@ -418,7 +422,14 @@ ${#VAR}
     myarray=(1 2 "three" 4 "five")      # create an arrray, Note: no comma
     myarray=($(ls backport_data*))      # create from command output
     myarray+=("six")                    # append new element to array
-    unset myarray[2]                    # delete 3rd element
+
+    # Associative array
+    arr2=([HDD]=Samsung [Monitor]=Dell [Keyboard]=A4Tech)
+    arr1[fruit]=Mango
+
+    echo ${#myarray[*]}                 # number of elements in array
+    echo ${#myarray[@]}                 # number of elements in array
+
     echo ${myarray[0]}                  # retrieve elements 0
     echo ${myarray[1]}                  # retrieve elements 1
     echo ${myarray[-1]}                 # retrieve last element
@@ -426,7 +437,13 @@ ${#VAR}
     echo ${myarray[@]}                  # retrieve ALL elements
     echo ${myarray[*]}                  # retrieve ALL elements
 
-    echo "array size: ${#myarray[@]}    # size
+                                        # copy a file into an array
+    array1=( `cat "$filename" | tr '\n' ' '`) 
+    array2=( "${array1[@]}" )           # copy one array to another
+
+
+    unset myarray[2]                    # delete 3rd element
+    unset myarray                       # delete entire array
 
     for f in ${myarray[@]}; do          # loop over array elements
       echo "$f"
@@ -436,23 +453,13 @@ ${#VAR}
         echo "$i:$myarray[$i]"
     done
 
-## Associative Arrays
-    declare -A arr1
-    arr1[fruit]=Mango
+    declare -a arr1                     # optionally declare an array
+    declare -A arr1                     # declare associative array
+    local -a arr2
 
-    declare -A arr2=([HDD]=Samsung [Monitor]=Dell [Keyboard]=A4Tech)
-
-    for key in ${!arr2[@]}; do 
-        echo $key
-    done
-
-    for val in ${arr2[@]}; do 
-        echo $val
-    done
 
 # Conditional Expressions
     man test
-
 
 
 # Loops

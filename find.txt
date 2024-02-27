@@ -38,6 +38,7 @@ Actions
 --------
 -exec cp '{} . \;                cp to current dir
 -exec grep -H 'mailto' {} \;     grep -H = print file name 
+-exec file --mime {} \+          replace {} with as many filenames as possible.
 -delete                          delete the file
 
 

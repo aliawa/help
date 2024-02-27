@@ -46,8 +46,11 @@ Control + up,down,righ,left # Resize pane in steps of 1 cell
 :swap-window -t 0               swap current window with the top window
 C-b .RT                         move current window to session "RT"
 
+Turn window into a pane (make window 2 a pane of window 1)
+join-pane -s 2 -t 1
 
-
+Make current pane its own window (break pane)
+C-b !
 
 
 
@@ -267,3 +270,14 @@ tmux -2 attach-session -d
 
 
 renumber-windows os
+
+
+
+
+Solution for 
+No entry for terminal type "tmux-256color";
+using dumb terminal settings.
+----------------------------------------------------------------------
+export TERM=screen-256color
+
+

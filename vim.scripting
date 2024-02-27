@@ -1,11 +1,26 @@
+Testing scripts
+----------------------------
+save script as .vim file
+run script with ':source <filename>' or ':so %'
+
+
+Echo (two types of echo)
+----------------------------
+echo  "shell=" &shell                  disappears after redraw
+echom "it's a zizzer zazzer zuzz"      can be seen later with :messages
+
+
 variables
 ----------------------------
+Scoping
 v:name  predefined by vim
 g:name  global
 w:name  window local
 b:name  buffer local
 s:name  script local
 a:name  function argument
+l:name  local to the current function
+t:varname     local to the current editor tab
 
 assignment
 let s:myvar = 1
@@ -20,7 +35,7 @@ if !exists("s:myvar")
 
 
 
-Special Variables
+Special Variables (pseudovariables)
 ---------------------------
 $NAME       environment variable
 &name       option
@@ -45,25 +60,43 @@ a !~ b   does not match
 :   echo  "str contains space"
 :endif
 
-
 a ==? b     ignore case
 a !~# b     case sensitive
+
+"non-printing or special charaters like "\n"
+:help expr-quote
+
+echom '\n\\'                        " literal string, special characters not evaluated
+
+Some string functions
+strlen("foo")                       " 3
+len("foo")                          " 3
+split("one two three")              " ['one', 'two', 'three']
+split("one,two,three", ",")         " ['one', 'two', 'three']
+join(["foo", "bar"], "...")         " foo...bar
+join(split("foo bar"), ";")         " foo;bar
+tolower("Foo")
+toupper("Foo")
+:help functions
+
+Substring
+"abcd"[0:2]                         " abc
+"abcd"[-2:]                         " cd
+
 
 
 Conditional
 ------------------------------
-
 :if {cond}
+:    {statements}
+:elseif {cond}
 :    {statements}
 :else
 :    {statements}
 :endif
 
-:if {cond}
-:    {statements}
-:elseif {cond}
-:    {statements}
-:endif
+ternary if
+&tabstop > 1 ? 1 : 0
 
 
 
@@ -78,7 +111,7 @@ execute normal mode command
 build and execute a normal mode command
 :execute "normal Inew text \<Esc>"      insert "new text" at the begining of line
 
-get value of expression
+eval: get value of expression
 :let optname = "path"
 :let optval = eval('&' . optname)
 
@@ -86,16 +119,30 @@ get value of expression
 
 Functions
 --------------------------------
-Functions
-:function {name}({var1}, {var2}, ...)
-:  {body}
-:endfunction
+function Meow()                     "Name must start with uppercase
+    echom "Mewo!"
+    return "Meow String!"
+endfunction
 
-run a function
-:call fn()
+call  Meow()                        " calling 
+echom GetMeow()                     " calling in expression, 'call' not needed
 
-Funciton with range
 
+function arguments
+function DisplayName(name)
+    echom a:name                    " use 'a:' prefix to refer to arguments
+endfunction
+
+
+varargs
+function Varg(...)
+    echom a:0                       " number of varargs
+    echom a:1                       " first vararg
+    echo a:000                      " all varargs as list
+endfunction
+
+
+Funciton with range: define two implicit arguments "firstline", "lastline"
 :function Count_words() range
 :  let lnum = a:firstline
 :  let n = 0
@@ -108,43 +155,165 @@ Funciton with range
 
 10,30call Count_Words()
 
-variable number of args
-:function Show(start, ...)
-a:1 first optional arg
-a:2 second optional arg
-
 
 remove a function
 :delfunction Show
 
+
 function reference
 Afunc = function('SomeFunc')
 
+Fuction name: first letter should be upper-case unless 
+prepend "s:"
 
 
-Loop
+Namespace
+function general#DeleteTrailingWS() abort
+    normal mz
+    %s/\v\s+$//ge
+    normal `z
+endfunc
+
+
+When you call the function with :call general#DeleteTrailingWS(),
+Vim will:
+- Look inside the autoload directory for a file called general.
+- Search for a function called DeleteTrailingWS inside this file.
+- Load and execute the function.
+
+
+
+built-in functions
+:help functions
+:help function-list
+
+
+
+Loops
+---------------------------------
+let c = 0
+for i in [1, 2, 3, 4]
+  let c += i
+endfor
+
+let c = 1
+let total = 0
+while c <= 4
+  let total += c
+  let c += 1
+endwhile
+
+
+
+
+List
 --------------------------------------
+let lst = ['aa', 'bb', 'cc']
+let lst = []
+let phones = { 'cell':5551017346, 'home':5558038728, 'work':'?' }
+
+lst + ['gg', 'ee']
+call add(lst, 'ff']
+
+List slice
+['a', 'b', 'c', 'd', 'e'] [0:2]                 " ['a','b','c']
+['a', 'b', 'c', 'd', 'e'] [0:10000]             " entire list 
+['a', 'b', 'c', 'd', 'e'][:1]                   " ['a', 'b']
+['a', 'b', 'c', 'd', 'e'][3:]                   " ['d', 'e']
+['a', 'b'] + ['c']                              " ['a','b','c']
+
+Loop on list
 :let alist = ['one', 'two', 'three']
 :for n in alist
 :  echo n
 :endfor
-   
+
+Some list functions
+:help list-functions
+call add(foo, 'b')
+len(foo)                                        " 2
+index(foo, 'b')                                 " 1
+join(foo)                                       " ab
+join(foo, '---')                                " a---b
+reverse(foo)                                    "['b', 'a']
 
 
-List and Dictionary
---------------------------------------
-let lst = ['aa', 'bb', 'cc']
-let lst = []
-call add(lst, 'ff']
-lst + ['gg', 'ee']
+
+
+
+Dictionaries
+---------------------------------
+{'a': 1, 100: 'foo',}['a']                  " 1
+{'a': 1, 100: 'foo',}.100                   " foo
+let foo.a = 100
+let foo.b = 200                             " {'a': 100, 'b': 200}
+let test = remove(foo, 'a')                 " test = 100
+unlet foo.b                                 " 
+
+:help dict-functions
+get({'a': 100}, 'a', 'default')             " 100
+get({'a': 100}, 'b', 'default')             " default
+has_key({'a': 100}, 'a')                    " 1
+items({'a': 100, 'b': 200})                 " [['a', 100], ['b', 200]]
+keys()
+values()
+
+
+
+Operators
+------------------------------
+:help expression-syntax
+Operation                           Operator syntax
+Assignment                          let var = expr
+Numeric-add-and-assign              let var += expr
+Numeric-subtract-and-assign         let var –= expr
+String-concatenate-and-assign       let var .= expr
+
+Ternary operator                    bool ? expr-if-true : expr-if-false
+Logical OR                          bool || bool
+Logical AND                         bool && bool
+Numeric addition                    num+num
+Numeric subtraction                 num–num
+String concatenation                str.str
+Numeric multiplication              num*num
+Numeric division                    num/num
+Numeric modulus                     num%num
+Convert to number                   +num
+Numeric negation                    –num
+Logical NOT                         !bool
+Parenthetical precedence            ( expr )
+
+help expr4
+echo  x == y             | " Equality by value
+echo  x != y             | " Inequality
+echo  x >  y             | " Greater than
+echo  x >= y             | " Greater than or equal
+echo  x <  y             | " Smaller than
+echo  x <= y             | " Smaller than or equal
+echo  x is y             | " Instance identity (lists and dictionaries)
+echo  x isnot y          | " Instance non-identity (lists and dictionaries)
+
+Prefer explicitly case sensitivity with '?' and '#'
+echo  'a' <  'B'         | " True or false depending on 'ignorecase'
+echo  'a' <? 'B'         | " True 
+echo  'a' <# 'B'         | " False
+
+
+Best practice for Registers
+---------------------------------
+saving yank register at the begining of script and restoring it at end
+let saved_unnammed_reg = @@
+let @@ = saved_unnammed_reg
 
 
 Debug
 --------------------------------------
-dump dictionary:
-echo plugs
-check return value of function
-echo has_key(plugs, 'gtags.vim')
+dump dictionary - :echo plugs
+check return value of function - :echo has_key(plugs, 'gtags.vim')
+list available functions - :function
+Show function "Fn" - :function Fn
+Origin of function containing the phrase "map" - :verbose function /map
+
 
 :augroup        all autocommand groups
 :command        all user commands

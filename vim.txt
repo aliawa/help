@@ -1243,6 +1243,7 @@ gI — Start inserting at the beginning of the line no matter
 Things to do in :G
 =   toggle inline diff
 dv  Perform :Gvdiffsplit on the file under cursor
+    if there is merge conflict, it opens 3 merge windows
 dq  Close all but one diff buffer, and :diffoff! the last one
 d?  Show help
 g?  show help
@@ -1301,4 +1302,102 @@ Add new filetype:
 
    languages understood by ctags
    ctags --list-languages
+
+
+
+" -------------------------------------------------------------
+"                    .VIMRC commands
+" -------------------------------------------------------------
+
+Setting options
+:set number                            
+:set number?                           check current value of option
+:set number!                           toggle a boolean option
+:set numberwidth=40                    set a non-boolean option
+:setlocal number                       set option for this buffer only
+
+
+Mapping, never use map, nmap, vmap, imap because they are recursive
+:noremap <c-d> dd                      normal and visual mode Ctrl+d mapped to dd
+:noremap <space> viw                   normal and visual mode Space-key mapped to "select word"
+:nnoremap \ dd                         normal mode only
+:vnoremap \ U                          visual mode only, upper case selection
+:inoremap <c-d> <esc>ddi               insert mode mapping, delete line
+:nmap                                  show normal-mode key mapping
+:nnoremap <buffer> <leader>x dd        key mapping for this buffer only
+
+
+operator pending mapping
+:onoremap p i(                        now dp will delete parameters inside the '(' and ')'
+
+abbriviations
+iabbrev waht what                      works in insert mode only
+
+
+Autocommands
+:help autocmd-events
+:autocmd BufNewFile * :write           BufNewFile   event to watch for 
+                                       *            filter for event for example *.txt
+                                       :write       The command to run 
+:autocmd BufNewFile,BufRead *.html setlocal nowrap   | "Multiple events 
+
+
+
+Other
+exists(g:syntax_on) " is global variable 'syntax_on' defined?
+
+<CR>                " carriage return see more unprintable-characters :help keycodes
+<silent>            " after nmap, causes the mapping not to echo any commands it is executing
+s/\<./\u&/g         " upper case first letter of word
+
+
+line continuation marker: single backslash at the start of line
+call SetName(
+\             first_name,
+\             middle_initial,
+\             family_name
+\           )
+multiple commands in a single line
+echo "Starting..." | call Phase(1) | call Phase(2) | echo "Done"
+
+
+Always use normal! because plane normal takes mappings into account
+normal does not understand <cr> <esc> etc.
+:execute "normal! mqA;\<esc>`q"
+
+grep the word 
+:nnoremap <leader>g :silent execute "grep! -R " .  shellescape(expand("<cWORD>")) . " ."<cr>:copen<cr>
+
+
+Paths
+expand('%')                                 " relative path of current file
+expand('%:p')                               " absolute path of current file
+fnamemodify('foo.txt', ':p')                " absolute path of foo.txt
+globpath('.', '*')                          " all files and dirs in current dir
+split(globpath('.', '*.txt'), '\n')         " all txt files as list
+
+
+Examples
+---------------------------------
+
+" change each line use as: :1,3call Change_lines('50')
+function! g:Change_lines(val)
+    call setline('.', substitute(getline('.'), '\d\+$', a:val, ''))
+endfunction
+
+
+" change last digits on each line in range
+function! g:Change_lines(val) range
+    let l:lnum = a:firstline
+    let l:val= a:val
+    while l:lnum < a:lastline
+        call setline(l:lnum, substitute(getline(l:lnum), '\d\+$', l:val, ''))
+        let l:val+=1
+        let l:lnum+=1
+    endwhile
+endfunction
+
+
+
+
 
