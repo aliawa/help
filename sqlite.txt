@@ -289,9 +289,8 @@ comment in sql file
 
 
 
-# --------------------------------------
-# SORT 
-# --------------------------------------
+SORT 
+--------------------------------------
 SELECT
 	name,
 	milliseconds, 
@@ -311,4 +310,10 @@ FROM
 	tracks
 ORDER BY
 	 3,2;
+
+
+IMPORT
+----------------------------------------------------------------------
+import csv file
+.import --csv session_log.csv sessions
 

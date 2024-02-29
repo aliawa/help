@@ -365,6 +365,12 @@ Or right in VIM - :E - would list files in :pwd.
 :sh works well when you don't know root, but have sudo privs.
 
 
+g
+----------------------------------------------------------------------
+gi — Move to the last insert you did and enter Insert mode.
+gv — Start visual mode and use the previous selection made.
+gI — Start inserting at the beginning of the line
+
 These make it so when a line has wrapped, jk navigation moves one line on the
 screen, instead of one line in the file
 nnoremap j gj
@@ -378,6 +384,8 @@ vnoremap <Up> gk
 inoremap <Down> <C-o>gj
 inoremap <Up> <C-o>gk
 
+visuals
+----------------------------------------------------------------------
 this gives you a current-row and current-column highlight, so you never lose
 your cursor
 set cursorcolumn
@@ -385,21 +393,21 @@ set cursorline
 hi cursorcolumn ctermbg=red
 
 
+help
+----------------------------------------------------------------------
 To view man page of a word under curser, type K(shift+K)
 
 
-# --------------------
-# Alternative Esc
-#--------------------
+Alternative Esc
+--------------------
 Ctrl-C instead of Esc for switching from insert mode into command mode
 Ctrl-[, which does exactly the same as Escape, and Ctrl-C
 
 
 
 
-# --------------------
-# Tags
-#--------------------
+Tags
+--------------------
 
 - generate tags
     cd src/
@@ -418,9 +426,8 @@ Ctrl-[, which does exactly the same as Escape, and Ctrl-C
 
 
 
-# --------------------
-# Editing binary files
-#--------------------
+Editing binary files
+--------------------
 
 # open and edit
 vi -b file.bin
@@ -1220,10 +1227,6 @@ DrawIt
 modeline
 another way to load initialization
 
-gi — Move to the last insert you did and enter Insert mode.
-gv — Start visual mode and use the previous selection made.
-gI — Start inserting at the beginning of the line no matter
-
 
 " -------------------------------------------------------------
 "                    FUGITIVE
@@ -1232,7 +1235,7 @@ gI — Start inserting at the beginning of the line no matter
 :Git blame [file]
 :Gedit HEAD~3:%             loads the current file as it existed 3 commits ago.
 :Gedit main:file2           load file2 from branch main
-:Gvdiffsplit                diff with staged version of the file
+:Gvdiffsplit!               diff with staged version of the file, !=keep current file in focus
 :Gvdiffsplit main           diff with branch main
 :Gread                      variant of git checkout -- filename, can be undone with u
 :Gwrite                     git add with working tree file. git checkout with index file
@@ -1401,4 +1404,6 @@ endfunction
 
 
 
-
+Help
+----------------------------------------------------------------------
+ins-special-keys        Special keys in insert mode
