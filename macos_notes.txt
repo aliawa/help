@@ -15,4 +15,33 @@ Left Shift + Ctrl + Opt + Power on
 Reset:
 Cmd + Option + P + R + Power on
 
+Find My IP
+Method 1: System Preferences > Network > Wifi > Check under "status"
+Method 2: System Preferences > Network > Wifi > Advanced > TCP/IP
+Method 3: Terminal > ifconfig | grep -A 5 en0
+
+Show all listening ports
+netstat -a | grep -i "listen"
+
+
+Run ftp
+brew install proftpd
+vi /usr/local/etc/proftpd.conf
+change <Anonymus ~ftp> to <Anonymous /Users/Shared>
+
+Add this section to allow uploads
+  <Limit STOR>
+   AllowAll
+  </Limit>
+
+Run in foreground
+sudo /usr/local/opt/proftpd/sbin/proftpd -X -n
+
+
+
+
+
+
+
+
 

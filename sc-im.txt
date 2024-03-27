@@ -1,0 +1,31 @@
+
+
+=   insert numeric value, =a0*3
+\   insert text in cell
+>   insert text right aligned
+<   insert text left aligned
+:fsum   sum cells above
+
+Go to visual mode for selecting ranges
+v       command-mode -> visual-mode
+<C-v>   insert-mode  -> visual-mode
+
+e   edit a numeric value
+E   edit a text value
+
+ic  insert column (before)
+oc  insert column (after)
+f>  increase column width
+
+ir  insert row
+yr  copy row
+dr  delete row
+
+:set trunctate      truncate content rather than showing ****
+:format "##"        2 digits and 0 decimal places
+
+configuration file
+    ~/.config/sc-im
+configuration options
+    set autobackup = 300
+

@@ -1,0 +1,7 @@
+-o output file
+-f from format
+-t to format
+-s create standalone doc instead of fragment
+
+pandoc -f markdown -t latex hello.txt
+

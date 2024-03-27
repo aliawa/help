@@ -1,0 +1,7 @@
+i   Add auto incremented column to right
+zi  give step value
+
+=   add and expression column
+^   rename column
+
+a   add new row
