@@ -755,7 +755,7 @@ Manually change the value of a register
 
 ".  dot register stores the last inserted text, you can use it to insert the
     same text again
-=
+"=
     evaluate an expression and insert the result at cursor
     INSERT mode: CTRL-R =<expression> <CR>
     NORMAL mode: "=<expression> p
@@ -1260,6 +1260,16 @@ Gvdiffsplit!
 d2o     take change from left window
 d3o     take change from right window
 only    close diff
+
+Left window     File in the local/target branch (devel/equinox)
+Middle window   The working file
+Right window    File in the incoming branch, the branch being merged (main)
+
+<<<<<<< HEAD
+what was in the local branch
+=======
+what happened after merging from remote branch
+>>>>>>>
 
 
 " -------------------------------------------------------------

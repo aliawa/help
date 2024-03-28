@@ -54,6 +54,12 @@ dpkg -S `which apache2`     # which package the binary apache2 is from
 dpkg -S file                # which package put the file here.
 dpkg --list                 # List all installed packages
 
+dpkg --listfiles vsftpd     # files installed by the package
+dpkg-query -L vsftpd        # files in a package
+dpkg -c package_file.deb    # files in a .deb file
+
+apt list --installed        # all installed packages
+
 
 
 # Remove
@@ -140,10 +146,4 @@ apt-get --compile sources goaccess
 
 
 
-
-dpkg --listfiles vsftpd     # files installed by the package
-dpkg-query -L vsftpd        # files in a package
-dpkg -c package_file.deb    # files in a .deb file
-
-apt list --installed        # all installed packages
 

@@ -19,6 +19,11 @@ Patterns
 '.*\.\(h\|cpp\)'            h ,cpp files
 
 
+Negation
+--------------
+find . -not -name '*.py' -delete
+
+
 Time
 -----
 -mtime 0                    modified in last 24 hours

@@ -296,6 +296,8 @@ only ubuntu 16 and 18 do not statisfy above requirements
 sudo apt instal python3-scapy
 sudo apt install python-yaml
 
+pyhton -m pip install pyyaml
+
 
 
 

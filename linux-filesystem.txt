@@ -79,20 +79,6 @@ lvscan
 mount /dev/vg_lin/lv_root /mnt 
 
 
-
-EM specific
-----------------------------------
-list EM partitions:
-ls -l /dev/flash
-
-disk usage:
-du -d 1
-
-flash partion info
-cat /proc/mtd
-
-
-
 Glossary
 ----------------------------------
 Master Boot Record (MBR)
@@ -137,7 +123,8 @@ df : disk space usage
      http://www.linfo.org/df.html
 
 du : shows the sizes of directories and files.
-   : du -sh
+   : du -sh     summarize, human readable
+   : du -d1     one level deep
 
 
 # Windows mount 

@@ -405,6 +405,30 @@ fi
 shift $((OPTIND - 1))
 DHOME=$1
 
+# getopt
+args=$(getopt -l st,cb: ac:fh $*)
+if [ $? != 0 ]
+then
+    help
+    exit 2
+fi
+set -- $args
+
+for i; do
+    case "$i" in
+        -a) abort;exit;;
+        -f) FETCH_MAIN=1;shift;;
+        -h) help; exit;;
+        -c) COMMIT_ID=$(eval echo "$2");
+            shift 2;;
+        --cb) COMMIT_BUGID=$(eval echo "$2");
+              shift 2;;
+        --st) status;exit;;
+        --) shift; break;;
+    esac
+done
+
+
 
 # Other
 ## upper case

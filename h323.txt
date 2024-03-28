@@ -1,10 +1,10 @@
 H.323 call setup
 ------------------------------------------
-Step 0: RAS Signalling
+Step 1: RAS Signalling
 Endpoint discovers GK by multicasting GRQ, gets GRJ or GCF from GK containg Transport Address of GK RAS channel
 Enpoint registers with GK, to inform GK of its alias address and Transport address
 
-Step 1:  RAS Signalling
+Step 2:  RAS Signalling
 This step is skipped if there is no Gatekeeper
 Terminal sends RAS messages to the address and the well known TSAP identifier (aka port) of GK RAS channel
 Possibly send LRQ to GK to translate destination alias to Transport address
@@ -12,16 +12,16 @@ Send ARQ Admission request message to GK, UDP destination port: 1719
 Receive ACF from GK with Call Signalling Transport address of GK or other EP
 
 
-Step 2: 
+Step 3: 
 exchange of call signalling messages on a Call Signalling channel
 Call signalling messages on H.225 channel (TCP/Dynamic port or 1720)
 Receive Connect message containing H.245 control channel address, H.245 address can also come
 in Alerting, Call Proceeding and Setup messages
 
-Step 3:
+Step 4:
 Establish H.245 Control Channel (TCP/Dynamic port)
 
-Step 4:
+Step 5:
 RTP/RTCP
 
 
@@ -49,7 +49,7 @@ Important fields:
 H.225 (modified Q.931 signalling) (on wireshark CS:..)
 ------------------------------------------------------
 
-TCP, Endpoint to Endpoint port 1720, GK dynamic port
+TCP, Endpoint to Endpoint: port 1720, GK: dynamic port
 Important fields:
     h245Address – This is a specific transport address on which the called endpoint or 
     gatekeeper handling the call would like to establish H.245 signalling. 
@@ -128,9 +128,46 @@ Associate all messages between all entities within all calls in the same confere
 
 Wireshark
 ------------
-Filter all "OpenLogicalChannels":  h225.facility_element
-in description h225 ras is shown as RAS: gatekeeperRequest
-h225 call signalling is shown as CS: facility OpenLogicalChannel
+
+Finding all messages related to a call
+1. Look at all OLC messages one of these filter
+    h245.OpenLogicalChannel_element
+    h225.fastStart > 1
+    h225.facility_element
+2. Find the h.225.0 > callIdentifier > guid 
+    h225.guid == 00000000-0000-1000-0000-00000ab5188e
+
+show all RAS messages
+    h225.RasMessage
+
+show all H.245
+    h225.H245Control_item`
+    
+show messages with fastStart elements   << this is where OLC is found
+    h225.fastStart > 1
+
+show all setup messages                 << OLC can be found here
+    q931.message_type == setup 
+    h225.h323_message_body == setup         
+    h225.h323_message_body == 0         
+show all facility messages              << this is where OLC is found
+    q931.message_type == facility
+    h225.facility_element
+    h225.h323_message_body == facility
+    h225.h323_message_body == 6
+show all connect
+    q931.message_type == connect
+    h225.h323_message_body == connect
+    h225.h323_message_body == 2
+show all callProceeding
+    q931.message_type == "call proceeding"
+    h225.h323_message_body == callproceeding
+    h225.h323_message_body == 1
+media channel port is 6238
+    h245.tsapIdentifier == 6238
+media channel ip is 10.26.130.51
+    h245.ip4_network == 10.26.130.51
+
 
 
 H225 Messages
