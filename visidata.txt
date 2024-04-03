@@ -1,7 +1,22 @@
 i   Add auto incremented column to right
+
 zi  give step value
 
 =   add and expression column
 ^   rename column
 
 a   add new row
+d   delete current row
+gd  delete selected rows
+
+za  add new column
+-   hide column
+gv  unide all columns
+
+z= expr     Enter result of expression in cell
+
+Shift-K     move row up
+Shift-J     move row down
+Shift-U     undo
+Shift-C     view columns sheet
+Ctrl-S      save

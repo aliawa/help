@@ -1,9 +1,14 @@
 
 
 =   insert numeric value, =a0*3
-\   insert text in cell
+\   insert text centered
 >   insert text right aligned
 <   insert text left aligned
+
+{}| align text left,right,center
+Zr,Sr   hide row, show row
+Zc,Sc   hide column, show column
+
 :fsum   sum cells above
 
 Go to visual mode for selecting ranges
@@ -13,9 +18,10 @@ v       command-mode -> visual-mode
 e   edit a numeric value
 E   edit a text value
 
-ic  insert column (before)
-oc  insert column (after)
-f>  increase column width
+ic      insert column (before)
+oc      insert column (after)
+f>      increase column width
+fk fj   decrease row height, increase row height
 
 ir  insert row
 yr  copy row
@@ -29,3 +35,8 @@ configuration file
 configuration options
     set autobackup = 300
 
+sort a1:m21 "+#D"
+
+Pc  paste and update refrences
+
+e tab   export as tab separated data
