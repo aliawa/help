@@ -1,18 +1,22 @@
 Versions:
+----------------------------------------------------------------------
 10.9.5  Mavericks
 10.13.x High Sierra
-
+11.7.2  Big Sur
 
 Go to recovery mode
+----------------------------------------------------------------------
 Cmd + R + Turn on the computer
 Opt + Cmd + R + Turn on the computer
 
 
 Reset SMC:
+----------------------------------------------------------------------
 Left Shift + Ctrl + Opt + Power on
 
 
 Reset:
+----------------------------------------------------------------------
 Cmd + Option + P + R + Power on
 
 Find My IP
@@ -20,6 +24,7 @@ Find My IP
 Method 1: System Preferences > Network > Wifi > Check under "status"
 Method 2: System Preferences > Network > Wifi > Advanced > TCP/IP
 Method 3: Terminal > ifconfig | grep -A 5 en0
+
 
 Show all listening ports
 ----------------------------------------------------------------------
@@ -44,7 +49,7 @@ FTP on macos
 2. Use finder as ftp client
    finder can connect to FTP server
 
-3. sftp from command line, 
+3. sftp from command line,
    ftp command is not available in newer macs. sftp requrires ssh server.
    Enable ssh login on macos big sur 11.7.2
         system preferences > Sharing > Remote Login
