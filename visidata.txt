@@ -1,22 +1,62 @@
-i   Add auto incremented column to right
+Editing cells
+https://www.visidata.org/docs/edit/
+ge  edit multiple rows at the same time
+    eg: select multiple rows then ge8 => current column in all rows will be 8
 
-zi  give step value
-
-=   add and expression column
-^   rename column
+gs  select all rows https://www.visidata.org/docs/columns/
 
 a   add new row
 d   delete current row
 gd  delete selected rows
 
 za  add new column
+^   rename column
+i   Add auto incremented column to right
+zi  Add auto incremented column with given step value
+=   Add an expression column
 -   hide column
 gv  unide all columns
+_   expand column to fit text
 
 z= expr     Enter result of expression in cell
+g= date.today()  create colum with todays date
+
+y   copy row
+p   paste row
 
 Shift-K     move row up
 Shift-J     move row down
 Shift-U     undo
 Shift-C     view columns sheet
 Ctrl-S      save
+
+
+Filter rows
+----------------------------------------------------------------------
+Select rows then "
+Frequency table with Shift-f then Enter
+Frequence table with Shift-f then select rows then g+Enter
+
+Sort
+----------------------------------------------------------------------
+#   to mark column numeric
+[   ascending
+]   descending
+
+
+Find sum of each category
+----------------------------------------------------------------------
+%   on "amount" column to mark data type float
++   to add an aggregator eg sum()
+navigae to Category colum and press Shift-f
+
+
+
+select
+gs  all rows
+gu  unselect all
+gt  toggle selection
+
+Move column
+H   L   one left or right
+gH gL   all the way left or right
