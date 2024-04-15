@@ -130,7 +130,7 @@ Wireshark
 ------------
 
 Finding all messages related to a call
-1. Look at all OLC messages one of these filter
+1. Look at all OLC messages with one of these filter
     h245.OpenLogicalChannel_element
     h225.fastStart > 1
     h225.facility_element

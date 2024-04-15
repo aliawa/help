@@ -44,6 +44,8 @@ aref = \$animal
 variables need to have a sigil infront of them $,@,%
 special vairable $_
 
+The reason for unreadability is because it has arrays with names such as
+@_ @+ @-, When the arrays are accessed $-[0] $+[0] etc
 
 Using "DATA" file handle
 ----------------------------------------------------------------------
@@ -69,8 +71,8 @@ __DATA__
 get the first line
     $msg = <DATA>;
 
-read all the lines, if $/ is undef, reads whole file. If it is '', reads one
-paragraph
+If $/ is undef: read all the lines, reads whole file. 
+If it is '', reads one paragraph
     do { 
         local $/;
         $msg = <DATA>
@@ -258,6 +260,35 @@ sub max {
     }
     return $max;
 }
+
+Ways of passing parameters to subroutines
+sub shifty {
+    my $foo = shift;
+}
+
+sub listy {
+    my ($foo) = @_;
+}
+
+sub fancy_listy {
+    my ($positional, $args, @bad) = @_;
+    die "Extra args" if @bad;
+}
+
+sub named_params {
+    my %opt = @_;
+}
+
+sub named_params {
+    my %opt = @_;
+    my $named = delete $opt{named} // "default value";
+    my $param = delete $opt{param}
+        or croak "Missing required 'param'";
+    croak "Unknown params:", join ", ", keys %opt
+        if %opt;
+    # do stuff 
+}
+
 
 switch case
 ----------------------------------------------------------------------
