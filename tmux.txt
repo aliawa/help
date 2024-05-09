@@ -1,8 +1,11 @@
 # CONCEPTS
 # ---------------------- 
+server manages all sessions
 session has windows
 windows has panes
 each pane is a separate terminal
+
+A client displays the session
 
 
 # SESSIONS 
@@ -106,19 +109,28 @@ C-b : source ~/.tmux.conf
 commands can be separated by ";" example:
 bind r source ~/.tmux.conf; display "source file loaded"
 
+# Aliases
+# -------------------------
+bind-key            bind 
+new-session         new  
+set-window-option   setw 
+set-option          set  
+run-shell           run  
+send-keys           send 
+
+
+
 # OPTIONS
 #------------------------------
+set-option              set     session option
 set-option -p           setp    pane option
 set-option -w           setw    window option
 set-option -s           sets    server option
 set-option -g           setg    global session or window option
 
 set-option <noting>               set session option
-set-option -s  or set -s          set server option
 set -g <option>                   set global server option
 set -w window-style bg=red        set window option: Applies to the window, i.e. all panes
-setw <option>                     set window option short ver.
-set -pt:.0 window-style bg=blue   set pane option. Applies to single pane
 setw -q @foo "abc123"             set user option: like a variable: 
 showw -v @foo                     show window option
 
@@ -225,15 +237,6 @@ tmux show-option -gw
 C-b q       pane index
 
 
-# Aliases
-# -------------------------
-bind    bind-key
-new     new-session
-setw    set-window-option
-set     set-option
-run     run-shell
-send    send-keys
-
 
 
 # bind-key
@@ -280,4 +283,13 @@ using dumb terminal settings.
 ----------------------------------------------------------------------
 export TERM=screen-256color
 
+
+
+TO LEARN
+----------------------------------------------------------------------
+Additionally, the new-window, new-session, split-window, respawn-window and respawn-pane commands allow shell-command to
+     be given as multiple arguments and executed directly (without ‘sh -c’).  This can avoid issues with shell quoting.  For
+     example:
+
+           $ tmux new-window vi /etc/passwd
 

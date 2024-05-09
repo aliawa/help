@@ -659,25 +659,17 @@ Tab /=    # align on =
 " -------------------------------------------------------------
 "                              vim setup
 " ------------------------------------------------------------
-# install pathogen
-mkdir -p ~/dotfiles/vim/autoload ~/dotfiles/vim/bundle
-cd ~/dotfiles
-curl -LSso ./vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
-
-# install plugins
-cd ./vim/bundle
-git submodule add https://github.com/mileszs/ack.vim ack.vim
-git submodule add https://github.com/chriskempson/base16-vim.git base16-vim
-git submodule add https://github.com/moll/vim-bbye.git bbye
-git submodule add  git://github.com/jpetrie/vim-counterpoint.git vim-counterpoint
-git submodule add https://github.com/itchyny/lightline.vim lightline.vim
-git submodule add https://github.com/mtth/scratch.vim scratch.vim
-git submodule add git://github.com/altercation/vim-colors-solarized.git vim-colors-solarized
-git submodule add git://github.com/tpope/vim-fugitive.git vim-fugitive
-git submodule add https://github.com/christoomey/vim-tmux-navigator.git vim-tmux
-git submodule status
-
-Other plugins:
+# Useful plugins
+tpope/vim-pathogen
+tpope/vim-fugitive
+mileszs/ack.vim
+chriskempson/base16-vim 
+moll/vim-bbye
+jpetrie/vim-counterpoint
+itchyny/lightline.vim
+mtth/scratch.vim
+altercation/vim-colors-solarized
+christoomey/vim-tmux-navigator
 txtfmt : to make arbitrary highlighting
 note   : note taking
 
@@ -1231,45 +1223,57 @@ another way to load initialization
 " -------------------------------------------------------------
 "                    FUGITIVE
 " -------------------------------------------------------------
-:Git -p                     force pagination for git output
 :Git blame [file]
 :Gedit HEAD~3:%             loads the current file as it existed 3 commits ago.
 :Gedit main:file2           load file2 from branch main
+
 :Gvdiffsplit!               diff with staged version of the file, !=keep current file in focus
 :Gvdiffsplit main           diff with branch main
-:Gread                      variant of git checkout -- filename, can be undone with u
+:only                       to close diff
+
+:Gread                      variant of "git checkout -- filename", can be undone with u
 :Gwrite                     git add with working tree file. git checkout with index file
 
-:G                          status page
-:G difftool -y              open all changed file in different tabs
+:G                          same as :Git, use g? for help on what to do here
+:G difftool -y [args]       open all changed file in different tabs, [args] is any git diff arg
 :tabo                       close all other tabs
 
 Things to do in :G
 =   toggle inline diff
 dv  Perform :Gvdiffsplit on the file under cursor
     if there is merge conflict, it opens 3 merge windows
-dq  Close all but one diff buffer, and :diffoff! the last one
+dq  Close all but one diff buffer, and :diffoff! the last one;
 d?  Show help
 g?  show help
 go  open file in vertical split
 )   jump to next file, huk, revision
 
-
+## MERGING ##
 In file with merge conflicts
 Gvdiffsplit!
 d2o     take change from left window
 d3o     take change from right window
 only    close diff
 
-Left window     File in the local/target branch (devel/equinox)
+Left window     File in the target branch, the branch taking-in the changes
 Middle window   The working file
-Right window    File in the incoming branch, the branch being merged (main)
+Right window    File in the incoming branch, the branch being merged (source of new changes)
 
 <<<<<<< HEAD
 what was in the local branch
 =======
 what happened after merging from remote branch
 >>>>>>>
+
+
+## Log ##
+0Gclog                      log of current file
+Git log --oneline
+Gllog                       location list
+
+:Git log --patch -- filename
+:vertical Git log -p -- %
+Gclog --name-only -- %:p
 
 
 " -------------------------------------------------------------

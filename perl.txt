@@ -2,19 +2,19 @@ Install cpan module
 ----------------------------------------------------------------------
 sudo cpanm enum
 
-
+One liners
+----------------------------------------------------------------------
 Ascii generator
-
 perl -e 'foreach $n (32..126){printf(" 0x%x %s\n", $n, chr($n))}'
 
+perl -e 'use Config; print "$Config{archlib}\n";'
 
-installing a2p (awk to perl)
-sudo apt install cpanminus
-cpanm App::a2p
 
 Perl blog:
 ----------------------------------------------------------------------
 There is an a2p script, you can download it like this.
+sudo apt install cpanminus
+cpanm App::a2p
 
 perl has a $_ variable, so you can write
 
@@ -302,4 +302,51 @@ given ($day_code)
     default { print 'Invalid day-code';}   
 }   
 
+
+
+Call C from perl
+----------------------------------------------------------------------
+1. Write your C library
+# example.c
+int sum (int a, int b) {
+    return a+b;
+}
+
+# example.h
+extern int sum(int a, int b);
+
+
+2. Make example.i and Makefile.PL as follows
+# example.i
+%module example
+%{
+#include "example.h"
+%}
+%include "example.h"
+
+# Makefile.PL
+use ExtUtils::MakeMaker;
+WriteMakefile(
+    "NAME"    => "example",                  # Name of package
+    "OBJECT"  => "example.o example_wrap.o"  # Object files
+);
+
+3. execute
+swig -perl example.i
+perl Makefile.PL
+
+
+4. Test
+# test.pl
+use lib qw(/home/aawais/swig);
+use example;
+$s = example::sum(10,20);
+print "$s\n";
+
+
+
+swig -perl example.i
+gcc -fpic -c example.c
+gcc -fpic -c example_wrap.c -I/usr/lib/x86_64-linux-gnu/perl/5.30/CORE -Doff64_t=__off64_t
+gcc -shared example.o example_wrap.o -o example.so
 
