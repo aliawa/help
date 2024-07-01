@@ -9,7 +9,7 @@ a   add new row
 d   delete current row
 gd  delete selected rows
 
-za  add new column
+za  insert new column on right
 ^   rename column
 i   Add auto incremented column to right
 zi  Add auto incremented column with given step value
@@ -17,6 +17,9 @@ zi  Add auto incremented column with given step value
 -   hide column
 gv  unide all columns
 _   expand column to fit text
+z+  show sum of column
+Shift C + d     delete column
+
 
 z= expr     Enter result of expression in cell
 g= date.today()  create colum with todays date
@@ -53,9 +56,8 @@ navigae to Category colum and press Shift-f
 
 
 select
-gs  all rows
-gu  unselect all
-gt  toggle selection
+s   t   u      select/toggle/unselect current row
+gs  gt  gu     select/toggle/unselect all rows
 
 Move column
 H   L   one left or right
