@@ -55,6 +55,9 @@ FTP on macos
         system preferences > Sharing > Remote Login
 
 
+Change Caps lock to Control
+----------------------------------------------------------------------
+Settings > Keyboard > Keyboard Shortcuts > Modifier Keys
 
 
 

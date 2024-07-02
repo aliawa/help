@@ -33,6 +33,9 @@ check if variable is defined. Note when script finishes the local vars are not f
 if !exists("s:myvar")
     let s:myvar = 0
 
+check current value of a variable:
+echo $g:solarized_termcolors
+
 
 
 Special Variables (pseudovariables)

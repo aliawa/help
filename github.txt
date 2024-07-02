@@ -12,4 +12,19 @@ if git push is not working
 eval "$(ssh-agent -s)"
 
 
+configure github for MacOS
+----------------------------------------------------------------------
+1. generate key: 
+    ssh-keygen -t ed25519 -C "aawais@paloaltonetworks.com"
+2. edit ~/.ssh/config
+    Host github.com
+        AddKeysToAgent yes
+        IdentityFile ~/.ssh/id_ed25519
+3. start ssh-agent in macos 
+    eval "$(ssh-agent -s)"
+4. Add your SSH private key to the ssh-agent 
+    ssh-add  ~/.ssh/id_ed25519
+5. Add new ssh public key to GitHub
+    pbcopy < ~/.ssh/id_ed25519.pub
+    Profile photo > settings > SSH and GPG keys
 

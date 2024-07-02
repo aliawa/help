@@ -149,27 +149,6 @@ cd blah && echo "success" || echo "fail"
 
 [ -z $A ] && echo "zero" || echo "non-zero"
 
-# Command line actions
-ctrl u      delete to begining of line
-ctrl k      delete to end of line
-ctrl p      backwards in history, same as up-arrow
-ctrl n      forward in history, same as down-arrow
-
-C-xC-e  edit-and-execute-command 
-    Invoke editor defined by $EDITOR on the current command line, and execute the result as shell commands.
-    Emacs mode: C-xC-e
-    In vi mode: ESC+v
-
-C-r    reverse-search-history incremental backward search in history
-C-s    forward-search-history incremental forward search in history
-C-o    operate-and-get-next 
-       Accept the current line for execution and fetch the next line relative to the current line from 
-       the history for editing.  Any argument is ignored. 
-
-C-d    delete under cursor
-C-_    undo last delete
-option b    back one word
-option f    forward one word
 
 # see all bash defines
 bash -v
@@ -589,5 +568,46 @@ complete -f -X '!*.txt' sample_command
 complete -F _UseGetOpt-2 -o filenames ./UseGetOpt-2.sh
 
 
+
+
+A technique to export env in bash programatically
+--------------------------------------------------
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+
+
+Readline Editing
+----------------------------------------------------------------------
+C-a Move to the start of the line.
+C-e Move to the end of the line.
+M-f Move forward a word.
+M-b Move backward a word.
+C-l Clear the screen, reprinting the current line at the top.
+
+C-k Kill the text from the current cursor position to the end of the line.
+M-d Kill from the cursor to the end of the current word, or if between words, to the end of the next word.
+C-w Kill from the cursor to the previous whitespace. 
+C-y Yank the most recently killed text back into the buffer at the cursor.
+
+ctrl u      delete to begining of line
+ctrl k      delete to end of line
+ctrl p      backwards in history, same as up-arrow
+ctrl n      forward in history, same as down-arrow
+
+C-xC-e  edit-and-execute-command 
+    Invoke editor defined by $EDITOR on the current command line, and execute the result as shell commands.
+    Emacs mode: C-xC-e
+    In vi mode: ESC+v
+
+C-r    reverse-search-history incremental backward search in history
+C-s    forward-search-history incremental forward search in history
+C-o    operate-and-get-next 
+       Accept the current line for execution and fetch the next line relative to the current line from 
+       the history for editing.  Any argument is ignored. 
+
+C-d    delete under cursor
+C-_    undo last delete
+option b    back one word
+option f    forward one word
 
 
