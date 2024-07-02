@@ -229,3 +229,15 @@ send "And I matched this portion: <$expect_out(0,string)>"
 log_user 1
 log_file exp.log
 
+
+
+Solution for ssh spawned by expect not resizing with window
+----------------------------------------------------------------------
+# Put this at the top of the script
+# trap sigwinch and pass it to the child we spawned
+trap {
+ set rows [stty rows]
+ set cols [stty columns]
+ stty rows $rows columns $cols < $spawn_out(slave,name)
+} WINCH
+
