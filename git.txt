@@ -200,10 +200,10 @@ git checkout `git rev-list -n 1 --before="2009-07-27 13:37" master`
 #                           Diff
 #---------------------------------------------------------
 
-# diff between working dir and staging area
-git diff
-git diff --numstat [remote-repo/branch]
-
+git diff                      # worktree and staged
+git diff --stat [branch]      # only show changed files| No. of lines changed| graph
+git diff --staged             # staged and last-commit
+#
 # diff between working dir and commited files
 # for last commit use HEAD
 git diff <hash> -- <filename>
@@ -211,20 +211,15 @@ git diff <hash> -- <filename>
 # diff between two historical versions
 git diff <hash1> <hash2> -- <filename>
 
-# diff between staged files and last commit
-git diff --staged
-
-# diff commited changes and remote. For example when
-# remote=origin and branch=master
-git diff --stat origin/master
-
 # Usefull options
---name-only  # show names only
---stat       # nice statistics
+--name-only   # show names of files that have changed
+--name-status # Modified/Added/Deleted | name of changed file
+--stat        # name of file changed | No. of lines changed | graph
 
 # diff with an earlier version of file and working directory
 git diff 2a076af:mand/b2buaInviteCore.cpp b2buaInviteCore.cpp
 
+==> see man git-diff > EXAMPLES
 
 
 #---------------------------------------------------------
@@ -315,7 +310,7 @@ git rebase -i HEAD~2
 #---------------------------------------------------------
 
 git tag -l                            # show all tags
-git tag -l v1.8.5*                       # list pattern
+git tag -l v1.8.5*                    # list pattern
 git tag -a v1.4 -m 'my version 1.4'   # create anotated
 git show v1.4                         # see tag data
 git tag v1.4-lw                       # create lightweigt
@@ -579,6 +574,7 @@ git switch -c foo -m <start-pt>         # same as above but also merge local cha
 git switch <branch-name>                # switch to branch
 git switch --discard-changes <branch>   # swith to branch and discard all local changes
 git switch --detach <commitish>         # where committish is tag name or commit number
+git switch -                            # come back to head from detached-head state
 
 
 

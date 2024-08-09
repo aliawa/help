@@ -88,7 +88,7 @@ variables need to have a sigil in front of them.
 scalar variable
     $foo = 12
 array variable
-    @foo = (1 2 3)
+    @foo = (1,2,3)
 hash variable
     %foo = ('Mon', 65, 'Tue', 68, 'Thu, 43)
 
@@ -176,7 +176,7 @@ loop
         print "$i\n";
     }
 
-    fo (@a) {
+    for (@a) {
         print $_ . "\n";
     }
 
@@ -349,4 +349,91 @@ swig -perl example.i
 gcc -fpic -c example.c
 gcc -fpic -c example_wrap.c -I/usr/lib/x86_64-linux-gnu/perl/5.30/CORE -Doff64_t=__off64_t
 gcc -shared example.o example_wrap.o -o example.so
+
+
+
+Online Documentation
+----------------------------------------------------------------------
+Perl functions by Category
+    https://perldoc.perl.org/functions
+SWIG and Perl5
+    https://www.swig.org/Doc1.3/Perl5.html
+
+
+pack / unpack
+----------------------------------------------------------------------
+my $t = pack( 'H2H2H2H2H2H2H2H2H2H2', 30,31,32,33,34,35,36,37,38,39 );
+this is compact form of above
+my $s = pack( 'H2' x 10, 30..39 );
+
+
+Special Variables
+----------------------------------------------------------------------
+perldoc: special variables 
+
+
+Read File
+----------------------------------------------------------------------
+my $filename = 'c:\temp\test.txt';
+open(FH, '<', $filename) or die $!;
+while(<FH>){
+   print $_;
+}
+close(FH);
+
+Entire file
+undef $/;
+data = <FH>;
+
+
+Dump
+----------------------------------------------------------------------
+use Data::HexDump;
+print HexDump($pkt);
+
+use Data::Dumper;
+warn Dumper $npe;
+
+
+Encode a UDP packet
+----------------------------------------------------------------------
+use NetPacket::UDP;
+use NetPacket::IP;
+use NetPacket::Ethernet qw(:strip);
+
+my $pkt; # <--- raw packet including ethernet header
+my $ip_obj = NetPacket::IP->decode(eth_strip($pkt));
+print("aw> $ip_obj->{src_ip} --> $ip_obj->{dest_ip} proto:$ip_obj->{proto}\n");
+my $udp_obj = NetPacket::UDP->decode($ip_obj->{data});
+print "aw> sport:$udp_obj->{src_port} dport:$udp_obj->{dest_port}\n";
+
+
+
+Manually craft an IP packet with ethernet header included
+----------------------------------------------------------------------
+
+# Ethernet Header data
+my $w1 = 0x45000000 | ($len + 20+8);
+my $w2 = 0;
+my $w3 = 0x0F110000;
+
+# IP Header data
+my $sa = Net::IPAddress::ip2num ($ip->{src_ip}) ;
+my $da = Net::IPAddress::ip2num ($ip->{dest_ip}) ;
+my @iphdr_struct = ($w1,$w2,$w3, $sa,$da);
+
+# UDP Header data
+my @udphdr_struct = ($udp->{src_port}, $udp->{dest_port}, $len+8, 0);
+
+# Assemble packet
+my $udp_pkt = pack("H12 H12 H4 N5 n4 A*",
+    $ether->{dest_mac},
+    $ether->{src_mac},
+    "0800",
+    @iphdr_struct,
+    @udphdr_struct,
+    $data);
+$len += (14+20+8);
+ctdc::pan_ctd_rcv_data($sess, $udp_pkt, \$len);
+
 

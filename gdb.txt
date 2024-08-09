@@ -176,3 +176,14 @@ tar -xzvf /tmp/code.tar.gz
 set directories
 set substitute-path
 
+
+TUI
+----------------------------------------------------------------------
+Command History
+Ctrl-P  last command
+Ctrl-n  next command
+Ctrl-f  forward one character
+Ctrl-b  backwards one character
+Ctrl-l  refresh
+
+

@@ -546,3 +546,14 @@ Wireless
 # Check for wireless interfaces
  iwconfig
 
+
+Create virtual network interfaces on Linux
+----------------------------------------------------------------------
+sudo modprobe dummy
+sudo ip link add eth0 type dummy
+ip link show eth0
+sudo ifconfig eth0 hw ether C8:D7:4A:4E:47:50
+sudo ip addr add 192.168.1.100/24 brd + dev eth0 label eth0:0
+sudo ip link set dev eth0 up
+
+

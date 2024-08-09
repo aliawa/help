@@ -185,6 +185,9 @@ $endif
 !:-                   # everything except the last argument
 
 
+## extract arguments from earlier command
+!-2:1, !-2:2 ...      # first, second ... from command before last
+
 ## resuse second argument of the command containiing keyword
 ls !<keyword>:2
 

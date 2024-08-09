@@ -256,14 +256,21 @@ switch esc and caps lock
 marks
 ---------
   mx   tells Vim to add a mark called x.
-  `x tells Vim to return to the line and column for mark x.
-  'x tells Vim to return to the beginning of the line where mark x is set.
-  `. moves the cursor to the line and column where the last edit was made.
-  '. moves the cursor to the line where the last edit was made.
-  '" moves the cursor to the last position of the cursor when you exited the
-     previous session.
+  `x return to the line and column for mark x.
+  'x return to the beginning of the line where mark x is set.
+
+  [     first character of changed / yanked / inserted text
+  ]     last character of changed / yanked / inserted text
+  <     start of last visual selection
+  >     end of last visual selection
+  '     position before last jump
+  "     where last exited
+  ^     where last insert was stopped
+  .     where last change was made
+
   :marks shows all marks set.
   :marks x shows the mark named x.
+
   :jumps shows the jumplist.
   Ctrl-o moves the cursor to the last jump.
   Ctrl-i moves the cursor to the previous jump.
@@ -1103,6 +1110,7 @@ example: run x.py and insert its output at cursor location
 :terminal           or :term, new terminal as a horizontal split
 :vert :terminal     terminal as vertical split
 Ctrl+w  N           terminal-normal-mode
+i                   back to regular terminal mode
 Ctrl+w  :           terminal-command-mode
 Ctrl+w  ""          paste
 Ctrl_w  "{reg}      paste register
@@ -1255,6 +1263,8 @@ d2o     take change from left window
 d3o     take change from right window
 only    close diff
 
+
+NOTE: The following is reversed for rebase which is the default for me
 Left window     File in the target branch, the branch taking-in the changes
 Middle window   The working file
 Right window    File in the incoming branch, the branch being merged (source of new changes)
@@ -1421,3 +1431,5 @@ endfunction
 Help
 ----------------------------------------------------------------------
 ins-special-keys        Special keys in insert mode
+vim-variable            :help vim-variable, predefined variables
+
