@@ -185,5 +185,6 @@ Ctrl-n  next command
 Ctrl-f  forward one character
 Ctrl-b  backwards one character
 Ctrl-l  refresh
+Ctrl-x Ctrl-a   Enter and Exit
 
 

@@ -30,8 +30,7 @@ convert short hash to full SHA-1 reference
 HEAD     : last commit
 HEAD^    : parent of HEAD. same as HEAD~
 HEAD~3   : The fourth last commit. same as HEAD^^^
-ORIG_HEAD: The position of HEAD just before "pull" or 
-           "merge"
+ORIG_HEAD: The position of HEAD just before "pull" or "merge"
 ^refC    : not refC: e.g. all commits reachable from refB
            but not from refC "git log ^refA refB"
 
@@ -154,7 +153,7 @@ git stash branch <new_branch_name> # create a branch from stashed changes, start
 git switch master                  # switch to branch master
 
 ### delete a branch
-git branch -d test_merge
+git branch -d test_br
 
 ### push
 # First time checkin of a branch (to remote with alias 'origin', check with 'git remote -v'
@@ -182,15 +181,6 @@ git merge dbr_aaw_em9459
 #---------------------------------------------------------
 #                           Pull
 #---------------------------------------------------------
-
-# Avoid merge master of ... commit message
-git pull --rebase
-
-# Overwrite local changes
-git fetch --all
-git reset --hard origin/master
-git pull
-
 
 # git checkout by date
 git checkout `git rev-list -n 1 --before="2009-07-27 13:37" master`
@@ -525,32 +515,39 @@ defaults to HEAD when no <commit> specified, in this case the HEAD will not move
 but the side-effect determined by <mode> will take place.
 
 mode can have one of five values
---soft  : just move the HEAD but leave index and working tree alone
-          This can for example be used to combine several commits.
-            git add -A; git commit -m "Start here."
-            git add -A; git commit -m "One"
-            git add -A; git commit -m "Two"
-            git add -A; git commit -m "Three"
-            git reset --soft HEAD~3
-            git add -A; git commit -m "All in one"
---hard  : move the HEAD and also change index and working tree to match, discarding local changes
---mixed : [default mode] move the HEAD, change index to match it but leave working dir unchanged
-        so if you do "git reset --mixed HEAD" or just "git reset" this will practically
-        unstage any staged changes.
-        this is similar to "git restore --staged ./*"
---merge and --keep : 
-        They are similar to hard in that they both update the index and working tree to match
-        the new HEAD. Differ as follows
-        1. If there are no staged changes then merge and keep are similar, they 
-        both keep the working tree changes intact.
-        2. If there are staged changes but no unstaged changes then keep will unstage the 
-        staged changes but merge will discard the staged changes
-        
-        see manual for more.
+--soft  
+    just move the HEAD but leave index and working tree alone
+    This can for example be used to combine several commits.
+    git add -A; git commit -m "Start here."
+    git add -A; git commit -m "One"
+    git add -A; git commit -m "Two"
+    git add -A; git commit -m "Three"
+    git reset --soft HEAD~3
+    git add -A; git commit -m "All in one"
+--hard
+    move the HEAD and also change index and working tree to match, discarding local changes
+--mixed 
+    [default mode] move the HEAD, change index to match it but leave working dir unchanged
+    so if you do "git reset --mixed HEAD" or just "git reset" this will practically
+    unstage any staged changes.
+    this is similar to "git restore --staged ./*"
+--merge and --keep
+    They are similar to hard in that they both update the index and working tree to match
+    the new HEAD. Differ as follows
+    1. If there are no staged changes then merge and keep are similar, they 
+    both keep the working tree changes intact.
+    2. If there are staged changes but no unstaged changes then keep will unstage the 
+    staged changes but merge will discard the staged changes
+
+Example:
+    # Overwrite local changes
+    git fetch --all
+    git reset --hard origin/master
+    git pull
 
 git restore .
 git restore /path/to/file/to/revert
-       discard unstaged changes. Do not touch index 
+    discard unstaged changes. Do not touch index 
 
 
 #---------------------------------------------------------
