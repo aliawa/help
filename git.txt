@@ -92,9 +92,6 @@ git remote set-url origin git@github.com:aliawa/dotfiles.git
 #                            Log
 #---------------------------------------------------------
 
-# log
-git log --oneline --abbrev-commit --all --graph --decorate --color
-
 git log -- Makefile             # see change log of one file:
 git log <branch>                # show commits going back from a specific branch
 git log .                       # show changes in current directory only
@@ -121,8 +118,9 @@ git log --grep='Bug.*11197'
 git log --author=aawais --grep=time_t --all-match
 
 --abbrev-commit     the commit id is shortened
--p                  show diff output
+--patch             show diff output (-p)
 --output=<file>     send log output to a file
+--oneline           shorthand for "--pretty=oneline --abbrev-commit"
 
 
 #---------------------------------------------------------
@@ -306,8 +304,8 @@ git show v1.4                         # see tag data
 git tag v1.4-lw                       # create lightweigt
 git tag -a v1.2 9fceb02               # tag a commit
 git push origin v1.5                  # sharing tag
-git checkout -b version2 v2.0.0       # checkout tag
-
+git checkout -b version2 v2.0.0       # start a new branch at tag v2.0.0
+git tag --contains 34b1413b3863       # which tag contains the given commit          
 
 
 
