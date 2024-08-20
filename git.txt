@@ -593,10 +593,10 @@ r1..r2      same as ^r1 r2
 #---------------------------------------------------------
 
 # create new worktree on existing branch
-git worktree add <path to folder> <existing branch name>   # path is usually like "../folder-name"
+git worktree add <path to folder> <commit-ish>   # path is usually like "../folder-name"
 
 # create new worktree with new branch
-git worktree add <path to folder> <existing-branch-name> -b <new-branch-name>
+git worktree add <path to folder> <commit-ish> -b <new-branch-name>
 
 # remove worktree
 git worktree remove <path to folder>
@@ -611,5 +611,38 @@ file <worktree dir returned by 'git worktree list' command>/.git
 
 # for panOS, run this after creating a new worktree
 git submodule update --init --recursive
+
+
+
+
+#---------------------------------------------------------
+#                 commit-ish / tree-ish
+#---------------------------------------------------------
+
+   Commit-ish/Tree-ish                     Examples
+ ------------------------   ---------------------------------------
+ 1. <sha1>                  dae86e1950b1277e545cee180551750029cfe735
+ 2. <describeOutput>        v1.7.4.2-679-g3bee7fb
+ 3. <refname>               master, heads/master, refs/heads/master
+ 4. <refname>@{<date>}      master@{yesterday}, HEAD@{5 minutes ago}
+ 5. <refname>@{<n>}         master@{1}
+ 6. @{<n>}                  @{1}
+ 7. @{-<n>}                 @{-1}
+ 8. <refname>@{upstream}    master@{upstream}, @{u}
+ 9. <rev>^                  HEAD^, v1.5.1^0
+10. <rev>~<n>               master~3
+11. <rev>^{<type>}          v0.99.8^{commit}
+12. <rev>^{}                v0.99.8^{}
+13. <rev>^{/<text>}         HEAD^{/fix nasty bug}
+14. :/<text>                :/fix nasty bug
+
+      Tree-ish only                        Examples
+ ------------------------   --------------------------------------
+15. <rev>:<path>            HEAD:README.txt, master:sub-directory/
+
+
+        Tree-ish?                          Examples
+ ------------------------   --------------------------------------
+16. :<n>:<path>             :0:README, :README
 
 
