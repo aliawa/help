@@ -1,7 +1,11 @@
-Bypass vimrc or load alternate vimrc
+vimrc
 ----------------------------------------------------------------------
-" vim -u NONE
-" vim -u ~/vimrc-alternate
+vim -u NONE
+vim -u ~/vimrc-alternate        alternate vimrc
+:source $MYVIMRC                reload vimrc file
+
+modeline
+special line at the begining and end of file with vim options for that file
 
 
 Get Info
@@ -545,7 +549,7 @@ Using quickfix commands
 
 copy to X11 clipboard
 ------------------------
-- On linux there are two system clipboards '*' and '+'. On windows and MacOSX the are both the same
+- On linux there are two system clipboards '*' and '+'. On windows and MacOSX the are both the same '*'
 - Vim must be compiled with "+clipboard". Check with :echo has('clipboard')
 
 "*yy:   copy to X11 mouse select clipboard so that it can pasted with middle mouse button
@@ -569,6 +573,7 @@ To use xclip if +clipboard is not available
 :'<,'>w !xclip                  # Linux
 :'<,'>w !pbcopy                 # MacOsx
 
+:help quotestar
 
 
 spelling
@@ -1108,17 +1113,17 @@ example: run x.py and insert its output at cursor location
 
 
 # -----------------------------------------------------------------
-# shell
+# shell, Terminal
 # -----------------------------------------------------------------
 :sh                 a shell inside vim
 :terminal           or :term, new terminal as a horizontal split
 :vert :terminal     terminal as vertical split
-Ctrl+w  N           terminal-normal-mode
-i                   back to regular terminal mode
-Ctrl+w  :           terminal-command-mode
-Ctrl+w  ""          paste
-Ctrl_w  "{reg}      paste register
-Ctrl+w  :display    see all available registers
+Ctrl-w  N           terminal-normal-mode
+i                   back to regular terminal mode from terminal-normal
+Ctrl-w  :           terminal-command-mode
+Ctrl-w  ""          paste
+Ctrl-w  "{reg}      paste register
+Ctrl-w  :display    see all available registers
 
 
 
@@ -1227,9 +1232,6 @@ DrawIt
 ----------------------------------------------------------------------
 <space>         toggle draw/erase
 
-
-modeline
-another way to load initialization
 
 
 " -------------------------------------------------------------
