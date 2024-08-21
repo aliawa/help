@@ -305,14 +305,16 @@ Folds
 :set foldmethod=indent
 ' then use zm and zr
 
-zo -- open one fold level under cursor
-zc -- close one fold level under cursor
+zo    open one fold level under cursor
+zc    close one fold level under cursor
 
-zr -- reduce folding by one level (open one more level)
-zm -- fold more by one level
+zr    reduce folding by one level (open one more level)
+zm    fold more by one level
 
-zR -- open all folds  (R for Reduce)
-zM -- close all folds
+zR    open all folds  (R for Reduce)
+zM    close all folds
+
+za    Toggle fold 
 
 
 :set foldmethod=marker
@@ -321,16 +323,19 @@ zM -- close all folds
 ' go in the block and zm
 
 :set foldmethod=manual
-' then go inside a {} block zfa}        'zf = create fold'
-' visual select and zf
+    then go inside a {} block zfa}        zf = create fold operater, a} = text object
+    visual select and zf
+
+
+:help usr_28
+:help options
+
+
 
 
 Visible screen actions
 ----------------------
 dL - Delete to end of page, in other words, everything visible.
-:qa
-
-jk
 
 
 
@@ -342,7 +347,6 @@ C - Often overlooked: chop off end of line and go into insert mode.
 c/"[enter] Great for modifying things in quotes:
 Much easier is to use :a! (or :i!), paste your text and then end the paste
     with a line containing just .
-:sp to split the screen er ctrl-w-w
 gF: Open the file under the cursor,
 
 (ctrl-v) -> visually select a column
@@ -366,10 +370,10 @@ q   stop recording
 @@  repeat previous @ command
 
 
-
 Or right in VIM - :E - would list files in :pwd.
 
 :sh works well when you don't know root, but have sudo privs.
+
 
 
 g
@@ -506,7 +510,6 @@ windows (^ means Ctrl )
 ^W>: increase width by 1
 ^W<: decrease width by 1
 ^w=: makes all panes the same size.
-^W_: maximize current window
 ^W<direction_key>: to move between windows; direction key relative horizontal or vertical split
 ^Wx: swap windows
 ^W_: Maximize height
@@ -514,14 +517,14 @@ windows (^ means Ctrl )
 
 :on[ly]                 fill screen with current buffer.
 :sp [filename]          opens the file in a new horizontal pane.
-:vsp [filename]         opens the file in a new vertical pane.
-:vsp | b <buffer name>  open named buffer in vertical split
-:vert sb 5              open buffer 5 in a vertical split
+:vs [filename]          opens the file in a new vertical pane.
+:vs | b <buffer name>   open named buffer in vertical split
+:vert sb 5              open buffer 5 in a vertical split (:vs #5) (sb = split and open buffer)
 
 
 
-edit-compile-edit cycle
------------------------
+edit-compile-edit cycle, (coding, development)
+----------------------------------------------------------------------
 Using quickfix commands
     cope:           open errors window (means: copen or cw)
     ccl:            close errors window
@@ -970,9 +973,10 @@ append, write selection to file
 " sort
 " -------------------------------------------------------------
 :sort u                 uniq
-:sort /[^,]*,/          sort on what comes after the pattern, here the first comma separated field
-:sort /\a\a\a/ r        sort on pattern. first 3 letters of line
-! reverse sort order
+:sort /[^,]*,/          sort on what comes after the pattern, here the second comma separated field
+:sort /\a\a\a/ r        sort on pattern. first 3 letters of line (because of r)
+:sort!                  reverse sort order
+:sort n                 sort on first decimal number in each line
 
 
 
