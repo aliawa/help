@@ -98,4 +98,11 @@ export ASAN_OPTIONS='abort_on_error=1'
 
 
 
+No color in output
+----------------------------------------------------------------------
+put in make file
+CFLAGS += "-fdiagnostics-color=never"
+
+export GCC_COLORS=
+
 

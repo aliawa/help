@@ -12,6 +12,7 @@ b main          set breakpoint at main
 b 21 if val==v1 break on line 21 when (val==v1)
 wa var1==var2   break when the expression (var1==var2) becomes true
 wa var1         break when var1 changes
+wa -l           watch the address of the expr. Works even when var is out of scope
 
 # Execute commands when a breakpoint is reached
 command 2       # specify commands for breakpoint 2       
@@ -26,6 +27,9 @@ dis[able]       # Disable all break points
 en[able] 3 4    # Enable breakpts num. 3 and 4
 clear foo.c:21  # Delete breakpoint at line nr 21 of foo.c
 del[ete] 1      # Delete breakpoint/watchpoint no. 1. If no args: delete all breakpoints
+
+dprintf pan_flow_mgmt.c:3598 "dport: %d\n", fp->key.u.s.ul4info.s.dport
+break pan_flow_mgmt.c:3598 if fp->key.u.s.ul4info.s.dport == 16384
 
 
 

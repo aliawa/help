@@ -59,12 +59,16 @@ Change Caps lock to Control
 ----------------------------------------------------------------------
 Settings > Keyboard > Keyboard Shortcuts > Modifier Keys
 
+
 Change function keys to function keys
 ----------------------------------------------------------------------
 Settings > Keyboard > Keyboard Shortcuts > 
     Function Keys > Use F1,F2, etc. keys as standard function keys
 
 
+Change Option key to Meta (Esc+)
+----------------------------------------------------------------------
+Iterm2 > Settings > Profiles > "Your profile" > Keys > Left Option Key = "Esc+"
 
 
 

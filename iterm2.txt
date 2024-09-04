@@ -8,9 +8,10 @@ Right Click -> "Move Session to split pane"
 
 
 
-# Use Right-option key as meta
+# Use Left-option key as meta
 # to use bash command line editing for example M-b shortcut to move back one word
-Settings > Profiles > Keys > "Left Option Key" = Esc+
+# Also "M" key in tmux
+Settings > Profiles > "Your profile" > Keys > Left Option Key = "Esc+"
 
 
 # Powerline font
@@ -22,4 +23,12 @@ Settings > General > Theme = Minimal
 Settings > General > Applications in terminal may access clipboard
 
 
+Adjust Split Panes
+Ctrl-Command-Arrow
+
+
+
+Minimum contrast
+----------------------------------------------------------------------
+Settings > Profiles > Colors > Minimum Contrast = 14
 

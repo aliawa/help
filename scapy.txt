@@ -166,6 +166,9 @@ a.results.summary()
 wrpcap("/tmp/write1.pcap",pkts)
 
 
+# sniff on one interface, forward it on another
+sniff (iface="trust_i", prn=lambda x:sendp(x, iface="untrust_i") )
+
 # -------------------------------
 # pcap 
 # -------------------------------

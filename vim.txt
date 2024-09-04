@@ -199,11 +199,8 @@ do                   " get Block
 :[range]diffput
 :w !diff %           " diff with saved version
 
-:e main.c            " diff current file to another file
-:vert diffsplit main.c~
-
-:e main.c            " diff current file to its patched file
-:vert diffpatch main.c.patch
+:vert diffsplit main.c          " diff current file to another file
+:vert diffpatch main.c.patch    " diff current file to its patched file
 
 :set noscrollbind    " Tmp turn off scroll bind
 :diffthis            " Make the current window part of the diff windows.
@@ -1130,10 +1127,9 @@ Ctrl-w  :display    see all available registers
 " -------------------------------------------------------------
 " Explore
 " -------------------------------------------------------------
-Lexplore
+Lexplore        Left explore, toggle
 enter           open file in preview window
 -               up directory
-qb              List bookmarked directories (query bookmark)
 qf              quick info about the file
 mf              mark file / Unmark file
 :MF *c          mark a group of files
@@ -1161,6 +1157,14 @@ mm
 :Rexplore       return to explorer from editing
 
 p               when using Vexplore, Sexplore etc, open file in preview window
+
+BOOKMARKS       -------
+mb              bookmark currently browsed dir
+{cnt}gb         goto bookmark nr {cnt}
+qb              List bookmarked directories (query bookmark)
+
+
+
 
 
 " -------------------------------------------------------------
@@ -1291,6 +1295,22 @@ Gllog                       location list
 :vertical Git log -p -- %
 Gclog --name-only -- %:p
 
+:Gblame [flags] 
+     g? show this help
+     A resize to end of author column
+     C resize to end of commit column
+     D resize to end of date/time column
+     q close blame and return to blamed window
+     gq q, then |:Gedit| to return to work tree version
+     <CR> q, then open commit
+     o open commit in horizontal split
+     O open commit in new tab
+     - reblame at commit
+     ~ reblame at [count]th first grandparent
+     P reblame at [count]th parent (like HEAD^[count])
+
+
+
 
 " -------------------------------------------------------------
 "                    TAGBAR
@@ -1406,6 +1426,8 @@ grep the word
 Paths
 expand('%')                                 " relative path of current file
 expand('%:p')                               " absolute path of current file
+expand('%:p:h')                             " directory of current file
+
 fnamemodify('foo.txt', ':p')                " absolute path of foo.txt
 globpath('.', '*')                          " all files and dirs in current dir
 split(globpath('.', '*.txt'), '\n')         " all txt files as list
