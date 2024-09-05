@@ -8,6 +8,17 @@ each pane is a separate terminal
 A client displays the session
 
 
+Help C-b ?
+----------------------------------------------------------------------
+-T means Key-table
+
+        C-b                key           the command that will be executed
+---------------------      ---           ---------------------------------
+bind-key    -T prefix       9                 select-window -t :=9
+
+
+
+
 # SESSIONS 
 # ---------------------- 
 tmux new -s mysess                  # start new 
@@ -35,15 +46,13 @@ C-b ,           rename window
 C-b "                       # split horizontal
 C-b %                       # split vertical
 C-b z                       # toggles zoom pane
-C-b Alt-2                   # make all panes same size (Alt-1 for verticle)
 C-b ;                       # previously active pane
 C-b o                       # next pane
 C-b x                       # delete pane
-C-b Alt- Right/Down         # Resize
 C-b : resize-pane -U 20     # Resize the current pane up by 20 cells
 C-b : resize-pane -D 20     # Resize the current pane down by 20 cells
 C-b }                       # Swap panes
-Control + up,down,righ,left # Resize pane in steps of 1 cell
+C-b M <up,down,righ,left>   # Resize pane in steps of 1 cell (M=meta or Option in macos)
 
 :swap-window -s 3 -t 1          swap windows 3 and 1
 :swap-window -t 0               swap current window with the top window
@@ -55,7 +64,10 @@ join-pane -s 2 -t 1
 Make current pane its own window (break pane)
 C-b !
 
-
+Swith to predefined layout, M1 is Meta + 1 or Option + 1 in macos
+This requires configureing Options key to Esc+ in iterm2 profile 
+C-b M1    
+C-b M2    
 
 
 # Refresh after config change
@@ -249,6 +261,8 @@ bind-key -T root            # keys invoked without the prefix key
 bind-key -T copy-mode-vi    # keys invoked in vi copy mode
 
 
+
+
 Get info
 # -------------------------
 get pane id of current pane
@@ -259,6 +273,8 @@ bash_var=$(tmux split-window -P -F "#{pane_id}")
 
 print window name on console
 tmux display-message -p '#{window_name}
+
+
 
 
 A script for inspiration
