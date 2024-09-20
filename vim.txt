@@ -85,26 +85,21 @@ Escape in regular expression
 :vimgrep term **/*.c* **/*.h   "grep in current and sub-directories
 :vimgrep 'pattern' %:p:h/*     "grep in directory of current file
 :!grep 'pattern' %:p:h/*       "grep in directory of current file
-
-
-s/\d\+/\=submatch(0) + 1/      Alter sequence number in a numbered list
-\d\+                           search a digit sequence
-\=submatch(0) + 1              get the matched pattern and add 1 to it.
-\=line('.')%10
-:s@\d@\=line('.')%10@          divide is a little complicated
-\=submatch(0) + 1              get the matched pattern and add 1 to it.
-\=<expression>                 Replace with the result of the expression
-:s/pat/\=expand("%:p")/        The expression can be quiet complex for example:
-                                  \="\n  " . substitute(submatch(1), "}", "\n}", "")/g
-                                  \=@a  - replace with content of register 'a'
 \_s                            "space including new line
 
+using "\=" to evaluate expressions in substitute string (\=<expression>)
+s/\d\+/\=submatch(0) + 1/      Alter sequence number in a numbered list
+    \d\+                       match a digit sequence
+    \=submatch(0) + 1          get the matched pattern and add 1 to it.
+:s@\d@\=line('.')%10@   
+:s/pat/\=expand("%:p")/       
+The expression can be quiet complex for example:
+    \="\n  " . substitute(submatch(1), "}", "\n}", "")/g
+    \=@a  - replace with content of register 'a'
 
-:.,$ g/FINDME/p                "search from cursor to end of file
-:'<,'>s/\%Vabc/efg/            "search and replace in visual selection
-
-/\%V
-search inside the visually selected area :'<,'>s/\%V(/#/g
+Range
+:.,$ g/FINDME/p            "search from cursor to end of file
+:%s/\%Vabc/efg/            "search and replace in visual selection
 
 
 
@@ -284,6 +279,10 @@ marks
 
   :'s,. w ~/tmp/file.txt
     write text between mark s and current cursor position to ~/tmp/file.txt
+
+  ='[
+  justify just pasted text
+
 
 
 visual selection
@@ -498,10 +497,20 @@ change color of numbers column
 Good colorscheme for diff
 1. morning
 
+Incantation from stackoverflow to fix the colors in vim :term
+let g:terminal_ansi_colors = [
+  \'#282828', '#CC241D', '#98971A', '#D79921',
+  \'#458588', '#B16286', '#689D6A', '#D65D0E',
+  \'#fb4934', '#b8bb26', '#fabd2f', '#83a598',
+  \'#d3869b', '#8ec07c', '#fe8019', '#FBF1C7' ]
+
+highlight Terminal guibg='#282828'
+highlight Terminal guifg='#ebdbb2'
+
 
 
 windows (^ means Ctrl )
--------
+----------------------------------------------------------------------
 ^Ws: horizontal split
 ^Wn: horizontal split with new file
 ^Wv: vertical split
@@ -540,6 +549,10 @@ Using quickfix commands
     cc [nr]        # Jump to [nr]
     cr             # Jump to first error (rewind)
     clas           # Jump to last error
+
+Read quickfix list from a file at startup
+    vim -q err.txt
+    vim -q <(cmd)
 
 
 
@@ -746,7 +759,7 @@ vim -S ~/.vim_sessions/mysession.vim
 "                          Register
 " -------------------------------------------------------------
 " copy from register to the command line
-Ctrl-r Ctrl-w                 insert the word under cursor in command line,
+Ctrl-r Ctrl-w           insert the word under cursor in command line,
 Ctrl-r {reg}            insert content of register. If text has control characters this may have unexpected effect.
 Ctrl-r Ctrl-r {reg}     don't interpret control characters in register when pasting to cmd line
 
@@ -754,25 +767,40 @@ Ctrl-r Ctrl-r {reg}     don't interpret control characters in register when past
 :reg              " show content of all registers
 :reg a b c        " show content of registers a,b and c
 
-Manually change the value of a register
+
+
+Get the value of a register "@"
 :let @/="the"
+:let @+=@%          copy name of current file to clipboard
+
 
 ".  dot register stores the last inserted text, you can use it to insert the
     same text again
 "=
     evaluate an expression and insert the result at cursor
-    INSERT mode: CTRL-R =<expression> <CR>
+    INSERT mode: Ctrl-r =<expression> <CR>
     NORMAL mode: "=<expression> p
 
+
+Tricks
+1. Replace a text with another copied from elsewhere
+ciw <C-r> 0
+
+Get the value of register 'r':
+ in normal mode  "r
+ in command mode @r
+ in insert mode  <C-r>r
 
 
 " -------------------------------------------------------------
 "                          Paths
 " -------------------------------------------------------------
-%  relative path of current file
-   %:t      name of current file
-   %:p:h    directory of current file
-
+:echo expand('%')
+  %      relative path of current file
+  %:p    absolute path of current file
+  %:p:h  absolute directory of current file
+  %:h    head, last component and separator removed (ie. path of file without the file name)
+  %:t    tail, last component of the path (ie. just the file name)
 
 
 " -------------------------------------------------------------
@@ -1234,12 +1262,13 @@ J                   down within same col
 
 DrawIt
 ----------------------------------------------------------------------
-<space>         toggle draw/erase
+<space>                         toggle draw/erase
+Shift + <up/down/right/left>    move without drawing
 
 
 
 " -------------------------------------------------------------
-"                    FUGITIVE
+"                    Fugitive
 " -------------------------------------------------------------
 :Git blame [file]
 :Gedit HEAD~3:%             loads the current file as it existed 3 commits ago.
@@ -1287,9 +1316,10 @@ what happened after merging from remote branch
 
 
 ## Log ##
-0Gclog                      log of current file
+0Gclog                      log of current file (0 means all lines of current file)
 Git log --oneline
 Gllog                       location list
+    move with lne, lp
 
 :Git log --patch -- filename
 :vertical Git log -p -- %
@@ -1300,8 +1330,7 @@ Gclog --name-only -- %:p
      A resize to end of author column
      C resize to end of commit column
      D resize to end of date/time column
-     q close blame and return to blamed window
-     gq q, then |:Gedit| to return to work tree version
+     gq  close blame, then |:Gedit| to return to work tree version
      <CR> q, then open commit
      o open commit in horizontal split
      O open commit in new tab
@@ -1461,3 +1490,13 @@ Help
 ins-special-keys        Special keys in insert mode
 vim-variable            :help vim-variable, predefined variables
 
+
+
+:set signcolumn=number
+
+
+FZF
+----------------------------------------------------------------------
+Ctrl-t  open in new tab
+Ctrl-x  open in new split
+Ctrl-v  open in new vertical-split

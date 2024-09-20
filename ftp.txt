@@ -13,3 +13,25 @@ FTP:
   * new PORT command from client
   * control connection is closed.
 
+                        Server
+Client                  Port 21
+         |                 |   
+         |                 |
+         |                 |
+         |      PORT       |
+         | --------------> |
+         |                 |
+         |                 |
+         |                 |
+         |                 |
+         |                 |
+         |                 |
+         |                 |
+         |                 |
+         |                 |
+         |                 |
+         |                 |
+         |                 |
+         |                 |
+         |                 |
+         |                 |

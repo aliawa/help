@@ -174,4 +174,8 @@ CANCEL: same branch ID as the request being canceled
 ACK for a non-2xx: same branch ID as the INVITE.
 
 
+Content-Length
+----------------------------------------------------------------------
+The size of the message-body does not include the CRLF separating
+header fields and body.
 

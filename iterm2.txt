@@ -32,3 +32,9 @@ Minimum contrast
 ----------------------------------------------------------------------
 Settings > Profiles > Colors > Minimum Contrast = 14
 
+
+Single click where you want to start a selection and Shift-Click where you want it to end to select text without dragging
+
+
+Edit > Selection Respects Soft Boundaries
+to recognize split pane dividers in programs like vi, emacs, and tmux so you can select multiple lines of text

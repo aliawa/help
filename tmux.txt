@@ -39,6 +39,14 @@ C-b 1           swith to window 1
 C-b w           choose from a list
 C-b &           close window
 C-b ,           rename window
+C-b l           last window
+
+:swap-window -s 3 -t 1          swap windows 3 and 1
+:swap-window -t 0               swap current window with the top window
+C-b .RT                         move current window to session "RT"
+
+Turn window into a pane (make window 2 a pane of window 1)
+join-pane -s 2 -t 1
 
 
 # PANES
@@ -54,13 +62,6 @@ C-b : resize-pane -D 20     # Resize the current pane down by 20 cells
 C-b }                       # Swap panes
 C-b M <up,down,righ,left>   # Resize pane in steps of 1 cell (M=meta or Option in macos)
 
-:swap-window -s 3 -t 1          swap windows 3 and 1
-:swap-window -t 0               swap current window with the top window
-C-b .RT                         move current window to session "RT"
-
-Turn window into a pane (make window 2 a pane of window 1)
-join-pane -s 2 -t 1
-
 Make current pane its own window (break pane)
 C-b !
 
@@ -68,6 +69,10 @@ Swith to predefined layout, M1 is Meta + 1 or Option + 1 in macos
 This requires configureing Options key to Esc+ in iterm2 profile 
 C-b M1    
 C-b M2    
+
+swap-pane -s {left}
+swap current pane with the left most
+(by default the target pane '-t' option is the current pane)  pane.
 
 
 # Refresh after config change
@@ -136,25 +141,33 @@ send-keys           send
 #------------------------------
 set-option              set     session option
 set-option -p           setp    pane option
-set-option -w           setw    window option
+set-option -w           setw    window option   (ie apply to all panes inside this window)
 set-option -s           sets    server option
 set-option -g           setg    global session or window option
 
-set-option <noting>               set session option
 set -g <option>                   set global server option
-set -w window-style bg=red        set window option: Applies to the window, i.e. all panes
+set -w window-style bg=red        set window option
 setw -q @foo "abc123"             set user option: like a variable: 
 showw -v @foo                     show window option
 
 show-option -s [option]           show server option
-show-option -w [option]           show window option
 show-option -gw [option]          show global window option
+
 set-option -wu <option>           unset window option
 set-option -pu <option>           unset pane option
 set-option -su <option>           unset server option
 
+Interesting server options:
+Interesting session options:
+    renumber-windows on
+Interesting window options:
+Interesting pane options:
+
+
 Command prompt
 command-prompt -p "text to display" "command to execute '%%'"
+
+
 
 
 # CLIPBOARD
@@ -288,7 +301,7 @@ tmux resize-pane -D 15
 tmux -2 attach-session -d
 
 
-renumber-windows os
+
 
 
 

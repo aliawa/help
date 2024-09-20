@@ -26,8 +26,7 @@ while (<>) {
 }
 
 
-Parenthesis are optional for functions but I am not goint to do 
-that
+Parenthesis are optional for functions 
 print("Hello, world\n");
 print "Hello, world\n";
 
@@ -129,7 +128,7 @@ my %weekly_temperature = (
 # access value
 my $monday_temp = $weekly_temperature{monday};
 
-#slice
+# slice
 my ($tuesday_temp, $friday_temp) = @weekly_temperature{('tuesday', 'friday')};
 
 # access all values
@@ -181,11 +180,11 @@ loop
     }
 
 operations
-    push(@array, element)      # add element or elements into the end of the array
-    $popped = pop(@array)      # delete and return the last element of the array
-    $shifted = shift(@array)   # delete and return the first element of the array
-    unshift(@array)            # add element or elements into the beginning of the array
-    scalar (@array)            # length
+    push(@array, element)        # add element or elements into the end of the array
+    $popped = pop(@array)        # delete and return the last element of the array
+    $shifted = shift(@array)     # delete and return the first element of the array
+    unshift(@array, "new_entry") # add element or elements into the beginning of the array
+    scalar (@array)              # length
 
 
 
@@ -435,5 +434,27 @@ my $udp_pkt = pack("H12 H12 H4 N5 n4 A*",
     $data);
 $len += (14+20+8);
 ctdc::pan_ctd_rcv_data($sess, $udp_pkt, \$len);
+
+
+
+
+C and perl
+----------------------------------------------------------------------
+EXTERN.h is located at /usr/lib/x86_64-linux-gnu/perl/5.30/CORE
+
+cd /usr/lib/x86_64-linux-gnu
+ln -s libperl.so.5.30.0 libperl.so
+
+
+
+
+Command Line
+----------------------------------------------------------------------
+use strict;
+use warnings;
+use Data::Dumper qw(Dumper);
+ 
+print Dumper \@ARGV;  # if you leave out the "\" it will print each array element as a
+                      # separate variable
 
 
