@@ -72,11 +72,15 @@ C-b M2
 
 swap-pane -s {left}
 swap current pane with the left most
-(by default the target pane '-t' option is the current pane)  pane.
+(by default the target pane '-t' option is the current pane) 
 
 
+
+Config
+----------------------------------------------------------------------
 # Refresh after config change
 tmux source-file .tmux.conf
+
 
 
 # COPY PASTE
@@ -299,7 +303,6 @@ tmux -2 new-session -d -s "$SESSION" -x "$2" -y "$(($1 - 1))"
 tmux split-window -v
 tmux resize-pane -D 15
 tmux -2 attach-session -d
-
 
 
 

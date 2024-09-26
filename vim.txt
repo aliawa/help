@@ -404,9 +404,20 @@ set cursorline
 hi cursorcolumn ctermbg=red
 
 
-help
+
+man page viewer
 ----------------------------------------------------------------------
 To view man page of a word under curser, type K(shift+K)
+
+# Use the man.vim plugin
+:runtime! ftplugin/man.vim
+:Man csh
+:Man 3 echo
+
+# Make shift-k use vim window
+set keywordprg=:Man
+shift + k
+
 
 
 Alternative Esc
@@ -1018,6 +1029,7 @@ normal mode: "=1+3<Enter>p
 
 convert hex to dec.
 echo 0xabc
+:%s/\<0x[0-9a-f]\+\>/\=str2nr(submatch(0), 16)/g
 
 add, subract, multiply
 echo 0x10 + 3
@@ -1125,11 +1137,6 @@ s/addr-\(..\)\(..\)\(..\)\(..\)/\=printf("%d.%d.%d.%d",
 " Open remote file with scp
 :e scp://remoteuser@server.tld//absolute/path/to/document
 
-" Find a man page
-:runtime! ftplugin/man.vim
-:Man csh
-:Man 3 echo
-shift + k
 
 insert command <c-r>=
 example: run x.py and insert its output at cursor location
@@ -1500,3 +1507,10 @@ FZF
 Ctrl-t  open in new tab
 Ctrl-x  open in new split
 Ctrl-v  open in new vertical-split
+
+
+Note
+----------------------------------------------------------------------
+go
+ge gE
+
