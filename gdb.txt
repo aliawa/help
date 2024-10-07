@@ -28,8 +28,17 @@ en[able] 3 4    # Enable breakpts num. 3 and 4
 clear foo.c:21  # Delete breakpoint at line nr 21 of foo.c
 del[ete] 1      # Delete breakpoint/watchpoint no. 1. If no args: delete all breakpoints
 
+# Formated print
 dprintf pan_flow_mgmt.c:3598 "dport: %d\n", fp->key.u.s.ul4info.s.dport
+
+# break on if-condition (conditional breakpoint)
 break pan_flow_mgmt.c:3598 if fp->key.u.s.ul4info.s.dport == 16384
+
+# add condition for breakpoint nr 3
+condition 3 var==1
+
+# remove condition on breakpoint nr 3
+condition 3
 
 
 
@@ -51,9 +60,9 @@ shell make              compile
 # ------------
 bt                      # show frame stack
 frame                   # show info about current frame
-fram frame-number       # chanage frame to operate on
+frame <frame-number>    # chanage frame to operate on
 up, down                # move up down the stack
-thread thread-number    # change thread to operate on
+thread <thread-number>  # change thread to operate on
 
 
 # Examin Data:
@@ -128,16 +137,7 @@ show environment [varname]
 set environment varname [=value]
 set solib-search-path ~/project/host_tt/snapgear/lib/libnl-1.1/lib
 
-# Source path
-# --------------------------------------
-# attach
-gdb pan_task <pid>
-set substitute-path /opt/build/panos-devel/slave/main-vm /home/aawais/pan
 
-
-# GUI 
-# --------------------------------------
-Ctrl-x Ctrl a
 
 
 # Examine core file
@@ -176,12 +176,17 @@ On the FW device:
 cd /
 tar -xzvf /tmp/code.tar.gz
 
+# Source path
+gdb pan_task <pid>  # attach
+set substitute-path /opt/build/panos-devel/slave/main-vm /home/aawais/pan
+
+
 - Other options
 set directories
 set substitute-path
 
 
-TUI
+TUI GUI
 ----------------------------------------------------------------------
 Command History
 Ctrl-P  last command
@@ -191,4 +196,13 @@ Ctrl-b  backwards one character
 Ctrl-l  refresh
 Ctrl-x Ctrl-a   Enter and Exit
 
+
+GDB init file
+----------------------------------------------------------------------
+1) Place in home directory, to enable current-dir init file
+    ~/.gdbinit
+    set auto-load safepath /
+
+2)  ~/project
+    break function-name
 

@@ -134,6 +134,9 @@ Finding all messages related to a call
     h245.OpenLogicalChannel_element
     h225.fastStart > 1
     h225.facility_element
+    h245.h2250LogicalChannelAckParameters_element || h245.h2250LogicalChannelParameters_element
+
+
 2. Find the h.225.0 > callIdentifier > guid 
     h225.guid == 00000000-0000-1000-0000-00000ab5188e
 

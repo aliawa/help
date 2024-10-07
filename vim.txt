@@ -812,6 +812,14 @@ Get the value of register 'r':
   %:p:h  absolute directory of current file
   %:h    head, last component and separator removed (ie. path of file without the file name)
   %:t    tail, last component of the path (ie. just the file name)
+  :r  remove extension (abc.txt --> abc)
+
+  fnamemodify('foo.txt', ':p')                " absolute path of foo.txt
+  globpath('.', '*')                          " all files and dirs in current dir
+  split(globpath('.', '*.txt'), '\n')         " all txt files as list
+
+
+
 
 
 " -------------------------------------------------------------
@@ -1072,15 +1080,6 @@ git pull origin master
 
 
 
-
-" -------------------------------------------------------------
-" Special characters in ed commands
-" -------------------------------------------------------------
-%   current filename
-##  current argument list
-:p  convert to absolute path
-:h  head, last component and separator removed
-:t  tail, last component of the name
 
 
 
@@ -1459,14 +1458,6 @@ grep the word
 :nnoremap <leader>g :silent execute "grep! -R " .  shellescape(expand("<cWORD>")) . " ."<cr>:copen<cr>
 
 
-Paths
-expand('%')                                 " relative path of current file
-expand('%:p')                               " absolute path of current file
-expand('%:p:h')                             " directory of current file
-
-fnamemodify('foo.txt', ':p')                " absolute path of foo.txt
-globpath('.', '*')                          " all files and dirs in current dir
-split(globpath('.', '*.txt'), '\n')         " all txt files as list
 
 
 Examples

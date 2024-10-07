@@ -374,6 +374,28 @@ do
     esac
 done
 
+## Manual parsing
+local usage=(
+        "optparsing_demo [-h|--help]"
+        "optparsing_demo [-v|--verbose] [-f|--filename=<file>] [<message...>]"
+        )
+opterr() { echo >&2 "optparsing_demo: Unknown option '$1'" }
+
+while (( $# )); do
+    case $1 in
+      --)                 shift; positional+=("${@[@]}"); break  ;;
+      -h|--help)          printf "%s\n" $usage && return         ;;
+      -v|--verbose)       flag_verbose=true                      ;;
+      -f|--filename)      shift; filename=$1                     ;;
+      -f=*|--filename=*)  filename="${1#*=}"                     ;;
+      -*)                 opterr $1 && return 2                  ;;
+      *)                  positional+=("${@[@]}"); break         ;;
+    esac
+    shift
+  done
+
+
+
 # the last argument should be the directory
 if [ "$OPTIND" -gt "$#" ]
 then
