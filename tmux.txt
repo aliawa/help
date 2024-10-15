@@ -325,3 +325,6 @@ Additionally, the new-window, new-session, split-window, respawn-window and resp
 
            $ tmux new-window vi /etc/passwd
 
+MACOS example configuration
+----------------------------------------------------------------------
+/opt/homebrew/opt/tmux/share/tmux

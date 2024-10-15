@@ -374,7 +374,7 @@ do
     esac
 done
 
-## Manual parsing
+## Manual parsing (zsh)
 local usage=(
         "optparsing_demo [-h|--help]"
         "optparsing_demo [-v|--verbose] [-f|--filename=<file>] [<message...>]"

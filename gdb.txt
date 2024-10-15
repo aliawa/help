@@ -69,6 +69,8 @@ thread <thread-number>  # change thread to operate on
 # ------------
 inf locals              # print all local variables
 info macro expression   # show macro definition (define)
+info args
+
 
 # Print values of expressions.
 p $register
@@ -92,7 +94,7 @@ x/<count><fmt letter><size letter>
 fmt letters:  o,x,d,u,t,f,a,i,c,s,z
 size letters: b,h,w,g
 
-ptype a                 # print definition of struct
+ptype a                 # print definition of struct/enum
 print *(structPointr)   # print struct
 set print pretty on     # print structs in readable form
 
