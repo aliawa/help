@@ -137,10 +137,10 @@ L     # bottom of screen
 30|   # Jump to column 30
 `.    # move to last edit position
 
-^E - scroll the view-port down
-^Y - scroll the view-port up
-^F - scroll down one page
-^B - scroll one page up
+Ctrl-E - scroll the view-port down
+Ctrl-Y - scroll the view-port up
+Ctrl-F - scroll down one page
+Ctrl-B - scroll one page up
 
 Fast text Movement
 ------------------
@@ -167,11 +167,11 @@ Auto Completion
 
 Ctrl-p         : complete from previous words: search backwards
 Ctrl-n         : complete from following words: search forwards
-Ctrl x  Ctrl f : complete filename.
-Ctrl x  Ctrl ] : similar to Ctrl n  and Ctrl p but completes only tags.
-Ctrl x  Ctrl l : complete entire line. Context aware, gets next line when
+Ctrl-x  Ctrl-f : complete filename.
+Ctrl-x  Ctrl-] : similar to Ctrl-n  and Ctrl-p but completes only tags.
+Ctrl-x  Ctrl-l : complete entire line. Context aware, gets next line when
                  pressed again.
-Ctrl x  Ctrl o : Programming language specific completion.
+Ctrl-x  Ctrl-o : Programming language specific completion.
 
 
 :set dictionary=file
@@ -201,8 +201,8 @@ do                   " get Block
 :diffthis            " Make the current window part of the diff windows.
 :diffoff             " turn off diff mode
 :diffoff!            " switch off diff in all windows
-Ctrl w =             " make windows same size
-Ctrl w |             " make windows maximum size
+Ctrl-w =             " make windows same size
+Ctrl-w |             " make windows maximum size
 
 
 Manually delete multiple lines
@@ -226,17 +226,37 @@ Source code
 gd : find local declaration
 gD : find global declaration
 gf : file under cursor, Ctrl-O to come back.
+
 #include "f CTRL−x CTRL−f"
 :set dictionary=file
 Ctrl-x Ctrl-k : complete from dictionary
-[[      go to start of function     previous '{' in the first column
-][      go to end of function       next '}' in the first column
+
 :help 29.3
+[[  go to start of prev function     previous '{' in the first column
+]]  go to start of next function     next '{' in the first column
 
-[{ jump back to "{" at the start of current block
-gd jump from use of variable to its local declaration.
+[]  go to end of prev function       next '}' in the first column
+][  go to end of this or next function 
+
+[{  jump back to "{" at the start of current block
+]}  jump forward to "}" at the end of current block
+
+[#  When you are somewhere inside a "#if" - "#endif", jump to start of it
+]#  To jump forward to the next "#else" or "#endif" 
+
+[D  macro definition
 
 
+Somethig to test out TODO
+:set makeprg=make\ CFLAGS+="-fdiagnostics-color=never" 
+:set makeprg=make\ GCC_COLORS=
+
+=a{     reindent current code block, = is the operator and a{ is the text object
+>i{     adds one indent to the current block of lines, inside {}
+gq]/    Format to end of comment, gq is the operator to format text, ]/ is the motion 
+
+Ctrl-T  add indent to current line in insert mode
+Ctrl-D  remove indent form current line in insert mode
 
 
 
@@ -289,7 +309,7 @@ visual selection
 ----------------
 v       selection mode
 V       select by line
-Ctrl V  block select
+Ctrl-V  block select
 gv      select previous visual area
 
 
@@ -392,8 +412,8 @@ nnoremap <Down> gj
 nnoremap <Up> gk
 vnoremap <Down> gj
 vnoremap <Up> gk
-inoremap <Down> <C-o>gj
-inoremap <Up> <C-o>gk
+inoremap <Down> <Ctrl-o>gj
+inoremap <Up> <Ctrl-o>gk
 
 visuals
 ----------------------------------------------------------------------
@@ -422,8 +442,8 @@ shift + k
 
 Alternative Esc
 --------------------
-Ctrl-C instead of Esc for switching from insert mode into command mode
-Ctrl-[, which does exactly the same as Escape, and Ctrl-C
+Ctrl-c instead of Esc for switching from insert mode into command mode
+Ctrl-[ which does exactly the same as Escape, and Ctrl-c
 
 
 
@@ -443,7 +463,7 @@ Tags
 
     Ctrl-] on any function name, structure name/field, etc. to jump to the declaration point
     Ctrl-T to come back
-    Ctrl-], Ctrl-T  Auto completion for the tag name
+    Ctrl-] Ctrl-t  Auto completion for the tag name
     :ta   jump to tag
 
 
@@ -522,19 +542,19 @@ highlight Terminal guifg='#ebdbb2'
 
 windows (^ means Ctrl )
 ----------------------------------------------------------------------
-^Ws: horizontal split
-^Wn: horizontal split with new file
-^Wv: vertical split
-^ww: changes between the panes.
-^w+: increase height by 1
-^w-: decrease height by 1
-^W>: increase width by 1
-^W<: decrease width by 1
-^w=: makes all panes the same size.
-^W<direction_key>: to move between windows; direction key relative horizontal or vertical split
-^Wx: swap windows
-^W_: Maximize height
-^W+: restore after ^W_
+Ctrl-w s  horizontal split
+Ctrl-w n  horizontal split with new file
+Ctrl-w v  vertical split
+Ctrl-w w  changes between the panes.
+Ctrl-w +  increase height by 1
+Ctrl-w -  decrease height by 1
+Ctrl-w >  increase width by 1
+Ctrl-w <  decrease width by 1
+Ctrl-w =  makes all panes the same size.
+Ctrl-w <direction_key>  to move between windows; direction key relative horizontal or vertical split
+Ctrl-w x  swap windows
+Ctrl-w _  Maximize height
+Ctrl-w +  restore after ^W_
 
 :on[ly]                 fill screen with current buffer.
 :sp [filename]          opens the file in a new horizontal pane.
@@ -668,12 +688,12 @@ sudo fc-cache -vf ~/.fonts/
 # 6. Now any monotype font will work properly
 
 
+
 # ----------------------------------------------------------------------------
 #                                untested
 # ----------------------------------------------------------------------------
 set pastetoggle=
 that will make `set paste` on pasting and `set nopaste` when it's done..
-
 
 
 
@@ -795,12 +815,12 @@ Get the value of a register "@"
 
 Tricks
 1. Replace a text with another copied from elsewhere
-ciw <C-r> 0
+ciw <Ctrl-r> 0
 
 Get the value of register 'r':
  in normal mode  "r
  in command mode @r
- in insert mode  <C-r>r
+ in insert mode  <Ctrl-r>r
 
 
 " -------------------------------------------------------------
@@ -970,7 +990,7 @@ Matching Bracket
 :g/pattern/t$           # copy lines matching pattern to end of file
 :g/pattern/m$           # move all lines matching pattern to end of file
 :g/pattern/y A          # copy matching lines to register A
-:.,$g/^\d/exe "normal! \<C-A>"
+:.,$g/^\d/exe "normal! \<Ctrl-A>"
                         # Increment each number at the start of line
 :g/^pattern/s/$/mytext  # Add text to end of line that begins with pattern
 :g/pattern/nomal @q     # run macro q on each matching line
@@ -1032,7 +1052,7 @@ append, write selection to file
 " -------------------------------------------------------------
 " calculate, math
 " -------------------------------------------------------------
-insert mode: <C-r>=7*7<CR>
+insert mode: <Ctrl-r>=7*7<CR>
 normal mode: "=1+3<Enter>p
 
 convert hex to dec.
@@ -1281,7 +1301,7 @@ Shift + <up/down/right/left>    move without drawing
 :Gedit main:file2           load file2 from branch main
 
 :Gvdiffsplit!               diff with staged version of the file, !=keep current file in focus
-:Gvdiffsplit main           diff with branch main
+:Gvdiffsplit <branch>:%     diff with same file in a different branch
 :only                       to close diff
 
 :Gread                      variant of "git checkout -- filename", can be undone with u
@@ -1309,7 +1329,7 @@ d3o     take change from right window
 only    close diff
 
 
-NOTE: The following is reversed for rebase which is the default for me
+NOTE: The following is true for cherry-pick conflict, may be reversed in rebase conflict
 Left window     File in the target branch, the branch taking-in the changes
 Middle window   The working file
 Right window    File in the incoming branch, the branch being merged (source of new changes)

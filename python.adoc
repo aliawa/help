@@ -7,6 +7,10 @@ form math import sqrt, pi
 from math import sqrt as sq
 
 
+== print
+print (a, b, sep='||', end='!')
+
+
 == Condition
 if expression1:
    statement(s)
@@ -114,6 +118,7 @@ t = ('Kumquat', '2', 'cups')  # create
 set.difference                # intersection
 set.symmetric_difference      # union
 
+
 == Looping
 Looping over two lists at the same time
 for color, ratio in zip(colors, ratios):
@@ -154,7 +159,8 @@ not any( n != m for n, m in zip(seq, reversed(seq))
 
 Counter(iterable)
 
-
+for i in range(3): 
+    print(i)
 
 == Built in functions for Numbers
 bin
@@ -184,6 +190,12 @@ s.startswith('bed',start, end+1)    # like find but raises ValueError
 import re
 re.findall("bed", s)        # returns a list with all occurances
 re.search("bed", s)         # returns index of start and end of bed in s
+
+Find all positions of character in string.
+s = 'shak#spea#e'
+c = '#'
+print([pos for pos, char in enumerate(s) if char == c])
+
 
 === Multiline strings
 print("""\
@@ -324,6 +336,11 @@ else:
     # no exception was raised in try block
     action_to_do(item)
 
+Multiple Exception catching
+try:
+    expression = input(f"{PS1} ")
+except (KeyboardInterrupt, EOFError):
+    raise SystemExit()
 
 
 
@@ -588,7 +605,7 @@ letters = { letter: n+1 for n, letter in enumerate(ascii_lowercase) }
 
 
 
-== class
+== Class
 class Dog:
     kind = 'canine'         # class variable shared by all instances
     def __init__(self, name):
@@ -602,20 +619,23 @@ e = Dog('Buddy')
 # add attributes at runtime
 class Employee:
     pass
-john = Employee() #create an empty employee record
-# Fill in the fields of the record
+john = Employee()       #create an empty employee record
 john.name = 'John Doe'
 john.dept = 'computer lab'
 john.salary = 1000
+del john.name           # delete class attribute
 
-# delete class attribute
-del john.name
+# set and get attributes
+setattr(object, name, value)
+getattr(object, name, [default])
+hasattr(object, name) 
+
 
 
 # A class that supports iterator protocol
 class Reverse:
     """Iterator for looping over a sequence backwards."""
-        def __init__(self, data):
+    def __init__(self, data):
     self.data = data
     self.index = len(data)
 
@@ -624,14 +644,12 @@ class Reverse:
 
     def __next__(self):
         if self.index == 0:
-        raise StopIteration
+            raise StopIteration
         self.index = self.index - 1
         return self.data[self.index]
 
 
 
-print (a, b, sep='||', end='!')
-for i in range(3): print(i)
 
 
 == unpacking

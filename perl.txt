@@ -84,14 +84,11 @@ print with new line
     print ($s, "\n")
 
 variables need to have a sigil in front of them.
-scalar variable
-    $foo = 12
-array variable
-    @foo = (1,2,3)
-hash variable
-    %foo = ('Mon', 65, 'Tue', 68, 'Thu, 43)
+$foo = 12                                   scalar variable
+@foo = (1,2,3)                              array variable
+%foo = ('Mon', 65, 'Tue', 68, 'Thu, 43)     hash variable
 
-special variable $_
+special variable '$_'
     @teams = ('cubs', 'reds', 'yankees', 'dodgers');
     foreach (@teams) {
       print "$_\n";
@@ -185,6 +182,7 @@ operations
     $shifted = shift(@array)     # delete and return the first element of the array
     unshift(@array, "new_entry") # add element or elements into the beginning of the array
     scalar (@array)              # length
+    $#array                      # last index (length-1)
 
 
 
@@ -448,13 +446,42 @@ ln -s libperl.so.5.30.0 libperl.so
 
 
 
-Command Line
+Basic scripts
 ----------------------------------------------------------------------
-use strict;
+#!/usr/bin/perl
 use warnings;
+print("Hello, World!\n");
+
+
+#!/usr/bin/perl
+use warnings;
+use strict;
 use Data::Dumper qw(Dumper);
- 
 print Dumper \@ARGV;  # if you leave out the "\" it will print each array element as a
                       # separate variable
 
 
+Debugger
+----------------------------------------------------------------------
+perl -d <script>
+perl -d:ptkdb <script>                      debug using the Devel::ptkdb GUI
+perl -dt <threaded_program_name>
+
+p   print
+x   recursive print
+T   backtrace
+s   single step
+n   next
+c [line|sub]  
+    continue, or continue to line or subroutine
+l   List
+b [line][condition]   
+    breakpoint
+B line  
+    delete breakpoint
+enable [line]
+disable [line]
+w expr      watch
+q           quit
+M           display all loaded modules and their versions
+!17         repeat command number 17

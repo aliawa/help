@@ -1,3 +1,9 @@
+# Info
+----------------------------------------------------------------------
+echo $SHELL                     # what is my shell
+$SHELL --version                # what is my shell version
+
+
 # Variables 
   pattern here means globbing pattern
 ${#var}                         # strlen(var)
@@ -241,6 +247,10 @@ if [[ $REPLY =~ [Yy]$ ]];then
     <execute dangerous action>
 fi
 
+echo "Type Y to run zsh: \c"
+read line
+[ "$line" = Y ] && exec $HOME/bin/zsh -l
+
 
 
 # functions
@@ -458,8 +468,7 @@ ${#VAR}
     echo ${#myarray[*]}                 # number of elements in array
     echo ${#myarray[@]}                 # number of elements in array
 
-    echo ${myarray[0]}                  # retrieve elements 0
-    echo ${myarray[1]}                  # retrieve elements 1
+    echo ${myarray[1]}                  # retrieve first element, indices start at 1 not 0
     echo ${myarray[-1]}                 # retrieve last element
     echo ${myarray[$i]}                 # $i contains index of element to retrieve
     echo ${myarray[@]}                  # retrieve ALL elements
@@ -481,9 +490,14 @@ ${#VAR}
         echo "$i:$myarray[$i]"
     done
 
+    declare -A arr1                     # declare associative array. (may need #!/bin/zsh as first line)
+    typeset -A arr1                     # same as above
+
     declare -a arr1                     # optionally declare an array
-    declare -A arr1                     # declare associative array
     local -a arr2
+
+    cp ${~tpath[$opt]} $LOCAL_DIR       # Zsh, perform globbing on array variable
+
 
 
 # Conditional Expressions
@@ -554,7 +568,7 @@ fi
 
 # Configuration
 
-When loging in through ssh, .bashrc is nor sourced. You must put this in .bash_profile
+When loging in through ssh, .bashrc is not sourced. You must put this in .bash_profile
 if [ -f ~/.bashrc ]; then
   . ~/.bashrc
 fi
@@ -636,3 +650,39 @@ option b    back one word
 option f    forward one word
 
 
+Zsh word splitting and globbing upon parameter expansion
+----------------------------------------------------------------------
+echo $=file   perform word splitting
+echo $~file   perform globbing
+echo $=~file  perform both
+
+
+ZSH
+---------------------------------------------------------------------
+quote everything in the string
+print -r -- ${(q)string}
+${(z)line}      split line into array
+${(Q)word}      unquote word
+
+
+Zsh Arrays
+----------------------------------------------------------------------
+print $#array           length of array
+array[2]=()             delete second element in array
+
+print ${array[(r)s*]}   first element that matches the pattern
+print ${array[(R)s*]}   last element that matches the pattern
+print ${array[(i)v*]}   index of first match
+print ${array[(I)v*]}   index of last match
+print ${(k)assoc}       print all keys of associative array
+print ${(v)assoc}       print all values of associative array
+print -l "${(@kv)assoc}"    print one per line
+
+
+Zsh switch case
+----------------------------------------------------------------------
+case 0 in
+    ([0-9]) print digit ;;
+    ([a-zA-Z]) print letter ;;
+    ([^0-9a-zA-Z]) print neither ;;
+esac

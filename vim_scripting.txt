@@ -145,7 +145,7 @@ function Varg(...)
 endfunction
 
 
-Funciton with range: define two implicit arguments "firstline", "lastline"
+Funcitons with range: define two implicit arguments "firstline", "lastline"
 :function Count_words() range
 :  let lnum = a:firstline
 :  let n = 0

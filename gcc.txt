@@ -106,3 +106,10 @@ CFLAGS += "-fdiagnostics-color=never"
 export GCC_COLORS=
 
 
+ignore certain errors in file or section of file
+----------------------------------------------------------------------
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuninitialized"
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+...
+#pragma GCC diagnostic pop

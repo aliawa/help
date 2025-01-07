@@ -33,7 +33,7 @@ HEAD~3   : The fourth last commit. same as HEAD^^^
 ORIG_HEAD: The position of HEAD just before "pull" or "merge"
 ^refC    : not refC: e.g. all commits reachable from refB
            but not from refC "git log ^refA refB"
-
+git help revisions
 
 #---------------------------------------------------------
 #                    TODO

@@ -141,6 +141,8 @@ Some new learnings
 -----------------------
 offsetof(struct foo,a) // number of bytes between start of foo and a
 compound literal: int *p = (int[]){2, 4};
+char **foo = (char *[]) { "x", "y", "z" };
+
 
 // GCC specific code
 #if  defined ( __GNUC__ )
@@ -166,7 +168,7 @@ intitialize to zero only works for '0'
 int z[4] = {1}; // z has type int[4] and holds 1,0,0,0
 int w[3] = {0}; // w has type int[3] and holds all zeroes
 
-since c 2d arrays are actally 1d arrays. The number of coulums
+since c 2d arrays are actually 1d arrays. The number of coulums
 must be specified because the compiler must know the size of each
 entry.
 int A[][2] = { {1,3}, {4,5}};

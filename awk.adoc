@@ -1,35 +1,3 @@
-
-== FIELDS
-field definition:
-field is either “anything that is not a comma,” or “a double quote, 
-anything that is not a double quote, and a closing double quote.” 
-FPAT = "([^,]*)|(\"[^\"]+\")"
-
-
-=== Number of fields
-
- # print number of fields, first field, last field
- { print NF, $1, $NF }
-
-=== Set field separator
-
- Variable |  Meaning                                    | Default
- ---------+---------------------------------------------+--------
- FS       |  controls the input field separator         | " "
- NF       |  number of fields in current record         | -
- OFS      |  output field separator                     | " "
-
- # Records are separated by blank lines and the field is the whole line
- BEGIN { RS = ""; FS = "\n" }
-
-=== Loop Through Fields
-
- for(i=1; i<=NF; i++) {
-     if($i=="dog") 
-         print $0,i
- }
-
-
 == structure of awk programs
 pattern {action}
 pattern {action}
@@ -38,7 +6,7 @@ every input line is tested against each of the pattern in turn
 
 
 pattern missing -> apply action to every line
-action missing -> apply default action {print $0}
+action missing  -> apply default action {print $0}
 action must be enclosed in {} in order for it be identified as action
 
 
@@ -53,10 +21,29 @@ shebang absolute path
 #!/usr/local/bin/awk -f
 
 
-== Line Numbers
-NR: number of lines read so far
+== FIELDS
+field is either “anything that is not a comma,” or “a double quote, 
+anything that is not a double quote, and a closing double quote.” 
+FPAT = "([^,]*)|(\"[^\"]+\")"
+
+# Treat entire line as one field
+BEGIN { RS = ""; FS = "\n" }
+
+=== Number of fields
+# print number of fields, first field, last field
+{ print NF, $1, $NF }
+
+=== Loop Through Fields
+
+ for(i=1; i<=NF; i++) {
+     if($i=="dog") 
+         print $0,i
+ }
+
+=== Line Numbers
 { print NR, $0 } # number all lines 
 in 'END' pattern, NR is the total number of lines in the files
+
 
 
 == Sort output
@@ -65,31 +52,30 @@ awk '{ printf("%6.2f %s\n", $2*$3, $0) }' emp.data | sort
 
 == Patterns
 
-  $2 >= 5         print all lines where second field is greater than 5
+  $2 >= 5               print all lines where second field is greater than 5
   $2*$3 > 50
   $1 == "Susie"
 
-  /Susie/         print all lines that contain "Susie" anywhere
+  /Susie/               print all lines that contain "Susie" anywhere
   /edu/ && /li/     
-  /edu/ || /li/
-  ! /li/                    records that do not contain 'li'
+  /edu/ || /li/         same as /edu|li/
+  ! /li/                records that do not contain 'li'
 
   $2 >= 4 || $3 >= 20
   !($2 < 4 && $3 < 20)
 
-  BEGIN           special patern, match before first line of first inpt file
-  END             special pattern, match after last line of last inpt file
+  BEGIN                 special patern, match before first line of first inpt file
+  END                   special pattern, match after last line of last inpt file
 
 
-  $0 ~ /(\+|-)[0-9]+/     match operator, string needs to match literal occurrence of a regex meta-char
-  $0 ~ "(\\+|-)[0-9]+"    match operator, string needs to match literal occurrence of a regex meta-char
+  $0 ~ /(\+|-)[0-9]+/   match operator, string needs to match literal occurrence of a regex meta-char
+  $0 ~ "(\\+|-)[0-9]+"  match operator, string needs to match literal occurrence of a regex meta-char
 
-== Range patterns
-NR==10, NR==20  tenth to twentieth lines of input inclusive
+=== Range patterns
 
-/Canada/, /USA/ from first line that matches Canada up through next line that matches USA
-/Asia|Europe/   same as /Asia/ || /Europe/
-$1 == "on", $1 == "off"   every record betwee 'on'/'off' pairs inclusive
+ NR==10, NR==20             tenth to twentieth lines of input inclusive
+ /Canada/, /USA/            from first line that matches Canada up through next line that matches USA
+ $1 == "on", $1 == "off"    every record betwee 'on'/'off' pairs inclusive
 
 When start and stop markers are on the same line.
 /^%$/   {skip = ! skip; next}
@@ -119,13 +105,17 @@ SUBSEP   |  subscript separator                        | "\034"
          |                                             |
 
 
+
+
 == STRING FUNCTIONS
 -------------------------+------------------------------------------------------------------
     FUNCTION             |              DESCRIPTION                                        
 -------------------------+------------------------------------------------------------------
-gsub(regex,str)          |  replace everything matching regex with str in $0
+sub(/regex/,t)           |  replace firstrmatch of regex in $0 with with t
+sub(/regex/,t,s)               |  replace first match of regex in string s with t
+gsub(regex,t)            |  replace everything matching regex with t in $0
                          |    return number of substitutions made 
-gsub(regex,s,t)          |  substitute all mathes of regex with s in string t, 
+gsub(regex,t,str)        |  substitute all mathes of regex with t in string str, 
                          |    return number of substitutions made
 index(str,substr)        |  return first position of substr in str, or 0 if t is not present
 length(s)                |  return number of characters in s
@@ -140,9 +130,7 @@ split(s,a,fs)            |  split s into array a on regex fs | return number of 
                             don't use single quotes to enclose fs
 
 sprintf(fmt,expr-list)   |  return expr-list formatted according to format string fmt
-sub(r,s)                 |  replace first match of regex r in $0 with with s
-sub(r,s,t)               |  replace first match of regex r in string t with s
-substr(s,p)              |  suffix of s starting at position p, counted from 1
+substr(s,p)              |  substring of s starting at position p, counted from 1
 substr(s,p,n)            |  substring of s of length n starting at position p, counted from 1
                          |                             
                       
