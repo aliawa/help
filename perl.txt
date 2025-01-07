@@ -1,6 +1,38 @@
+Basic scripts
+----------------------------------------------------------------------
+#!/usr/bin/perl
+use warnings;
+print("Hello, World!\n");
+
+
+#!/usr/bin/perl
+use warnings;
+use strict;
+use Data::Dumper qw(Dumper);
+print Dumper \@ARGV;  # if you leave out the "\" it will print each array element as a
+                      # separate variable
+
+
+Using command line args
+----------------------------------------------------------------------
+#!/usr/bin/perl -w
+
+$num_args = $#ARGV + 1;
+if ($num_args != 2) {
+    print "\nUsage: name.pl first_name last_name\n";
+    exit;
+}
+$first_name=$ARGV[0];
+$last_name=$ARGV[1];
+print "Hello, $first_name $last_name\n";
+
+
+
+
 Install cpan module
 ----------------------------------------------------------------------
 sudo cpanm enum
+
 
 One liners
 ----------------------------------------------------------------------
@@ -445,20 +477,6 @@ ln -s libperl.so.5.30.0 libperl.so
 
 
 
-
-Basic scripts
-----------------------------------------------------------------------
-#!/usr/bin/perl
-use warnings;
-print("Hello, World!\n");
-
-
-#!/usr/bin/perl
-use warnings;
-use strict;
-use Data::Dumper qw(Dumper);
-print Dumper \@ARGV;  # if you leave out the "\" it will print each array element as a
-                      # separate variable
 
 
 Debugger
