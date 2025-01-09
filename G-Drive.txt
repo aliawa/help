@@ -1,0 +1,15 @@
+Location of offline files
+----------------------------------------------------------------------
+click "Google Drive icon" on Mac Menu Bar 
+then "Gear icon" > Preferences > Click "Gear Icon" again on the settings pop-up. 
+The location is shown under "Google Drive streaming location"
+
+
+Link in workspace
+----------------------------------------------------------------------
+cd ~/workspace
+ln -s "/Users/aawais/Library/CloudStorage/GoogleDrive-aawais@paloaltonetworks.com/My\ Drive/bugs/" bugs
+
+
+
+

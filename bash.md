@@ -462,17 +462,19 @@ ${#VAR}
     myarray+=("six")                    # append new element to array
 
     # Associative array
-    arr2=([HDD]=Samsung [Monitor]=Dell [Keyboard]=A4Tech)
+    declare -A arr1=([HDD]=Samsung [Monitor]=Dell [Keyboard]=A4Tech)
     arr1[fruit]=Mango
+    declare -A arr2="( $(echo "[a]=1 [b]=2") )"     # quotes are required when assiging output of command to array.
 
-    echo ${#myarray[*]}                 # number of elements in array
-    echo ${#myarray[@]}                 # number of elements in array
+    ${#myarray[*]}                 # number of elements in array
+    ${#myarray[@]}                 # number of elements in array
 
-    echo ${myarray[1]}                  # retrieve first element, indices start at 1 not 0
-    echo ${myarray[-1]}                 # retrieve last element
-    echo ${myarray[$i]}                 # $i contains index of element to retrieve
-    echo ${myarray[@]}                  # retrieve ALL elements
-    echo ${myarray[*]}                  # retrieve ALL elements
+    ${myarray[1]}                  # retrieve first element, indices start at 1 not 0
+    ${myarray[-1]}                 # retrieve last element
+    ${myarray[$i]}                 # $i contains index of element to retrieve
+    ${myarray[@]}                  # all values (just values, not keys)
+    ${myarray[*]}                  # retrieve ALL elements
+    ${!myarray[@]}                 # keys of associative array
 
                                         # copy a file into an array
     array1=( `cat "$filename" | tr '\n' ' '`) 
@@ -678,6 +680,23 @@ print ${(k)assoc}       print all keys of associative array
 print ${(v)assoc}       print all values of associative array
 print -l "${(@kv)assoc}"    print one per line
 
+foo=(This is a parameter.)
+print -- ${foo[4]}
+
+foo=('first element' 'second element')
+print -- ${foo[2]}
+
+typeset -A assoc
+assoc=(one eins two zwei three drei)
+print ${assoc[two]}     # prints zwie
+assoc[four]=vier        # assign new value
+unset 'assoc[one]'      # delete
+print $assoc            # print only the values, no subscripts
+
+typeset -A newass
+newass=(${(kv)assoc})   # copy one associative array into another
+
+
 
 Zsh switch case
 ----------------------------------------------------------------------
@@ -686,3 +705,29 @@ case 0 in
     ([a-zA-Z]) print letter ;;
     ([^0-9a-zA-Z]) print neither ;;
 esac
+
+
+print ${#path}      print lenght of string
+print ${#PATH}      print length of array elements
+print ${(w)#foo}    print number of words in string
+
+
+Zsh compatibility options
+----------------------------------------------------------------------
+SH_WORD_SPLIT
+NO_BANG_HIST
+BSD_ECHO (sh only)
+IGNORE_BRACES
+INTERACTIVE_COMMENTS
+KSH_OPTION_PRINT
+NO_MULTIOS
+POSIX_BUILTINS
+PROMPT_BANG
+SINGLE_LINE_ZLE 
+BARE_GLOB_QUAL
+GLOB_SUBST
+SH_FILE_EXPANSION
+SH_GLOB
+KSH_GLOB
+GLOBAL_EXPORT
+

@@ -13,7 +13,7 @@ print Dumper \@ARGV;  # if you leave out the "\" it will print each array elemen
                       # separate variable
 
 
-Using command line args
+Using command line args (-w enables warnings)
 ----------------------------------------------------------------------
 #!/usr/bin/perl -w
 

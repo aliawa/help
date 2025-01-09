@@ -1,0 +1,256 @@
+
+-outdir     location of the the output .pm file
+
+Typemaps
+https://www.swig.org/Doc2.0/Typemaps.html#Typemaps_nn7
+
+
+Everything in the %{ ... %} block is simply copied verbatim to the resulting wrapper file created by SWIG
+
+
+
+Compiling a perl extenstion
+----------------------------------------------------------------------
+1. create the interface file
+   %module example
+   %{
+   #include "example.h"
+   %}
+   %include "example.h"
+
+2. generate wrapper file
+   swig -perl example.i
+
+3. Find location of include files
+   perl -e 'use Config; print "$Config{archlib}\n";'
+
+4. compile files
+   gcc -fPIC -c example.c
+   gcc -fPIC -D_GNU_SOURCE -I/usr/lib/x86_64-linux-gnu/perl/5.30/CORE -c example_wrap.c
+
+5. create shared library. Note libray name can be example.so or libexample.so
+   gcc -shared exampel.o example_wrap.o -o example.so
+
+6. Use in perl script
+   use lib '/home/aawais/swig_char_array';
+   use example;
+
+   examplec::process_int(3);
+
+
+Using perl extension
+----------------------------------------------------------------------
+1. Perl strings and int can be directly passed.
+
+   perl:
+   my $myint = 4;
+   examplec::process_int(3);
+   examplec::process_int($myint);
+
+   c:
+   void process_int( int arg) {
+       printf("arg = %d\n", arg);
+   }
+
+   perl:
+   my $mychr = "abc";
+   examplec::process_char_ptr("efg");
+   examplec::process_char_ptr($mychr);
+
+   c:
+   void process_char_ptr( char* arg) {
+       printf("arg = %s\n", arg);
+   }
+ 
+
+2. int*
+   INOUT magically creates output from a void function
+   perl:
+   my $myint = 4;
+   $x = examplec::process_int_ptr($myint);
+   print ("after call: $x\n");
+
+   example.i
+   %module example
+   %include typemaps.i
+   %{
+       void process_int_ptr( int*INOUT );
+   %}
+
+   void process_int_ptr( int*INOUT );
+
+   c:
+   void process_int_ptr( int* arg) {
+       (*arg)++;
+   }
+
+
+3. Perl reference
+   perl:
+   my $myint = 4;
+   examplec::process_int_ptr($myint);
+   print ("after call: $myint\n");
+
+   example.i
+   %module example
+   %include typemaps.i
+   %{
+       void process_int_ref( int );
+   %}
+
+   void process_int_ref( int*REFERENCE);
+
+   c:
+   void process_int_ref( int* arg) {
+       (*arg)++;
+   }
+
+
+
+
+
+
+
+1. Example interface file
+    Everything in the %{...%} block is copied verbatim to the resulting wrapper created by SWIG
+
+    %module example
+    %inline %{
+    extern double mysin(double x);
+    extern int mystrcmp(const char *, const char *);
+    extern int Foo;
+    %}
+    #define STATUS 50
+    #define VERSION "1.1"
+
+2. compile interface file
+    swig -perl <interface file>
+
+
+3. output of swig comand
+    example_wrap.c
+    example.pm
+
+4. write example.c
+    #include <math.h>
+    #include <string.h>
+    int Foo;
+    double mysin(double x) {
+        return sin(x);
+    }
+    int mystrcmp(const char* a, const char* b) {
+        return strcmp(a,b);
+    }
+
+5. compiling c library
+    gcc -shared example.c example_wrap.c -o example.so -I/usr/lib/x86_64-linux-gnu/perl/5.30/CORE -Doff64_t=__off64_t -fPIC
+
+6. Use in perl
+    #!/usr/bin/perl
+    use warnings;
+    use strict;
+    use lib qw(/home/aawais/swig/simple_types/);
+    use example;
+
+    print (examplec::mysin(3)."\n");
+    print (examplec::mystrcmp("awais", "ali")."\n");
+    $example::Foo = 30;
+    print ($examplec::VERSION."\n");
+    print ($examplec::STATUS."\n");
+
+
+Install location
+----------------------------------------------------------------------
+swig -swiglib
+
+
+STRING
+----------------------------------------------------------------------
+when a string is passed to c. C code should not modify the string.
+
+
+
+Typemap
+----------------------------------------------------------------------
+"in" typemap is for sending values into C
+/* Convert from Python --> C */
+%typemap(in) int {
+    $1 = PyInt_AsLong($input);
+}
+$input      the input python object that needs to be converted
+$1          c variable that has the type declared in typemap "int" in this case
+
+"out" typemap is to get value from C and convert it to target language
+/* Convert from C --> Python */
+%typemap(out) int {
+    $result = PyInt_FromLong($1);
+}
+$result is the value returned by the wrapper 
+
+
+
+Local variable in the scope of the entire wrpper function
+in the code below std::string temp is available in the entire wrapper function
+    %typemap(in) std::string * (std::string temp) {
+        unsigned int len;
+        char        *s;
+        s = SvPV($input,len);         /* Extract string data */
+        temp.assign(s,len);           /* Assign to temp */
+        $1 = &temp;                   /* Set argument to point to temp */
+    }
+
+
+Typemap debugging
+----------------------------------------------------------------------
+option 1:
+swig -perl -debug-tmsearch example.i
+After that invoke swig with -E option, search for the typemap used, look at full typemap content.
+
+option 2:
+swig -perl -debug-tmused example.i
+
+
+Typemap match rule
+----------------------------------------------------------------------
+When trying to match parameters, SWIG looks at both datatype and name. 
+Thus, special processing applied to a parameter of "double *result" will not be applied to "double *input". 
+On the other hand, special processing defined for a datatype of "double *" 
+could be applied to both (since it is more general). 
+
+
+Converting a C output parameter to a return value
+----------------------------------------------------------------------
+// Simple example using typemaps
+%module example
+%include typemaps.i 					// Grab the standard typemap library
+
+%apply double *OUTPUT { double *result };
+extern void add(double a, double b, double *result);
+
+
+# Perl code to call our add function
+
+$a = add(3,4); 		
+print $a,"\n";
+7
+
+
+Returning multiple values
+----------------------------------------------------------------------
+Suppose you had a function like this :
+
+    // Returns a status code and double
+    int get_double(char *str, double *result);
+
+When declared in SWIG as :
+
+    int get_double(char *str, double *OUTPUT);
+
+The function would return a list of output values as shown for Python below :as follows :
+
+    >>> get_double("3.1415926")					# Returns both a status and value
+    [0, 3.1415926] 
+    >>>
+
+
+
