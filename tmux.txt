@@ -51,28 +51,27 @@ join-pane -s 2 -t 1
 
 # PANES
 # ----------------------
-C-b "                       # split horizontal
-C-b %                       # split vertical
-C-b z                       # toggles zoom pane
-C-b ;                       # previously active pane
-C-b o                       # next pane
-C-b x                       # delete pane
-C-b : resize-pane -U 20     # Resize the current pane up by 20 cells
-C-b : resize-pane -D 20     # Resize the current pane down by 20 cells
-C-b }                       # Swap panes
-C-b M <up,down,righ,left>   # Resize pane in steps of 1 cell (M=meta or Option in macos)
+C-b "                              # split horizontal
+C-b %                              # split vertical
+C-b z                              # toggles zoom pane
+C-b ;                              # previously active pane
+C-b o                              # next pane
+C-b x                              # delete pane
+C-b }                              # Swap panes
+C-b : resize-pane -U 20            # Resize the current pane up by 20 cells
+C-b : resize-pane -D 20            # Resize the current pane down by 20 cells
+C-b <option> <up,down,righ,left>   # Resize pane in steps of 5 cell
 
 Make current pane its own window (break pane)
 C-b !
 
-Swith to predefined layout, M1 is Meta + 1 or Option + 1 in macos
+Swith to predefined layout
 This requires configureing Options key to Esc+ in iterm2 profile 
-C-b M1    
-C-b M2    
+C-b <option> 1                     # <option> is Meta or 'M' in docs
+C-b <option> 2    
 
-swap-pane -s {left}
-swap current pane with the left most
-(by default the target pane '-t' option is the current pane) 
+swap-pane -s {left}                # swap current pane with the left most
+(by default the target pane, '-t' option, is the current pane) 
 
 
 

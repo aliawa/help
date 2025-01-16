@@ -27,6 +27,9 @@ Ctrl-^           toggle between files (also :e#)
 gt gT            (next prev tab)
 
 :ls              (list of current buffers)
+                 %	the buffer in the current window
+                 #	the alternate buffer for ":e #" and CTRL-^
+
 :b2              (go to numbered buffer, given by ls command)
 :bn :bp          (buffer next prev)
 :bd3             (delete/close buffer number #)
@@ -323,28 +326,26 @@ show hidden symbols
 Folds
 ----------------------
 :set foldmethod=indent
-' then use zm and zr
-
-zo    open one fold level under cursor
-zc    close one fold level under cursor
-
-zr    reduce folding by one level (open one more level)
-zm    fold more by one level
-
-zR    open all folds  (R for Reduce)
-zM    close all folds
-
-za    Toggle fold 
-
+    then use zm and zr
+    zm    fold more by one level
+    zr    reduce folding by one level (open one more level)
+    zo    open one fold level under cursor
+    zc    close one fold level under cursor
+    zR    open all folds  (R for Reduce)
+    zM    close all folds
+    za    Toggle fold 
 
 :set foldmethod=marker
-' then enter /* some text {{{ */ at the begining
-' enter /* }}}*/ at the end
-' go in the block and zm
+    then enter /* some text {{{ */ at the begining
+    enter /* }}}*/ at the end
+    go in the block and zm
 
 :set foldmethod=manual
     then go inside a {} block zfa}        zf = create fold operater, a} = text object
     visual select and zf
+    zf  create fold
+    zd  delete fold
+
 
 
 :help usr_28

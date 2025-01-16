@@ -262,9 +262,14 @@ git format-patch -1 3c2ab26f8ae --stdout
 #                       OOPS / UNDO
 #---------------------------------------------------------
 
-# Undo last commit 
-git reset --soft HEAD^ # not pushed yet
-git revert HEAD        # when it has already been pushed
+# Undo entire commits
+git revert HEAD^
+
+# Throw away all uncommited changes in working dir
+git reset --hard
+
+# restore certain files from previous commits
+git restore --source=HEAD~2 replay_data.py
 
 # Add more changes to last commit
 git add sipClient.h
@@ -272,9 +277,6 @@ git commit --amend
 
 # change the last commit message
 git commit --amend
-
-# revert next-to-last commit but keep the last commit
-git revert HEAD^
 
 # replace working file with an old one
 git checkout HEAD^ path/to/file
