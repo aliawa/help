@@ -1,19 +1,29 @@
-vimrc
+vimrc and configuration settings
 ----------------------------------------------------------------------
-vim -u NONE
-vim -u ~/vimrc-alternate        alternate vimrc
-:source $MYVIMRC                reload vimrc file
+vim -u NONE          Dont load any vimrc file
+vim -u {vimrc}       load specific vimrc file
+:version             which vimrc is being used
+:echo $MYVIMRC       which vimrc is being used
+:source $MYVIMRC     reload vimrc file
+:set runtimepath?    what is my runtime path
 
 modeline
-special line at the begining and end of file with vim options for that file
+    special line at the begining or end of file with vim options for that file
 
 
-Get Info
+
+
+switch esc and caps lock Linux
 ----------------------------------------------------------------------
-:set runtimepath?    what is my runtime path
-:version             what vimrc files are loaded
-vim -u {vimrc}       load specific vimrc file
-vim -u NONE          Dont load any vimrc file
+- create .Xmodmap
+  keycode 9=Caps_Lock
+  keycode 66=Escape
+
+- Alternative Esc
+  Ctrl-c instead of Esc for switching from insert mode into command mode
+  Ctrl-[ which does exactly the same as Escape, and Ctrl-c
+
+
 
 
 Multiple files
@@ -28,7 +38,7 @@ gt gT            (next prev tab)
 
 :ls              (list of current buffers)
                  %	the buffer in the current window
-                 #	the alternate buffer for ":e #" and CTRL-^
+                 #	the alternate buffer for ":e #" and Ctrl-^
 
 :b2              (go to numbered buffer, given by ls command)
 :bn :bp          (buffer next prev)
@@ -38,8 +48,10 @@ gt gT            (next prev tab)
 :qall            (close all files)
 
 :e %<.h          open corresponding header file
-:e %<.c          open corresponding source file
+:e %<.c          open corresponding source file. "%<" means current file without extension
 :e!              discard all changes to current buffer.
+
+
 
 
 " -------------------------------------------------------------
@@ -140,12 +152,9 @@ L     # bottom of screen
 30|   # Jump to column 30
 `.    # move to last edit position
 
-Ctrl-E - scroll the view-port down
-Ctrl-Y - scroll the view-port up
-Ctrl-F - scroll down one page
-Ctrl-B - scroll one page up
 
-Fast text Movement
+
+Window scroll Movement
 ------------------
 zt or zENTER: make the line with the cursor the top line of the screen.
 zz or z.    : center
@@ -156,18 +165,17 @@ zh and zl   : scroll right,left by character
 zH and zL   : scroll right, left by half a screen
 Note        : use g^ and g$ instead of ^ and $ when the document is scrolled
 
+Ctrl-E - scroll the view-port down
+Ctrl-Y - scroll the view-port up
+Ctrl-F - scroll down one page
+Ctrl-B - scroll one page up
 
 
-
-Matching Bracket
------------------
-%
 
 
 
 Auto Completion
 --------------
-
 Ctrl-p         : complete from previous words: search backwards
 Ctrl-n         : complete from following words: search forwards
 Ctrl-x  Ctrl-f : complete filename.
@@ -261,14 +269,31 @@ gq]/    Format to end of comment, gq is the operator to format text, ]/ is the m
 Ctrl-T  add indent to current line in insert mode
 Ctrl-D  remove indent form current line in insert mode
 
+%       Matching Bracket
 
 
 
-switch esc and caps lock
-------------------------
-- create .Xmodmap
-  keycode 9=Caps_Lock
-  keycode 66=Escape
+edit-compile-edit cycle, (coding, development)
+----------------------------------------------------------------------
+Using quickfix commands
+    cope:           open errors window (means: copen or cw)
+    ccl:            close errors window
+
+    <Enter>:        Jump to error
+    Ctrl-<Enter>:   Open a new window and jump to error there
+
+    cn             # Next error
+    cp             # Previous error
+    cl             # See all errors
+    cc             # See full error text
+    cc [nr]        # Jump to [nr]
+    cr             # Jump to first error (rewind)
+    clas           # Jump to last error
+
+Read quickfix list from a file at startup
+    vim -q err.txt
+    vim -q <(cmd)
+
 
 
 
@@ -416,6 +441,8 @@ vnoremap <Up> gk
 inoremap <Down> <Ctrl-o>gj
 inoremap <Up> <Ctrl-o>gk
 
+
+
 visuals
 ----------------------------------------------------------------------
 this gives you a current-row and current-column highlight, so you never lose
@@ -423,7 +450,6 @@ your cursor
 set cursorcolumn
 set cursorline
 hi cursorcolumn ctermbg=red
-
 
 
 man page viewer
@@ -441,17 +467,10 @@ shift + k
 
 
 
-Alternative Esc
---------------------
-Ctrl-c instead of Esc for switching from insert mode into command mode
-Ctrl-[ which does exactly the same as Escape, and Ctrl-c
-
-
 
 
 Tags
 --------------------
-
 - generate tags
     cd src/
     ctags -R            (Recursive)
@@ -471,7 +490,6 @@ Tags
 
 Editing binary files
 --------------------
-
 # open and edit
 vi -b file.bin
 :%!xxd                # view in hex format
@@ -491,9 +509,8 @@ bvi
 bless
 
 
-# ----------------------------------
-# Syntax files and color schemes
-# ----------------------------------
+Syntax files and color schemes
+----------------------------------
 custom syntax files location. If the directory does not exist,
 create it and put your custom syntax file there
     ~/.vim/syntax/mlg.vim
@@ -541,7 +558,7 @@ highlight Terminal guifg='#ebdbb2'
 
 
 
-windows (^ means Ctrl )
+windows 
 ----------------------------------------------------------------------
 Ctrl-w s  horizontal split
 Ctrl-w n  horizontal split with new file
@@ -562,29 +579,6 @@ Ctrl-w +  restore after ^W_
 :vs [filename]          opens the file in a new vertical pane.
 :vs | b <buffer name>   open named buffer in vertical split
 :vert sb 5              open buffer 5 in a vertical split (:vs #5) (sb = split and open buffer)
-
-
-
-edit-compile-edit cycle, (coding, development)
-----------------------------------------------------------------------
-Using quickfix commands
-    cope:           open errors window (means: copen or cw)
-    ccl:            close errors window
-
-    <Enter>:        Jump to error
-    Ctrl-<Enter>:   Open a new window and jump to error there
-
-    cn             # Next error
-    cp             # Previous error
-    cl             # See all errors
-    cc             # See full error text
-    cc [nr]        # Jump to [nr]
-    cr             # Jump to first error (rewind)
-    clas           # Jump to last error
-
-Read quickfix list from a file at startup
-    vim -q err.txt
-    vim -q <(cmd)
 
 
 
@@ -921,12 +915,6 @@ vit         or vat, select inside html/xml tags. Use o to jump between ends of s
 vip         select to next blank line (v {inside}{paragraph}
 
 
-
-" -------------------------------------------------------------
-"                      Tagbar
-" -------------------------------------------------------------
-s     - change sort order
-space - show prototype in command line
 
 
 " -------------------------------------------------------------
@@ -1364,7 +1352,6 @@ Gclog --name-only -- %:p
      - reblame at commit
      ~ reblame at [count]th first grandparent
      P reblame at [count]th parent (like HEAD^[count])
-
 
 
 
