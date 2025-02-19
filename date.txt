@@ -18,7 +18,7 @@ LINUX
 
 MAC
 ----------------------------------------------------------------------
-change date format (mac)
+Convert between date formats
   date -j -f <input-format> <input-date> <output-format>
   date -j -f '%Y-%m-%d %H:%M:%S' '2022-07-17 20:28:35' +'%Y-%m-%d %H:%M:%S' 
   date -j -f '%a %b %d %H:%M:%S %Y' 'Sun Jul 17 20:28:35 2022' +'%Y-%m-%d %H:%M:%S'
@@ -27,14 +27,29 @@ change date format (mac)
   date -j -f '%a %b %d %H:%M:%S %Y' 'Sun Jul 17 20:28:35 2022'  +%s
 
 
-Current date and time
-  date "+DATE: %Y-%m-%d%nTIME: %H:%M:%S"
+Current date and time in different formats
+  date +"<format>"
+
+  date +"DATE: %Y-%m-%d%nTIME: %H:%M:%S"
     outputs:
     DATE: 1987-11-21
     TIME: 13:36:16
 
-date +"%b %d, %G"
+  date +"%b %d, %G"
     Nov 14, 2024
 
-Get date 1 month ago from today. Output in YYYY-MM-DD format
+  date +"%s"
+    173817795
+
+
+Adjusted date and time
+  date -v +/-[m, y, H etc.]
+
   date -v -1m +'%Y-%m-%d'
+  Get date 1 month ago from today. Output in YYYY-MM-DD format
+    2024-12-29
+
+  date -r <filename> -v -12H +"%s"
+    12 hours before modification time of <filename>
+
+

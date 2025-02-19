@@ -27,5 +27,41 @@ Check if there is segmentation
 - Without tcp reassembly: sip.continuation
 
 
+Display filter syntax
+----------------------------------------------------------------------
+operators:
+    https://www.wireshark.org/docs/wsug_html_chunked/ChWorkBuildDisplayFilterSection.html
 
 
+==, eq
+    ip.src==192.168.0.0/16 and ip.dst==192.168.0.0/16           traffic on a single subnet
+contains "text"
+    sip.To contains "a1762"
+    udp contains 81:60:03                                       anywhere in udp header or payload
+matches "regex"
+    http.request.uri matches "gl=se$"
+slice
+    eth.addr[0:3]==b4:0c:25         only packets from PAN devices
+    udp[8:3]==81:60:03              first 3 bytes immediately after the UDP header, could be used to identify the protocol
+!
+    ! ( ip.addr == 10.43.54.65 )    no traffic to or from this host
+in
+    tcp.port in {80, 443, 8080}
+    tcp.port in {443, 4430..4434}
+    http.request.method in {"HEAD", "GET"}
+    ip.addr in {10.0.0.5 .. 10.0.0.9, 192.168.1.1..192.168.1.9}
+    frame.time_delta in {10 .. 10.5}
+
+lower
+    lower(http.server) contains "apache"
+len
+    len(http.request.uri) > 100
+
+string 
+    string(frame.number) matches "[13579]$"
+${}
+    frame.time_relative >= ${frame.time_relative} - 300         all frames since last 5 minutes of selected
+
+
+
+    

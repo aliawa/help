@@ -113,3 +113,13 @@ ignore certain errors in file or section of file
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 ...
 #pragma GCC diagnostic pop
+
+
+
+Preprocessor
+----------------------------------------------------------------------
+parsing a non-c file through preprocessor
+use " - > file.txt" because otherwise gcc assumes it is a c/c++ file
+gcc -E -DPAN_PLATFORM_vm -P  -DREGEX_XML_CDATA=\"awais\" -DREGEX_USER_NAME=\"ali\" -o set_clean.xml - < set.xml
+
+

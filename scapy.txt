@@ -106,7 +106,7 @@ del pkt[TCP].chksum
 # "unans" is ist of unreplied packet
 ans,unans=sr(IP(dst="www.test.fr/30", ttl=(1,6))/TCP())
 
-# Send and receive single packet
+# Send and receive single reply
 p=sr1(IP(dst="www.slashdot.org")/ICMP()/"XXXXXXXXXXX")
 
 
@@ -245,6 +245,7 @@ def getHwName(hw):
 ls()
 
 # all available protocol fields
+ls(IP, verbose=True)
 ls(ARP)
 
 # all scapy commands
@@ -340,3 +341,16 @@ MACOS
 ----------------------------------------------------------------------
 put this in PATH
 /Users/aawais/Library/Python/3.9/bin
+
+
+sprintf
+----------------------------------------------------------------------
+print(p.sprintf("%Ether.src% > %Ether.dst%\n%IP.src% > %IP.dst%"))
+
+if IP layer present, print IP.src and IP.dst
+if Raw present then print Raw.load
+    sprintf("{IP:%IP.src% -> %IP.dst%\n}{Raw:%Raw.load%\n}"
+
+
+
+

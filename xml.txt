@@ -1,5 +1,6 @@
 PRETTY PRINT XML
 tidy -xml -wrap 100 -i ~/Downloads/PAN-203003.xml > clean.xml
+xmllint --format --output out.xml in.xml
 
 
 SYSTEM

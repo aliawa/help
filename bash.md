@@ -369,6 +369,7 @@ with "shopt -s extglob"
 
 
 ## getopts
+   Uses builtin variables: OPTARG, OPTIND
 while getopts vkm:l:w:h option
 do
     case "$option"
@@ -383,6 +384,17 @@ do
 
     esac
 done
+if [ "$OPTIND" -gt "$#" ]       #  check if last positional arg is present
+then
+    echo
+    echo "Missing directory!"
+    usage
+    exit 2
+fi
+shift $((OPTIND - 1))           # get the last argument now
+DHOME=$1
+
+
 
 ## Manual parsing (zsh)
 local usage=(
@@ -406,18 +418,6 @@ while (( $# )); do
 
 
 
-# the last argument should be the directory
-if [ "$OPTIND" -gt "$#" ]
-then
-    echo
-    echo "Missing directory!"
-    usage
-    exit 2
-fi
-
-# get the last argument now
-shift $((OPTIND - 1))
-DHOME=$1
 
 # getopt
 args=$(getopt -l st,cb: ac:fh $*)
@@ -456,7 +456,8 @@ ${#VAR}
 
 
 
-# Arrays
+# Bash Arrays
+----------------------------------------------------------------------
     myarray=(1 2 "three" 4 "five")      # create an arrray, Note: no comma
     myarray=($(ls backport_data*))      # create from command output
     myarray+=("six")                    # append new element to array
@@ -498,7 +499,6 @@ ${#VAR}
     declare -a arr1                     # optionally declare an array
     local -a arr2
 
-    cp ${~tpath[$opt]} $LOCAL_DIR       # Zsh, perform globbing on array variable
 
 
 
@@ -697,6 +697,8 @@ typeset -A newass
 newass=(${(kv)assoc})   # copy one associative array into another
 
 
+cp ${~tpath[$opt]} $LOCAL_DIR       # Zsh, perform globbing on array variable
+
 
 Zsh switch case
 ----------------------------------------------------------------------
@@ -730,4 +732,9 @@ SH_FILE_EXPANSION
 SH_GLOB
 KSH_GLOB
 GLOBAL_EXPORT
+
+
+Get full path of script
+----------------------------------------------------------------------
+ DIR=$(cd $(dirname $0) && pwd -P)
 

@@ -5,7 +5,7 @@ origin  https://github.com/aliawa/bin.git (fetch)
 origin  https://github.com/aliawa/bin.git (push)
 
 git remote set-url origin git@github.com:aliawa/bin.git
-
+git remote set-url origin git@github.com:aliawa/scapy.git
 
 if git push is not working
 ----------------------------------------------------------------------

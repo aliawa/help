@@ -156,6 +156,7 @@ git branch -d test_br
 ### push
 # First time checkin of a branch (to remote with alias 'origin', check with 'git remote -v'
 git push -u origin dbr_aaw_em9459
+
 # Push the branch to remote repository
 git push [remote-name] [branch-name]  # General Syntax
 git push origin <branch>
@@ -255,7 +256,8 @@ git apply -R <patch>
 git show -p 06b6f75e > ~/tmp/a.patch
 
 # patch from single commit
-git format-patch -1 3c2ab26f8ae --stdout
+git format-patch -1 --stdout 3c2ab26f8ae 
+git format-patch -1 --output=~/tmp/a.patch 3c2ab26f8ae 
 
 
 #---------------------------------------------------------
@@ -301,12 +303,12 @@ git rebase -i HEAD~2
 
 git tag -l                            # show all tags
 git tag -l v1.8.5*                    # list pattern
-git tag -a v1.4 -m 'my version 1.4'   # create anotated
+git tag -a v1.4 -m 'my version 1.4'   # create anotated (ie, create tag object to store date, commit message etc.)
+git tag -a v1.2 9fceb02               # tag a commit (anotated)
+git tag v1.4                          # create lightweight tag (usually for personal temporary use)
 git show v1.4                         # see tag data
-git tag v1.4-lw                       # create lightweigt
-git tag -a v1.2 9fceb02               # tag a commit
-git push origin v1.5                  # sharing tag
-git checkout -b version2 v2.0.0       # start a new branch at tag v2.0.0
+git push origin v1.5                  # making a tag public
+git checkout -b version2 v2.0.0       # start a new branch 'version2' at tag v2.0.0
 git tag --contains 34b1413b3863       # which tag contains the given commit          
 
 
@@ -427,7 +429,27 @@ git bisect run ./test
 git mergetool -t vimdiff
 git mergetool -t diffconflicts      #<< this one is nicer
 
+------------------------------------------
+|             |           |              |
+|   LOCAL     |   BASE    |   REMOTE     |
+|             |           |              |
+------------------------------------------
+|                                        |
+|                MERGED                  |
+|                                        |
+------------------------------------------
+:diffg RE      get from REMOTE
+:diffg BA      get from BASE
+:diffg LO      get from LOCAL
 
+:wq            save and exit
+:cq            abort and exit
+
+
+Note after git pull --rebase:
+    LOCAL is the remote branch version
+    REMOTE is the local branch version 
+    because we are replaying local changes onto the remote changes.
 
 #---------------------------------------------------------
 #                       On Line Help
@@ -446,26 +468,6 @@ http://gitignore.io
 
 A Hacker’s Guide to Git
 https://wildlyinaccurate.com/a-hackers-guide-to-git
-
-
-
-#---------------------------------------------------------
-#                       git scripts
-#---------------------------------------------------------
-
-# create two working directories linked to the same repo
-git-new-workdir
-
-# add git command completion to bash
-git-completion.bash
-
-
-#---------------------------------------------------------
-#                       github
-#---------------------------------------------------------
-For github
-git remote set-url origin git@github.com:aliawa/scapy.git
-
 
 
 #---------------------------------------------------------
@@ -505,7 +507,7 @@ to the latest child commit in order to reach the older commits on a branch.
 
 
 #---------------------------------------------------------
-#                       git reset / git restore
+#                       Reset / Restore
 #---------------------------------------------------------
 
 git reset [<mode>] [<commit>]
@@ -545,9 +547,9 @@ Example:
     git reset --hard origin/master
     git pull
 
-git restore .
-git restore /path/to/file/to/revert
-    discard unstaged changes. Do not touch index 
+    # discard unstaged changes. Do not touch index 
+    git restore .
+    git restore /path/to/file/to/revert
 
 
 #---------------------------------------------------------

@@ -91,6 +91,7 @@ Escape in regular expression
 /^\w\+\ze(/j            Search for functions
 :s/CTRL-v CTRL-m//g     search and replace new lines (windows)"
 :s/\(^\s\+\)/\1\/\//    comment out lines (comment characters placed after the initial space)
+:s/pattern//gn          Count occurances
 
 :set nows               will not search past the top or bottom.
 :set hls                Highlight search pattern
@@ -1246,7 +1247,7 @@ vit   or vat, select inside html/xml tags. Use o to jump between ends of selecti
 :DeleteColumn 2
 :Header 2           Fix first two rows as column heading. default is first row
 :Header!            Hide header lines
-:Sort 3             Sort on column 3
+:Sort [n]           Sort on column n, Col. numbers start at 1, if n missing then sort current col.
 :Sort 3f            Numeric sort on floating point
 :Column a           Copy entire column to register a
 :MoveColumn 1 $     Move column to end

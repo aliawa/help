@@ -13,25 +13,28 @@ FTP:
   * new PORT command from client
   * control connection is closed.
 
-                        Server
-Client                  Port 21
+      Client            Server
+  <random port p>       Port 21
          |                 |   
          |                 |
          |                 |
-         |      PORT       |
+         |   PORT (p+1)    |
          | --------------> |
          |                 |
+         |       ACK       |
+         | <-------------- |
          |                 |
+
+
+
+      Client            Server
+       <p+1>            Port 20
          |                 |
+         |      Data       |
+         | <-------------- |
+         |      Data       |
+         | <-------------- |
+         |      Data       |
+         | <-------------- |
          |                 |
-         |                 |
-         |                 |
-         |                 |
-         |                 |
-         |                 |
-         |                 |
-         |                 |
-         |                 |
-         |                 |
-         |                 |
-         |                 |
+
