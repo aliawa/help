@@ -44,3 +44,39 @@ with open(CaseFile, 'w') as f:
     |+      keep all new-lines at end of string
     |       keep only one new-line at end, remove the rest
 
+
+
+python dictionary with tuple as key
+----------------------------------------------------------------------
+# YAML
+? !!python/tuple [0,0]
+: The Hero
+? !!python/tuple [0,1]
+: Treasure
+? !!python/tuple [1,0]
+: Treasure
+? !!python/tuple [1,1]
+: The Dragon
+
+# Python
+{(0, 1): 'Treasure', (1, 0): 'Treasure', (0, 0): 'The Hero', (1, 1): 'The Dragon'}
+
+
+
+List of dictionaries
+----------------------------------------------------------------------
+# YAML
+- name: PyYAML
+  status: 4
+  license: MIT
+  language: Python
+- name: PySyck
+  status: 5
+  license: BSD
+  language: Python
+
+# Python
+[{'status': 4, 'language': 'Python', 'name': 'PyYAML', 'license': 'MIT'},
+{'status': 5, 'license': 'BSD', 'name': 'PySyck', 'language': 'Python'}]
+
+

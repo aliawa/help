@@ -263,6 +263,8 @@ python -m ensurepip
 
 
 == python shell startup
+interactive shell >>>
+
 export PYTHONSTARTUP=~/.pystartup
 
 to enable autocompletion put this in the pystartup file
@@ -282,6 +284,8 @@ apt install python3-pip
 
 # List installed packages
 pip list
+python3 -m pip list
+
 
 # install / upgrade package
 python -m pip install SomePackage

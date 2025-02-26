@@ -650,4 +650,9 @@ git submodule update --init --recursive
 
 
 
-
+Git misleading messages
+----------------------------------------------------------------------
+# this message means that your "working-branch" is up to date with your local
+# version of "origin/main"
+Switched to branch 'main'
+Your branch is up to date with 'origin/main'.

@@ -736,5 +736,5 @@ GLOBAL_EXPORT
 
 Get full path of script
 ----------------------------------------------------------------------
- DIR=$(cd $(dirname $0) && pwd -P)
+DIR=$(cd $(dirname $0) && pwd -P)
 

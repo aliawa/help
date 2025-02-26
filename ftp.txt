@@ -13,27 +13,90 @@ FTP:
   * new PORT command from client
   * control connection is closed.
 
+Active FTP
+----------------------------------------------------------------------
+client connects from a random unprivileged port (N > 1024) to the FTP server's
+command port, port 21
+
       Client            Server
-  <random port p>       Port 21
+  <random port N>       Port 21
          |                 |   
          |                 |
          |                 |
-         |   PORT (p+1)    |
+         |   PORT (N+1)    |
+         | --------------> |
+         |                 |
+         |       2xx       |
+         | <-------------- |
+         |                 |
+
+Client listens on port N+1 by default for data connection
+
+      Client            Server
+       <N+1>            Port 20
+         |                 |
+         |       SYN       |
+         | <-------------- |
+         |       ACK       |
+         | --------------> |
+         |      Data       |
+         | <-------------- |
+         |                 |
+
+
+Passive FTP
+----------------------------------------------------------------------
+
+      Client            Server
+  <random port N>       Port 21
+         |                 |   
+         |                 |
+         |                 |
+         |      PASV       |
          | --------------> |
          |                 |
          |       ACK       |
          | <-------------- |
          |                 |
 
-
+Client listens on port N+1 by default for data connection
 
       Client            Server
-       <p+1>            Port 20
+       <N+1>            Port 20
          |                 |
+         |       SYN       |
+         | <-------------- |
+         |       ACK       |
+         | --------------> |
          |      Data       |
          | <-------------- |
-         |      Data       |
+         |                 |
+
+
+Passive EPRT
+----------------------------------------------------------------------
+
+      Client            Server
+  <random port N>       Port 21
+         |                 |   
+         |                 |
+         |                 |
+         |      PASV       |
+         | --------------> |
+         |                 |
+         |       ACK       |
          | <-------------- |
+         |                 |
+
+Client listens on port N+1 by default for data connection
+
+      Client            Server
+       <N+1>            Port 20
+         |                 |
+         |       SYN       |
+         | <-------------- |
+         |       ACK       |
+         | --------------> |
          |      Data       |
          | <-------------- |
          |                 |

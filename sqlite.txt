@@ -317,3 +317,13 @@ IMPORT
 import csv file
 .import --csv session_log.csv sessions
 
+
+
+Conditions
+----------------------------------------------------------------------
+SELECT  id, Regression FROM bugs WHERE Regression IS NOT NULL;
+SELECT  id, Regression FROM bugs WHERE Regression != "";
+
+
+
+
