@@ -1509,8 +1509,15 @@ Ctrl-x  open in new split
 Ctrl-v  open in new vertical-split
 
 
-Note
+g shortcuts
 ----------------------------------------------------------------------
-go
-ge gE
+go              go to byte
+ge gE           backward to end of word, WORD
+
+g&              take the last substitute command and run through the whole file
+
+gU gu           capitalize <text-obj>, uncapitalize <text-obj>
+g~              change capitalization
+gUU guu g~~     whole line
+
 

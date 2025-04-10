@@ -136,6 +136,25 @@ pointer to array
 int (*a)[3] // pointer to array of 3 ints
 int *a[3]   // pointer to array of 3 int pointers
 
+Passing one row of a 2-dimensional array to a function
+
+typedef struct {
+    char i;
+} MyType_t;
+void myfunc( Mytype_t (*pT)[2]) {
+    printf("%c %c\n", (*pT)[0].i, (*pT)[1].i);
+}
+main() {
+    Mytype_t b[3][2];
+    b[1][0].i = 'a';
+    b[1][1].i = 'b';
+    b[2][0].i = 'c';
+    b[2][1].i = 'd';
+    Mytype_t (* pb)[2];
+    pb = &(b[1]);
+    myfunc(pb);
+}
+
 
 Some new learnings
 -----------------------

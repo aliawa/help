@@ -127,3 +127,10 @@ ls -l
 grep --color -E 'pattern|$' file
 
 
+
+column
+----------------------------------------------------------------------
+look at csv file
+  cat a.csv | column -t -s,
+
+

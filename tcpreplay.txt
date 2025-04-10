@@ -165,7 +165,8 @@ tcprewrite --fixcsum -c sip.cache -i sip_tcp_50.edit.pcap.3 -o sip_tcp_50.edit.p
 1. Select host from left pane "10.5.12.208"
 2. go to "Configure" tab
 3. select "Networking > Virtual Switches"
-4. Edit > Security > Promiscuous mode > Accept
+4. open virtual switch for example "Standard Switch: vSwitch1"
+5. Edit > Security > Promiscuous mode > Accept
 
 
 # Split a pcap file

@@ -122,6 +122,8 @@ git log --author=aawais --grep=time_t --all-match
 --output=<file>     send log output to a file
 --oneline           shorthand for "--pretty=oneline --abbrev-commit"
 
+git log --pretty=format:'%Cred%h%Creset %C(bold blue)%an%Creset %Cgreen%cr%Creset %s%C(bold red)%d%Creset'
+
 
 #---------------------------------------------------------
 #                         History
@@ -130,9 +132,9 @@ git log --author=aawais --grep=time_t --all-match
 # show current branch only
 git show-branch --more=20
 
-# restoring a directory from history
-git checkout <treeish> -- /path/to/dir
-git checkout ver_13_6_0 mand
+# restoring a single directory from git
+git checkout <treeish> -- /path/to/dir      # treeish means a commit or symbolic name of commit
+git checkout ver_13_6_0 mand    
 
 
 #---------------------------------------------------------

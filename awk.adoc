@@ -140,17 +140,16 @@ ARGC        One more than the number of arguments because "awk" is also counted
 ARGV        starts from ARGV[1] upto ARGV[ARGC-1]
 
 echo a.awk
-{
+BEGIN{
     for (i=0; i<ARGC; i++) {
-        print "ARGUMENT " i " is " ARGV[i];
+        print "ARGV["i"] is " ARGV[i];
     }
-
 }
-awk -f a.awk a1 a2                                                                aawais@M-C02ZQK5CMD6M
 
-ARGUMENT 0 is awk
-ARGUMENT 1 is a1
-ARGUMENT 2 is a2
+awk -f a.awk a1 a2                                                                aawais@M-C02ZQK5CMD6M
+ARGV[0] is gawk
+ARGV[1] is a1
+ARGV[2] is a2
 
 Note: all command line arguments must be files that exist. Use the below trick to 
 pass arbitrary arguments
