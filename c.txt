@@ -117,15 +117,21 @@ C header files
 
 pointer to function
 -----------------------
-int (*p)(const char*, const char*);   // p is a function pointer
-p = strcmp;                           // p is initialized
-char* compStr(char* a, char* b, int(*cmp) (const char*, const char*))   // cmpStr takes a pointer to funcion as parameter
+# declare
+int (*p)(const char*, const char*);
 
-typedef (*stringcomp_t)(const char*, const char*);   // stringcomp_t is now a type
+# initialize 
+p = strcmp;
 
-// Dispatch table
-// For such similar~return~type~and~argument operations you can create an array
-// of function pointers and select a proper function by its index rather than its name
+# pointer-to-function as a function parameter
+char* compStr(char* a, char* b, int(*cmp) (const char*, const char*))
+
+# function pointer typedef
+typedef (*stringcomp_t)(const char*, const char*);
+
+# Dispatch table
+# When all functions have same return-type and argument,  you can create an array
+# of function pointers and select a proper function by its index rather than its name
 typedef int (*functionPtr)(int, int);
 functionPtr arrayFp[4] = {getSum, getDifference, getProduct, getDivision};
 arrayFp[0](a,b);

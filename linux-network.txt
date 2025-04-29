@@ -80,6 +80,9 @@ ip l show
 # it works like a patch cable, each end can be in a different namespace
 ip link add v-eth1 type veth peer name v-peer1
 
+# mtu
+ip link set ens192 mtu 2000
+
 
 # -------------------------
 # ip rule (policy routing)

@@ -367,3 +367,8 @@ default value                   0
 dictionary of int:str values    skinny_messages
 
 
+OSError: [Errno 90] Message too long
+----------------------------------------------------------------------
+ip link set ens192 mtu 2000
+
+
