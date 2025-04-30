@@ -41,7 +41,7 @@ ip [fmly] r | column -t
 # add
 ip r a 192.168.20.0/24 dev eth0
 
-# static throug a router
+# static through a router
 ip r a to <addr> via <router_addr> dev eth0
 
 # default route (special prefix:"default" equivalent to ipv4 0/0 and ipv6 ::/0
