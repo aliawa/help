@@ -1,0 +1,29 @@
+Stun Header
+
+       0                   1                   2                   3
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |0 0|     STUN Message Type     |         Message Length        | 2 bytes
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                         Magic Cookie                          | 2 bytes
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                                                               | 12 bytes 
+      |                     Transaction ID (96 bits)                  |
+      |                                                               |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+      Bits          Bytes  Len(Bits) Len(Bytes)      What is it
+      ---------     -----  --------- ---------      --------------------------------------------
+      0 -   1       0       2        x              Always zero
+      2 -  15       0 - 1   12       2              Type (class + method)
+     16 -  31       2 - 3   16       2              Lenght of payload, not including the 20 byte header 
+     32 -  47       4 - 7   32       4              Magic cookie (0x2112A442)
+     48 - 143       8 - 19  96      12              Transaction id
+    144 - end       variable                        Attributes in TLV format
+   
+
+How to identify a stun message
+----------------------------------------------------------------------
+1. First 2 bits of payload are zero. Means First nibble (4 bits) can be one of 0,1,2,3
+2. Byte 3, last 2 bits are zero
+3. Bytes 4 - 7 of payload is the magic cookie 0x2112A442

@@ -1,0 +1,19 @@
+# breakpoint
+breakpoint set -f <file> -l <line>
+breakpoint set -n <funcname>
+breakpoint list
+
+# short forms
+br s -f <file> -l <line>
+
+# Alias
+command alias bfl breakpoint set -f %1 -l %2
+bfl foo.c 12
+
+
+# Load
+lldb <prog-file>
+lldb
+(lldb) file <prog-file>
+
+
