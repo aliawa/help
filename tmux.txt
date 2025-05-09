@@ -327,3 +327,10 @@ Additionally, the new-window, new-session, split-window, respawn-window and resp
 MACOS example configuration
 ----------------------------------------------------------------------
 /opt/homebrew/opt/tmux/share/tmux
+
+
+TODO
+----------------------------------------------------------------------
+bind-key    -T prefix       M-p               previous-window -a
+
+

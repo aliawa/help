@@ -71,4 +71,11 @@ Change Option key to Meta (Esc+)
 Iterm2 > Settings > Profiles > "Your profile" > Keys > Left Option Key = "Esc+"
 
 
+Developer tools/ LLDB
+----------------------------------------------------------------------
+sudo dscl . append /Groups/_developer GroupMembership <username>
+
+# also ran this, but not sure if that was enough
+sudo /usr/sbin/DevToolsSecurity --enable
+
 

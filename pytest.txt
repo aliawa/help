@@ -1,6 +1,19 @@
 INVOCATION
+# help
 https://docs.pytest.org/en/6.2.x/usage.html#cmdline
 pytest -h
+
+# run all in module "test_dipp_alg2.py"
+python -m pytest -v dipp_tests/test_dipp_alg2.py
+
+# run specific test from the module
+python -m pytest -v test_dipp_alg2.py::test_dipp_call
+
+# run tests marked with "runlist" in directory dipp_tests/
+python -m pytest -v -m runlist dipp_tests/
+
+
+
 
 -q  quiet mode
 

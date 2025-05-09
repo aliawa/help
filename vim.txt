@@ -1521,3 +1521,8 @@ g~              change capitalization
 gUU guu g~~     whole line
 
 
+
+TO DO
+----------------------------------------------------------------------
+nnoremap + :let @/ =  expand('<cword>')<cr>
+

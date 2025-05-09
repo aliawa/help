@@ -125,6 +125,14 @@ git log --author=aawais --grep=time_t --all-match
 git log --pretty=format:'%Cred%h%Creset %C(bold blue)%an%Creset %Cgreen%cr%Creset %s%C(bold red)%d%Creset'
 
 
+# show contents of a single commit
+git show 09ce34b9
+
+# show files changed in a commit
+git show --pretty="" --name-only head~8
+
+
+
 #---------------------------------------------------------
 #                         History
 #---------------------------------------------------------
@@ -260,6 +268,8 @@ git show -p 06b6f75e > ~/tmp/a.patch
 # patch from single commit
 git format-patch -1 --stdout 3c2ab26f8ae 
 git format-patch -1 --output=~/tmp/a.patch 3c2ab26f8ae 
+
+
 
 
 #---------------------------------------------------------
@@ -579,12 +589,6 @@ git switch -                            # come back to head from detached-head s
 
 
 
-
-# show author, commit message,  changed files and diff in a commit
-git show 09ce34b9
-
-# show files changed in a commit
-git show --pretty="" --name-only head~8
 
 
 

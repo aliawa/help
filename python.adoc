@@ -319,6 +319,16 @@ sudo apt install python-yaml
 pyhton -m pip install pyyaml
 
 
+# install package from github.
+1. clone github repo
+2. create a python vertual env.
+3. cd <directory containing setup.py>
+4. pip install .
+
+
+
+
+
 
 
 == Exceptions
