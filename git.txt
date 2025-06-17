@@ -203,7 +203,7 @@ git diff                      # worktree and staged
 git diff --stat [branch]      # only show changed files| No. of lines changed| graph
 git diff --staged             # staged and last-commit
 #
-# diff between working dir and commited files
+# diff between working dir and some commit
 # for last commit use HEAD
 git diff <hash> -- <filename>
 

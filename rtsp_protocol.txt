@@ -2,15 +2,14 @@
 How does client find about the media stream 
 ------------------------------------------------------------
 RTSP URL identifies the media stream
-Client learns about the properties of media by downloading a "presentation
-description" file. Client obtains this file using any means such as http etc
-from somewhere, for example a Web page
+Client learns about the properties of media by downloading a "presentation description" file. 
+Client obtains this file using any means such as http etc from somewhere, for example a Web page
 
 
-RTSP actually controls presentation
-------------------------------------
-Presentations have names that is included in the URL, forexample "twister". Presentation is a
-combination of streams such as audio and video.
+RTSP actually controls "a presentation"
+---------------------------------------
+Presentations have names that is included in the URL, for example "twister". 
+Presentation is a combination of streams such as audio and video.
 rtsp://media.example.com:554/twister
 
 
@@ -18,15 +17,15 @@ How does the client find out the server port and address
 ---------------------------------------------------------
 From the RTSP URL:
 rtsp://<host>:<port>         use tcp
-rtsp://<host>/<path>         use tcp port 554
+rtsp://<host>/<path>         use tcp and default port 554
 rtspu://<host>:<port>        use udp
 
 
 
 Use of SDP.
 ------------
-* SDP can be retrieved by clients from server using HTTP or DESCRIBE. So SDP is
-  only send from server to client.
+* SDP can be retrieved by clients from server using HTTP or DESCRIBE. 
+  SDP is only sent from server to client.
 * The port in "m=" is typically 0, if it does contain a value it is just a
   recomendation from server, the client can ignore it.
 * The "c=" field is typically "0.0.0.0" because the destination address is
@@ -34,10 +33,6 @@ Use of SDP.
 * Aggregate Control: if there is session level "a=control" field then it is to control all
   streams. Media level "a=control" is for individual streams.
 
-
-Default server port
-------------------
-554
 
 
 RTSP has sessions
@@ -88,19 +83,19 @@ Media transport
 ----------------
 The media always flows from server to client therefore only one address is
 needed. There are three cases.
-    unicast: transmitted to the source of RTSP request with port chosen by client
-    multicast: server chooses address: e.g. live transmission.
-    multicast: client chooses address: e.g. server to participate in existing multicast conference
+    unicast   : transmitted to the source of RTSP request with port chosen by client
+    multicast : server chooses address, e.g. live transmission.
+    multicast : client chooses address, e.g. server to participate in existing multicast conference
 
 
 Methods:
 ----------
-SETUP:      Start an RTP session
-PLAY:       Start data stream on a session allocated via SETUP
-PAUSE:      Temporarily halts a stream without freeing server resources
-TEARDOWN:   Frees resource associated with the stream.
-DESCRIBE:   Obtain media information about the resource identified by request
-            URL. The response contains SDP
+SETUP    : Start an RTP session
+PLAY     : Start data stream on a session allocated via SETUP
+PAUSE    : Temporarily halts a stream without freeing server resources
+TEARDOWN : Frees resource associated with the stream.
+DESCRIBE : Obtain media information about the resource identified by request URL. 
+           The response contains SDP
 
 
 
@@ -108,8 +103,8 @@ Asterisk in request URI
 ------------------------------
 The asterisk "*" in the Request-URI means that the request does not
 apply to a particular resource, but to the server itself, and is only
-allowed when the method used does not necessarily apply to a
-resource.  Example: OPTIONS * RTSP/1.0
+allowed when the method used does not necessarily apply to a resource.  
+Example: OPTIONS * RTSP/1.0
 
 
 Interleaved media
@@ -125,7 +120,7 @@ More than one Request in the same connection
    A client that supports persistent connections or connectionless mode
    MAY "pipeline" its requests (i.e., send multiple requests without
    waiting for each response). A server MUST send its responses to those
-   requests in the same order that the requests were received.12.37 Session
+   requests in the same order that the requests were received.
 
 
 Session identifier
