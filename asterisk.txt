@@ -19,9 +19,11 @@ host=dynamic
 
 
 
-connect to  running asterisk
+running asterisk
 -----------------------------
-asterisk -r 
+sudo systemctl start asterisk
+sudo systemctl enable asterisk      # optional, start on system boot
+sudo asterisk -rvvv                 # connect to asterisk cli
 
 
 Asterisk Logging
@@ -46,23 +48,45 @@ Asterisk Logging
 
 common debug commands
 ------------------------------------------------------------------------
-sip debug         :  turn on sip debugging
-sip no debug
-set verbose 4     :  10 is the highest verbosity
-show dialplan
-sip show domains  :  show domains as configured in sip.conf
-sip show settings :  for example on what port is asterisk listening
-sip show peers    :  show ua's who's IP is known i.e. ua's with host=IP
-                     and registered ua's with host=dynamic
-sip show users    :  all users listed in sip.conf
-sip show settings :  does not work in Edgemarc asterisk
-sip show registry
+core show help <command>
 
+sip notify                     -- Send a notify packet to a SIP peer
+sip prune realtime [peer|all]  -- Prune cached Realtime users/peers
+sip qualify peer               -- Send an OPTIONS packet to a peer
+sip reload                     -- Reload SIP configuration
+sip set debug {on|off|ip|peer} -- Enable/Disable SIP debugging
+sip set history {on|off}       -- Enable/Disable SIP history
+sip show {channels|subscriptions} -- List active SIP channels or subscriptions
+sip show channelstats          -- List statistics for active SIP channels
+sip show channel               -- Show detailed SIP channel info
+sip show domains               -- List our local SIP domains
+sip show domains               -- show domains as configured in sip.conf
+sip show history               -- Show SIP dialog history
+sip show inuse                 -- List all inuse/limits
+sip show mwi                   -- Show MWI subscriptions
+sip show objects               -- List all SIP object allocations
+sip show peers                 -- List defined SIP peers
+sip show peer                  -- Show details on specific SIP peer
+sip show registry              -- List SIP registration status
+sip show sched                 -- Present a report on the status of the scheduler queue
+sip show settings              -- Show SIP global settings
+sip show tcp                   -- List TCP Connections
+sip show users                 -- List defined SIP users
+sip show user                  -- Show details on specific SIP user
+sip unregister                 -- Unregister (force expiration) a SIP peer from the registry
+sla show stations              -- Show SLA Stations
 
-extensions reload :  reload extensions.conf
+core set verbose <number>      -- 10 is the highest verbosity
+dialplan show
 reload		      :  reload configuration
-stop now	      :  stop it
-restart now	      :  restart immediately
+
+core stop gracefully           -- Gracefully shut down Asterisk
+core stop now                  -- Shut down Asterisk immediately
+core stop when convenient      -- Shut down Asterisk at empty call volume
+
+logger add channel debug_log_pan notice,warning,debug,verbose
+logger show channels
+
 
 
 TLS (sip.conf)

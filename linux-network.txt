@@ -560,3 +560,30 @@ sudo ip addr add 192.168.1.100/24 brd + dev eth0 label eth0:0
 sudo ip link set dev eth0 up
 
 
+Is firewall runnuing
+sudo ufw status
+    Status: active
+    Status: inactive
+
+
+sudo ip link set dev ens160 promis on
+sudo vi /etc/sysctl.conf
+sudo sysctl -p
+
+
+route -n get 100.100.87.1
+
+delete route
+sudo route -n delete 100.100.87.0/24
+
+check route
+netstat -nr
+
+show routing for ip
+route get 100.100.87.1
+
+route add
+sudo route -n add -net 192.168.1.0/24 192.168.0.1
+sudo route -n add 192.168.1.1/32 192.168.0.1
+
+

@@ -1207,7 +1207,7 @@ mb              bookmark currently browsed dir
 {cnt}gb         goto bookmark nr {cnt}
 qb              List bookmarked directories (query bookmark)
 
-
+:Lex %:p:h      Open folder of current file
 
 
 
@@ -1309,7 +1309,7 @@ dq  Close all but one diff buffer, and :diffoff! the last one;
 d?  Show help
 g?  show help
 go  open file in vertical split
-)   jump to next file, huk, revision
+)   jump to next file, hunk, revision
 
 ## MERGING ##
 In file with merge conflicts

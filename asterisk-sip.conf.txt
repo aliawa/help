@@ -1,3 +1,7 @@
+dialpan reload
+dialpan show
+
+
 Sip.conf
 ---------
 
