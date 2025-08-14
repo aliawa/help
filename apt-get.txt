@@ -10,9 +10,10 @@ apt edit-sources                            # edit sources.list using $EDITOR
 
 # Maintainence
 # ---------------------------------------------------------
-apt update
-apt full-upgrade
-apt autoremove
+apt update -y
+apt full-upgrade -y 
+apt autoremove -y   # remove packages that were installed to satisfy dependencies, but are not needed now because the original package that required theses dependencies is itself been uninstalled
+apt clean -y        # cleans packages from local cache.
 
 do-release--upgrade -d
 

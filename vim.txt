@@ -300,7 +300,7 @@ Read quickfix list from a file at startup
 
 marks
 ---------
-  mx   tells Vim to add a mark called x.
+  mx add a mark called x.
   `x return to the line and column for mark x.
   'x return to the beginning of the line where mark x is set.
 
@@ -313,8 +313,9 @@ marks
   ^     where last insert was stopped
   .     where last change was made
 
-  :marks shows all marks set.
-  :marks x shows the mark named x.
+  :marks    shows all marks set.
+  :marks x  shows the mark named x.
+  :delm x   delete mark x
 
   :jumps shows the jumplist.
   Ctrl-o moves the cursor to the last jump.
@@ -1526,3 +1527,13 @@ TO DO
 ----------------------------------------------------------------------
 nnoremap + :let @/ =  expand('<cword>')<cr>
 
+
+
+command line
+----------------------------------------------------------------------
+Ctrl-u  delete to start
+Ctrl-h  backspace
+Ctrl-w  delete word
+
+Ctrl-b  begining
+Ctrl-e  end
