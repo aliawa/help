@@ -1,0 +1,16 @@
+Spc     play
+x       stop playback
+
+
+Cmd+b   label at current cursor pos
+Cmd+.   label at current playback pos
+
+Cmd+[   go to Selection start
+Cmd+]   go to Selection end
+
+Spc     play the selection only
+
+
+During playback press [ to mark start of selection
+press ] to mark end of selection.
+

@@ -1,44 +1,121 @@
-Editing cells
-https://www.visidata.org/docs/edit/
-ge  edit multiple rows at the same time
-    eg: select multiple rows then ge8 => current column in all rows will be 8
-
-gs  select all rows https://www.visidata.org/docs/columns/
-
-a   add new row
-d   delete current row
-gd  delete selected rows
-
-za  insert new column on right
-^   rename column
-i   Add auto incremented column to right
-zi  Add auto incremented column with given step value
-=   Add an expression column
--   hide column
-gv  unide all columns
-_   expand column to fit text
-z+  show sum of column
-Shift C + d     delete column
-
-
+Editing
+--------------
+e           begin editing current cell
+Enter       finish editing
+Ctrl-c      cancel edit
+Ctrl-a      jump to begining of value
+Ctrl-e      jump to end value
+Ctrl-k      delete from current pos to end
+shift-u     undo
+shift-r     redo
 z= expr     Enter result of expression in cell
-g= date.today()  create colum with todays date
 
-y   copy row
-p   paste row
+ge<value>   enter <value> in current column of all selected rows
 
-Shift-K     move row up
-Shift-J     move row down
-Shift-U     undo
-Shift-C     view columns sheet
-Ctrl-S      save
+Ctrl-s      save
+
+
+Row
+--------------
+a           add row
+ga3         add 3 rows
+d           delete current row
+gd          delete selected rows
+y           copy row
+p           paste row
+shift-k     move up
+shift-j     move down
+
+
+
+Column
+-------------
+za                  add column
+gza3                add 3 columns
+shift-c d           delete a column
+shift-l             move one position right
+shift-h             move one position left
+g shift-l           all the way right
+g shift-h           all the way left
+_                   Adjust column width to fit content
+^                   rename column
+-                   hide column
+gv                  unide all columns
+i                   add auto incremented column to right
+zi                  add auto incremented column with given step value
+=<expr>             add a column with result of expr. Col names can
+                    be used in expr, but they should be valid python
+                    identifiers
+g= date.today()     add colum with todays date
+!                   make it key-column, so it does not scroll away
+z+                  show sum of column
+
+
+In columns-sheet
+--------------
+- set width to 0 to hide column
+- d delete column
+
+
+
+Search and replace
+--------------
+*           * followed by regex and then followed by
+            Tab and then followed by replacement text
+            this creates an new column with the replacements carried out.
+g*          replace text in selected rows in current column
+            g* > search-term > Tab > replacement > Enter
+
+
+Column Types
+--------------
+~   string
+#   int
+%   float
+$   currency
+@   date
+
+
+Move around the sheet
+--------------
+gg, G       like vim
+gh, gl      go to left most, right most column
+gk, gj      top row, bottom row
+/,?         search in current colum
+g/, g?      search in all coulums
+r, c        search row by name, search column by name
+
+
+
+Overview sheets
+--------------
+shift-s     sheets sheet
+shift-c     columns sheet
+shift-f     frequencies of values in current column
+
+
+
+Select
+--------------
+s           select row
+u           unselect row
+t           toggle select row
+gs          select all rows
+gu          unselect all rows
+gt          toggle select all rows
+|<regex>    select rows by regex-match in current column
+
 
 
 Filter rows
 ----------------------------------------------------------------------
-Select rows then "
-Frequency table with Shift-f then Enter
-Frequence table with Shift-f then select rows then g+Enter
+"           open selected rows in a separate sheet
+
+In frequencies table (shift-f)
+- press enter to open a new sheet with rows having selected value in column
+- select muliple rows and press g+Enter
+
+
 
 Sort
 ----------------------------------------------------------------------
@@ -55,10 +132,8 @@ navigae to Category colum and press Shift-f
 
 
 
-select
-s   t   u      select/toggle/unselect current row
-gs  gt  gu     select/toggle/unselect all rows
 
-Move column
-H   L   one left or right
-gH gL   all the way left or right
+
+
+
+
