@@ -62,7 +62,7 @@ Settings > Keyboard > Keyboard Shortcuts > Modifier Keys
 
 Change function keys to function keys
 ----------------------------------------------------------------------
-Settings > Keyboard > Keyboard Shortcuts > 
+Settings > Keyboard > Keyboard Shortcuts >
     Function Keys > Use F1,F2, etc. keys as standard function keys
 
 
@@ -77,5 +77,22 @@ sudo dscl . append /Groups/_developer GroupMembership <username>
 
 # also ran this, but not sure if that was enough
 sudo /usr/sbin/DevToolsSecurity --enable
+
+
+
+Create a desktop shortcut to open firefox banking profile
+----------------------------------------------------------------------
+Use Automator:
+choose type: Application
+Drag "Run shell-script" in workflow
+open /Applications/Firefox.app --new --args -p banking
+
+Dowload .icns icon file from macosicons.com
+Right-click the automator shortcut > Get Info
+Drag your icon over the small icon in top-left corner
+
+
+
+
 
 
