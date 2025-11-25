@@ -147,7 +147,7 @@ ip netns exec <namespace> ip link set eth5 netns 1
 
 # changing host name
 # ------------------
-hostname:
+hostname ubuntu:
     hostnamectl set-hostname xps2.ewn
     
 check:

@@ -1009,8 +1009,8 @@ HELP
 " -------------------------------------------------------------
 " Using help
 " -------------------------------------------------------------
-:helpgrep {pattern}     # use \c to ignore case, :cn next :cp previous
-    then navigate using :cn :cp :cwindow
+:helpgrep {pattern}     # use \c to ignore case, 
+    then navigate using :cn (next)  :cp (previous) :cwindow
 
 
 
@@ -1160,11 +1160,13 @@ example: run x.py and insert its output at cursor location
 :sh                 a shell inside vim
 :terminal           or :term, new terminal as a horizontal split
 :vert :terminal     terminal as vertical split
-Ctrl-w  N           terminal-normal-mode
+
+** All vim commands must be preceded with Ctrl-w **
+Ctrl-w  Shift-n     terminal-normal-mode
 i                   back to regular terminal mode from terminal-normal
 Ctrl-w  :           terminal-command-mode
-Ctrl-w  ""          paste
-Ctrl-w  "{reg}      paste register
+Ctrl-w  ""          paste register "
+Ctrl-w  "{reg}      paste register {reg}
 Ctrl-w  :display    see all available registers
 
 
@@ -1293,6 +1295,7 @@ Shift + <up/down/right/left>    move without drawing
 
 :Gvdiffsplit!               diff with staged version of the file, !=keep current file in focus
 :Gvdiffsplit <branch>:%     diff with same file in a different branch
+:Gvdiffsplit stash@{0}:%    diff with most recent stash
 :only                       to close diff
 
 :Gread                      variant of "git checkout -- filename", can be undone with u
@@ -1300,7 +1303,10 @@ Shift + <up/down/right/left>    move without drawing
 
 :G                          same as :Git, use g? for help on what to do here
 :G difftool -y [args]       open all changed file in different tabs, [args] is any git diff arg
+:G difftool -y HEAD^
 :tabo                       close all other tabs
+
+:Gllog %                    change log for current file
 
 Things to do in :G
 =   toggle inline diff

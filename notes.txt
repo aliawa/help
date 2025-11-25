@@ -55,6 +55,14 @@ rpm -i <rpm file>
 rpm -U <package name> (upgrage a package)
 
 
+Uninstall RPM
+----------------------------------------------------------------------
+Find exact name of package
+    rpm -qa | grep undo
+Uninstall
+    rpm -e undo-tunnel-9.0.0-0.x86_64
+
+
 Dialup on Linux
 ----------------
 1. Programs->Internet->Dialup Configuration->Accounts Add

@@ -28,8 +28,15 @@ Time
 -----
 -mtime 0                    modified in last 24 hours
 -newer image.bin            modified after the modification time of image.bin.acn
-\! -newer image.bin         modified befoer image.bin
-\! -newermt '2011-06-08'    older than 2011-06-08 
+! -newer image.bin         modified befoer image.bin
+! -newermt '2011-06-08'    older than 2011-06-08 
+
+find files modified in last 24 hours and similar
+find . -type f -newermt "-24 hours" 
+find . -type f -newermt "-10 minutes" 
+find . -type f -newermt "1 day ago" 
+find . -type f -newermt "yesterday"
+
 
 
 Location

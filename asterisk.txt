@@ -1,29 +1,41 @@
-starting
--------
-cd ~/asterisk-1.2.10
-sudo ./asterisk -vvvc
+running asterisk
+----------------------------------------------------------------------
+in foreground
+    cd ~/asterisk-1.2.10
+    sudo ./asterisk -vvvc
+Daemon
+    sudo systemctl start asterisk
+    sudo systemctl enable asterisk      # optional, start on system boot
+
+
+connect to CLI:
+    sudo asterisk -rvvv                 
+    sip show peers
 
 
 configuration
--------------
-cd /etc/asterisk
-sudo vi sip.conf
-search for [snom]
+----------------------------------------------------------------------
+/etc/asterisk
+    sip.conf
+    maxexpiry=3600                 ; Maximum allowed time of incoming registrations (seconds)
 
 
 minimalist client entry in sip.conf
-----------------------------------
-[UserName]
-type=friend
-host=dynamic
+    [UserName]
+    type=friend
+    host=dynamic
+
+Debug commands
+----------------------------------------------------------------------
+sip show peers
+sip reload
+dialplan show paloalto
 
 
+help
+----------------------------------------------------------------------
+help core show                  all commands begining with "core show"
 
-running asterisk
------------------------------
-sudo systemctl start asterisk
-sudo systemctl enable asterisk      # optional, start on system boot
-sudo asterisk -rvvv                 # connect to asterisk cli
 
 
 Asterisk Logging

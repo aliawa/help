@@ -31,7 +31,7 @@ tshark -r a.pcap -Y "sip.Method == INVITE"
 # All 200 OK
 tshark -r a.pcap -Y "sip.Status-Code == 200"
 
-# show the info field
+# show the info field (as shown in the info column in wireshark)
 tshark -r a.pcap -T fields -e _ws.col.info
 
 # sip statistics

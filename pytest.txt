@@ -68,7 +68,7 @@ def order():
     return []
 
 @pytest.fixture(autouse=True)
-def myfixture(order):
+def myfixture(order):            <<< this fixture will without any test requesting it.
     order.append("1")
 
 def test_a1(order):
