@@ -163,10 +163,10 @@ check:
 
 # netstat: listening services
 # ---------------------------
-states:
-  netstat -tpna
+sockets:
+  netstat -tpna         add -l for listening sockets only
   netstat -upna
-  netstat -pna --inet # UDP,TCP,RAW
+  netstat -pna --inet <UDP|TCP|RAW>
 
 protocol statistics:
   netstat -aps
@@ -176,6 +176,7 @@ routing table:
 
 interfaces:
   netstat -i 
+  netstat -ia
 
 
 

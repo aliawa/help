@@ -81,3 +81,9 @@ assignee = currrentUser() and "Explain Root Cause" ~ "sequence"
 # branch
 "Branch Selection - PANOS" ~ 11.1-cosmos
 
+
+
+# Performance
+
+assignee = currentUser() and status changed to (Resolved,DEFERRED) during ("2025/08/01", "2026/01/31")
+

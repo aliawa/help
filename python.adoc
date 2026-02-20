@@ -45,13 +45,13 @@ min(lst)
 max(lst)
 
 lst.upper()
-lst.append(3)       # appends as a single element, even when obj is iterable, unlike + operator and extend
+lst.append(obj)     # appends as a single element, even when obj is iterable, unlike + operator and extend
 lst.extend('42')    # add '4' and '2' to lst as separate elements; takes iterable
 lst.insert(1,'g')   # insert 'g' and index 1
 lst.remove('baz')   # remove 'baz' from list if present, raise exception otherwise
 lst.pop(0)          # removes item at index and returns the removed item. 
 lst.count('2')      # count string '2' in lst
-lst.sort()          # sort list in-place. doesn't return new list, as opposed to sorted
+lst.sort()          # sort list in-place. doesn't return new list, like sorted
 
 sorted(lst)         # takes any iterable, return a sorted list
 set(lst)            # return set, eliminates duplicates
@@ -230,6 +230,11 @@ vars(obj)                       returns __dict__ of obj
 
 check if two objects are same   print(hex(id(A))); print(hex(id(A_copy)))
 
+using rich inpect
+    from rich import inspect
+    a = []
+    inspect(a, methods=True)
+
 
 
 == Venv
@@ -262,16 +267,21 @@ python -m ensurepip
 
 
 
-== python shell startup
-interactive shell >>>
-
-export PYTHONSTARTUP=~/.pystartup
+== configure python REPL
+put configuration in ~/.pythonstartup
+    also see PYTHONSTARTUP
+    try:
+        from rich import pretty, traceback
+    except ModuleNotFounderror:
+        pass
+    else:
+        pretty.install()
+        traceback.install(show_locals=False)
 
 to enable autocompletion put this in the pystartup file
-
-import rlcompleter
-import readline
-readline.parse_and_bind("tab: complete")
+    import rlcompleter
+    import readline
+    readline.parse_and_bind("tab: complete")
 
 
 
@@ -390,6 +400,14 @@ re.finditer     # return match objects
 re.findall      # return matched strings
 
 (?: )           # non-capturing group
+
+comp_pat = re.compile(r'abc (?P<num>\d{3})')
+res = comp_pat.match('some text')
+print (res.group('num'))
+
+
+
+
 
 
 
@@ -679,4 +697,9 @@ dict_vec = {'x':1, 'y':0, 'z':1}
 
 myfunc(*tuple_vec)          # Unpack a tuple
 myfunc(**dict_vec)          # Unpack a dictionary, assigns dictionary keys to func args
+
+
+
+== oneliners
+python rich.markdown readme.md
 

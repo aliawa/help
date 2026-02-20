@@ -6,6 +6,7 @@ vim -u {vimrc}       load specific vimrc file
 :echo $MYVIMRC       which vimrc is being used
 :source $MYVIMRC     reload vimrc file
 :set runtimepath?    what is my runtime path
+:scritpnames         where are all the loaded scripts
 
 modeline
     special line at the begining or end of file with vim options for that file
@@ -368,7 +369,7 @@ Folds
     go in the block and zm
 
 :set foldmethod=manual
-    then go inside a {} block zfa}        zf = create fold operater, a} = text object
+    then go inside a {} block zfa}        'zf' is create fold operater, a} is text object
     visual select and zf
     zf  create fold
     zd  delete fold
@@ -1172,7 +1173,7 @@ Ctrl-w  :display    see all available registers
 
 
 " -------------------------------------------------------------
-" Explore
+" Explore :Lex
 " -------------------------------------------------------------
 Lexplore        Left explore, toggle
 enter           open file in preview window
