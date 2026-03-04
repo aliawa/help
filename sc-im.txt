@@ -40,3 +40,9 @@ sort a1:m21 "+#D"
 Pc  paste and update refrences
 
 e tab   export as tab separated data
+
+copy-paste
+    yy  copy cell
+    p   paste
+    Pc  paste without updating refrence
+

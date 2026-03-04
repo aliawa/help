@@ -120,6 +120,10 @@ In frequencies table (shift-f)
 Sort
 ----------------------------------------------------------------------
 #   to mark column numeric
+@   mark as date
+%   floating point
+$   currency
+
 [   ascending
 ]   descending
 
