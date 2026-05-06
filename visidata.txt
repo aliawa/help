@@ -31,24 +31,26 @@ shift-j     move down
 Column
 -------------
 za                  add column
+zi                  add auto incremented column with given step value
+i                   add auto incremented column to right
+=date.today()       add colum with todays date
+=<expr>             add a column with result of expr. see <expr>
 gza3                add 3 columns
+
 shift-c d           delete a column
 shift-l             move one position right
 shift-h             move one position left
 g shift-l           all the way right
 g shift-h           all the way left
-_                   Adjust column width to fit content
+_ (underscore)      Adjust column width to fit content
 ^                   rename column
 -                   hide column
 gv                  unide all columns
-i                   add auto incremented column to right
-zi                  add auto incremented column with given step value
-=<expr>             add a column with result of expr. Col names can
-                    be used in expr, but they should be valid python
                     identifiers
-g= date.today()     add colum with todays date
 !                   make it key-column, so it does not scroll away
 z+                  show sum of column
+z<Enter>            show entire text in cell
+'(single-quote)     create a new frozen column from current column. Needed after =<expr>
 
 
 In columns-sheet
@@ -136,8 +138,12 @@ navigae to Category colum and press Shift-f
 
 
 
+<expr>
+Col names can be used in expr, but they should be valid python
 
 
 
 
-
+Save and exit
+----------------------------------------------------------------------
+Confirm before quit         options.quitguart = True in ~/.visidatarc

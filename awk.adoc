@@ -112,7 +112,7 @@ SUBSEP   |  subscript separator                        | "\034"
     FUNCTION             |              DESCRIPTION                                        
 -------------------------+------------------------------------------------------------------
 sub(/regex/,t)           |  replace firstrmatch of regex in $0 with with t
-sub(/regex/,t,s)               |  replace first match of regex in string s with t
+sub(/regex/,t,s)         |  replace first match of regex in string s with t
 gsub(regex,t)            |  replace everything matching regex with t in $0
                          |    return number of substitutions made 
 gsub(regex,t,str)        |  substitute all mathes of regex with t in string str, 

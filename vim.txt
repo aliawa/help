@@ -989,7 +989,7 @@ Matching Bracket
 :g/pattern1/s/pattern2/string/gi
                         # in lines matchin pattern1 replace pattern2 with string
 :v/./,/./-g             # compress multiple blank lines to a single blank line
-:%s/^\_s\+$/\r/g         # another way to collapse empty lines
+:%s/^\_s\+$/\r/g        # another way to collapse empty lines
 
 
 :%g/^a/-1join     join lines starting with character 'a' to previous line

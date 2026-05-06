@@ -159,6 +159,8 @@ on 5060
 4. gdb pan_task all_pktproc_4_8.1.11_1
 5. bt
 
+example:
+gdb /opt/idpfs/usr/local/bin/pan_task all_task_8-20260224091243-11.1.6_pshm
 
 Shared Library
 --------------
