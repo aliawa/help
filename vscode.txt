@@ -1,0 +1,12 @@
+Cmd-Shift-p  
+    opens command palette
+    Example: type "open settings json" or "view show extension"
+
+Execute commands
+Ctrl-Shift-p 
+
+File quick open
+Cmd-p
+
+List of all open files
+Ctrl-Tab

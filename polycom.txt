@@ -1,0 +1,32 @@
+
+6 Settings
+    1 Basic
+        7 Restart Phone
+
+6 Settings
+    4 Status
+        4 Diagnostics
+            4 Network
+                1 Ping
+                2 Trace Route
+
+6 Settings
+    2 Advanced
+        1 Administration Settings
+            Call Server Configuration
+                SIP
+                    Server 1
+
+6 Settings
+    2 Advanced
+        1 Administration Settings
+            2 Line Configuration
+                Line 1
+                    SIP Protocol
+                        Server 1
+                            Address     10.5.16.52
+                            Port        5060
+                            Register    Yes
+                            Transport   TCP Preferred
+                            Special Interop Standard
+

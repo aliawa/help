@@ -1,0 +1,18 @@
+Login
+----------------------------------------------------------------------
+    ip  : https://10.124.170.11
+    pwd : rotatibad3
+    user: aawais@paloaltonetworks.com
+
+
+Reset
+----------------------------------------------------------------------
+Gear Icon > System manager
+
+Gear Icon > Device Manager > "10.124.162.19" > Actions > Reboot Device
+                           > "10.124.167.53"
+                           > "10.124.169.10"
+
+Gear Icon > Queue Manager
+
+

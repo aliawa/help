@@ -1,0 +1,44 @@
+REGISTER sip:[64:ff9b:0:0:0:0:4801:2e0c] SIP/2.0
+Via: SIP/2.0/TCP [2a00:79e1:2c00:1901:8649:4112:1de8:f1de]:63041;branch=z9hG4bK3jrC36
+Via: SIP/2.0/TCP [3a00:79e1:2c00:1901:8649:4112:1de8:f1de]:64042;branch=z9hG4bK3jrC37;received=111.111.111.111
+Via: SIP/2.0/TCP [4a00:79e1:2c00:1901:8649:4112:1de8:f1de]:65041;branch=z9hG4bK3jrC38;received=222.222.222.222
+Via: SIP/2.0/TCP [5a00:79e1:2c00:1901:8649:4112:1de8:f1de]:66041;branch=z9hG4bK3jrC39;received=444.444.444.44
+Via: SIP/2.0/TCP [6a00:79e1:2c00:1901:8649:4112:1de8:f1de]:67041;branch=z9hG4bK3jrC40;received=555.555.555.555
+Via: SIP/2.0/TCP [7a00:79e1:2c00:1901:8649:4112:1de8:f1de]:68041;branch=z9hG4bK3jrC41;received=666.666.666.666
+Via: SIP/2.0/TCP [8a00:79e1:2c00:1901:8649:4112:1de8:f1de]:69041;branch=z9hG4bK3jrC42;received=777.777.777.777
+From: <sip:+10620370062@receiver.int>;tag=nqkENGl
+Call-ID: f3CqRMgPFktDyqJQkTNs1Hmu@caller.int
+To: <sip:+10620370062@receiver.int>
+CSeq: 1 REGISTER
+User-Agent: Softphone v 234555.121212.11111.abcdev laaab
+Max-Forwards: 70
+Date: Thu, 26 Feb 2026 19:02:33 GMT
+Expires: 300
+Timestamp: 56789012345
+P-Called-Party-ID: <sip:user1-business@example.com>
+P-Visited-Network-ID: "Visited network number 1"
+P-Charging-Function-Addresses: ccf=192.0.8.1; ecf=192.0.8.3,ccf-2=192.0.8.2; ecf-2=192.0.8.4
+P-Charging-Vector: icid-value=1234bc9876e;icid-generated-at=192.0.6.8;orig-ioi=home1.net
+P-Access-Network-Info: IEEE-802.11,dsl-location,eth-location,fiber-location,ci-3gpp2,ci-3gpp2-femto
+Geolocation: <cid:target123@atlanta.example.com>,<https://lis.example.com:8222/y77syc7cuecbh>;loc-src=edgeproxy.example.com
+Geolocation-Routing: yes
+Event: ua-profile;profile-type=device;vendor="vendor.example.net"; model="Z100";version="1.2.3"
+WWW-Authenticate: Digest realm="atlanta.com", domain="sip:boxesbybob.com", qop="auth", nonce="f84f1cec41e6cbe5aea9c8e88d359", opaque="", stale=FALSE, algorithm=MD5
+Warning: 301 isi.edu "Incompatible network address type 'E.164'"
+History-Info: <sip:UserA@ims.example.com>;index=1;foo=bar
+History-Info: <sip:UserA@ims.example.com?Reason=SIP%3Bcause%3D302>;index=1.1,<sip:UserB@example.com?Privacy=history&Reason=SIP%3Bcause%3D486>;index=1.2;mp=1.1,<sip:45432@192.168.0.3>;index=1.3;rc=1.2
+Accept: application/sdp;level=1, application/x-private, text/html, application/sdp;level=1, application/x-private, text/html
+Accept-Encoding: gzip
+Accept-Language: da, en-gb;q=0.8, en;q=0.7
+Organization: Google Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad Paloalto Networks
+Reason: SIP;cause=200;text="cisco-alarm:25 Name=SEP20BBC0200F84 ActiveLoad=SIP894x.9-4-2-8 InactiveLoad=SCCP894x.9-4-2-8 Last=initialized"
+Require: 100rel, outbound, early-session, path, policy, pref, privacy, replaces, join, sdp-anat, norefersub, resource-priority, extended-refer, X-cisco-callinfo, X-cisco-serviceuri, X-cisco-escapecodes, X-cisco-service-control, X-cisco-srtp-fallback, X-cisco-monrec, X-cisco-config, X-cisco-sis-7.0.0, X-cisco-xsi-8.5.1
+Supported: 100rel, outbound, early-session, path, policy, pref, privacy, replaces, join, sdp-anat, norefersub, resource-priority, extended-refer, X-cisco-callinfo, X-cisco-serviceuri, X-cisco-escapecodes, X-cisco-service-control, X-cisco-srtp-fallback, X-cisco-monrec, X-cisco-config, X-cisco-sis-7.0.0, X-cisco-xsi-8.5.1
+Unsupported: 100rel, outbound, early-session, path, policy, pref, privacy, replaces, join, sdp-anat, norefersub, resource-priority, extended-refer, X-cisco-callinfo, X-cisco-serviceuri, X-cisco-escapecodes, X-cisco-service-control, X-cisco-srtp-fallback, X-cisco-monrec, X-cisco-config, X-cisco-sis-7.0.0, X-cisco-xsi-8.5.1
+Allow: PRACK, INVITE, ACK, BYE, CANCEL, UPDATE, INFO, SUBSCRIBE, NOTIFY, REFER, MESSAGE, OPTIONS, PUBLISH, REGISTER
+Call-Info: <http://wwww.example.com/alice/photo.jpg> ;purpose=icon,<http://www.example.com/alice/> ;purpose=info
+Priority: P2 critical Panos P2 critical
+Subject: pan_task crash on both active and passive firewalls leading to interfaces going down and failover. pan_task crash on both active and passive firewalls leading to interfaces going down and failover Sed ut perspiciatis unde omnis iste 
+Contact: <sip:ad7cc845-114f-8fc5-2172-897baa1d28e8@[2a00:79e1:2c00:1901:8649:4112:1de8]:5060;transport=TCP;ob>;reg-id=1;+sip.instance="<urn:uuid:00000000-0000-0000-0000-0000e922f243>"
+Expires: 300
+Content-Length:  0

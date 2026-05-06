@@ -1,0 +1,68 @@
+import pyshark
+cap = pyshark.FileCapture("rx1.pcap")
+sip1 = cap[0]
+
+
+sip1.captured_length      
+sip1.eth                  
+sip1.frame_info           
+sip1.get_multiple_layers( 
+sip1.get_raw_packet(      
+sip1.highest_layer        
+sip1.interface_captured   
+sip1.ip                   
+sip1.layers
+sip1.length
+sip1.number
+sip1.pretty_print(        
+sip1.sniff_timestamp
+sip1.show(                
+sip1.sip                  
+sip1.sniff_time
+sip1.transport_layer
+sip1.udp
+
+
+sip1.sip.call_id                          
+sip1.sip.call_id_generated                
+sip1.sip.content_length                   
+sip1.sip.cseq                             
+sip1.sip.cseq_method                      
+sip1.sip.cseq_seq                         
+sip1.sip.field_names                      
+sip1.sip.from                    
+sip1.sip.from_addr               
+sip1.sip.from_host                  
+sip1.sip.from_tag              
+sip1.sip.from_user             
+sip1.sip.get(                  
+sip1.sip.get_field(            
+sip1.sip.get_field_by_showname(
+sip1.sip.get_field_value(      
+sip1.sip.has_field(            
+sip1.sip.layer_name            
+sip1.sip.method                
+sip1.sip.msg_hdr               
+sip1.sip.pretty_print( 
+sip1.sip.r_uri         
+sip1.sip.r_uri_host    
+sip1.sip.r_uri_port    
+sip1.sip.raw_mode      
+sip1.sip.request_line           <<< only if it is a request
+sip1.sip.resend        
+sip1.sip.status_code            <<< only if it is a response
+sip1.sip.status_line            <<< only if it is a response
+sip1.sip.tag
+sip1.sip.to
+sip1.sip.to_add        
+sip1.sip.to_host
+sip1.sip.to_port
+sip1.sip.via
+sip1.sip.via_branch
+sip1.sip.via_sent_by_address
+sip1.sip.via_sent_by_port
+sip1.sip.via_transport       
+
+
+
+
