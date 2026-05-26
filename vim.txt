@@ -541,7 +541,7 @@ change colorscheme
   colorscheme aawais
 
 highlight some colums, example: highlight Columns 13 and 80 with hl-ColorColumn
-  set colorColumn=13,80
+  set colorcolumn=13,80
 
 change color of numbers column
   :highlight LineNr ctermbg=0
@@ -787,29 +787,24 @@ vim -S ~/.vim_sessions/mysession.vim
 " -------------------------------------------------------------
 "                          Register
 " -------------------------------------------------------------
-" copy from register to the command line
 Ctrl-r Ctrl-w           insert the word under cursor in command line,
-Ctrl-r {reg}            insert content of register. If text has control characters this may have unexpected effect.
-Ctrl-r Ctrl-r {reg}     don't interpret control characters in register when pasting to cmd line
-
+Ctrl-r {reg}            insert content of register. eg. Ctrl-r / will paste last searched term
+Ctrl-r Ctrl-r {reg}     don't interpret control characters in register when pasting to cmd line.
+                        If text has control characters this may have unexpected effect.
 
 :reg              " show content of all registers
 :reg a b c        " show content of registers a,b and c
 
-
-
 Get the value of a register "@"
 :let @/="the"
 :let @+=@%          copy name of current file to clipboard
-
 
 ".  dot register stores the last inserted text, you can use it to insert the
     same text again
 "=
     evaluate an expression and insert the result at cursor
     INSERT mode: Ctrl-r =<expression> <CR>
-    NORMAL mode: "=<expression> p
-
+    NORMAL mode: "=<expression> <CR> p
 
 Tricks
 1. Replace a text with another copied from elsewhere
@@ -819,6 +814,10 @@ Get the value of register 'r':
  in normal mode  "r
  in command mode @r
  in insert mode  <Ctrl-r>r
+
+Execute contents of register
+ in normal mode  @q 
+ in command mode :@q
 
 
 " -------------------------------------------------------------
@@ -970,6 +969,9 @@ Matching Bracket
 " -------------------------------------------------------------
 :g/pattern/cmd          Execute Ex command cmd on lines matching pattern
 :g!/pattern/cmd         Execute Ex command cmd on lines *not* matching pattern
+                        same as v/pattern/cmd
+    cmd is an ex command, see help ex-cmd-index
+    or a normal mode command "g/pattern/normal {normal-mode-commands}"
 
 :g/pattern/z#.5         # display 5 context lines
 :g/pattern/z#.5|echo "========"

@@ -667,7 +667,6 @@ getattr(object, name, [default])
 hasattr(object, name) 
 
 
-
 # A class that supports iterator protocol
 class Reverse:
     """Iterator for looping over a sequence backwards."""
