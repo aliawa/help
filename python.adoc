@@ -1,10 +1,16 @@
 = PYTHON NOTES
 
 == Four ways to import something
-import math
-import math as mt
-form math import sqrt, pi
-from math import sqrt as sq
+import math                         use as math.sqrt(45)
+import math as mt                   use as mt.sqrt(45)
+form math import sqrt, pi           use as sqrt(45) 
+from math import sqrt as sq         use as sq(45)
+
+=== import script from same dir
+import helper.py from the same directory
+import helper
+
+import helper.py from parent folder
 
 
 == print
