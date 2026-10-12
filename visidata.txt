@@ -22,9 +22,9 @@ ga3         add 3 rows
 d           delete current row
 gd          delete selected rows
 y           copy row
-p           paste row
-shift-k     move up
-shift-j     move down
+shift-p     paste row
+shift-k     move the row up
+shift-j     move the row down
 
 
 

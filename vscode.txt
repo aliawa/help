@@ -10,3 +10,14 @@ Cmd-p
 
 List of all open files
 Ctrl-Tab
+
+Jump to symbol in editor
+Cmd-Shift-o
+:@ to group by category
+
+Jump to function in workspace
+Cmd-t
+
+
+
+

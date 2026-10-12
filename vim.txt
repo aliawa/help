@@ -942,10 +942,10 @@ L     # bottom of screen
 30|   # Jump to column 30
 `.    # move to last edit position
 
-^E - scroll the view-port down
-^Y - scroll the view-port up
-^F - scroll down one page
-^B - scroll one page up
+Ctrl-e - scroll the view-port down
+Ctrl-y - scroll the view-port up
+Ctrl-f - scroll down one page     <<< does not work with tmux because Ctrl-f is remapped
+Ctrl-b - scroll one page up
 
 Fast text Movement
 ------------------
@@ -1324,8 +1324,8 @@ go  open file in vertical split
 ## MERGING ##
 In file with merge conflicts
 Gvdiffsplit!
-d2o     take change from left window
-d3o     take change from right window
+d2o     take change from left window   (in rebase, this is the file from branch HEAD)
+d3o     take change from right window  (in rebase, this is the file from working directory)
 only    close diff
 
 

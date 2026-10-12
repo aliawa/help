@@ -29,7 +29,7 @@ RTP/RTCP
 
 H.225 RAS: (Registration/Admission/Status) (on wireshark RAS:..)
 -----------------------------------------------------------------
-UDP, ports(or TSAP identifier):[unicast 1719, multicast 1718]
+UDP, dest ports(or TSAP identifier):[unicast 1719, multicast 1718]
 RAS is the signaling protocol used between gateways(endpoints) and gatekeepers.
 - gatekeeper discovery
 - endpoint registration
